@@ -2361,10 +2361,10 @@ Se si preferisce rendere il tutto più facile o più difficile, è possibile reg
 <pre><code class="language-diff linenos start=171">	ld a, [_OAMRAM]
 	ld b, a
 	ld a, [_OAMRAM + 4]
-+ sub a, 6
++	add a, 6
 	cp a, b
 </code></pre>
-<p>In alternativa, si può aggiungere <code>add a, 6</code> subito dopo <code>ld a, [_OAMRAM]</code>.</p>
+<p>Alternatively, you can add <code>sub a, 6</code> just after <code>ld a, [_OAMRAM]</code>.</p>
 <p>In entrambi i casi, provate a giocare con il valore <code>6</code>; vedete cosa vi sembra giusto!</p>
 </details>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="bricks"><a class="header" href="#bricks">Bricks</a></h1>

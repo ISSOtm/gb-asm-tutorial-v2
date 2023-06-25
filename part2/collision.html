@@ -568,10 +568,10 @@ If you’d prefer to make this easier or more difficult, feel free to adjust the
 <pre><code class="language-diff linenos start=171">	ld a, [_OAMRAM]
 	ld b, a
 	ld a, [_OAMRAM + 4]
-+	sub a, 6
++	add a, 6
 	cp a, b
 </code></pre>
-<p>Alternatively, you can add <code>add a, 6</code> just after <code>ld a, [_OAMRAM]</code>.</p>
+<p>Alternatively, you can add <code>sub a, 6</code> just after <code>ld a, [_OAMRAM]</code>.</p>
 <p>In both cases, try playing with that <code>6</code> value; see what feels right!</p>
 </details>
 
