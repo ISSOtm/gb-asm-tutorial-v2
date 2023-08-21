@@ -1,0 +1,391 @@
+<!DOCTYPE HTML>
+<html lang="it" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Entry Point - GB ASM Tutorial</title>
+
+        <!-- Custom HTML head -->
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:site:id" content="@gbdev0"/>
+        <meta property="og:title" content="Entry Point - GB ASM Tutorial" />
+        <meta property="og:image" content="https://gbdev.io/gb-asm-tutorial/assets/banner/1200x628.png" />
+        <meta property="og:site_name" content="GB ASM Tutorial"/>
+
+        <meta name="description" content="A complete guide to programming Game Boy games in assembly.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../css/custom.css">
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item affix "><a href="../index.html">Home</a></li><li class="chapter-item affix "><a href="../roadmap.html">Tabella di marcia</a></li><li class="chapter-item affix "><a href="../help-feedback.html">Help</a></li><li class="chapter-item affix "><li class="part-title">Parte Ⅰ - Hello World!</li><li class="chapter-item "><a href="../part1/setup.html"><strong aria-hidden="true">1.</strong> Configurazione</a></li><li class="chapter-item "><a href="../part1/hello_world.html"><strong aria-hidden="true">2.</strong> Hello World!</a></li><li class="chapter-item "><a href="../part1/toolchain.html"><strong aria-hidden="true">3.</strong> Strumenti di lavoro</a></li><li class="chapter-item "><a href="../part1/bin_and_hex.html"><strong aria-hidden="true">4.</strong> Binario ed esadecimale</a></li><li class="chapter-item "><a href="../part1/registers.html"><strong aria-hidden="true">5.</strong> Registri</a></li><li class="chapter-item "><a href="../part1/assembly.html"><strong aria-hidden="true">6.</strong> Basi di Assembly</a></li><li class="chapter-item "><a href="../part1/memory.html"><strong aria-hidden="true">7.</strong> Memoria</a></li><li class="chapter-item "><a href="../part1/header.html"><strong aria-hidden="true">8.</strong> L'header</a></li><li class="chapter-item "><a href="../part1/operations.html"><strong aria-hidden="true">9.</strong> Operazioni e flags</a></li><li class="chapter-item "><a href="../part1/jumps.html"><strong aria-hidden="true">10.</strong> Salti</a></li><li class="chapter-item "><a href="../part1/tracing.html"><strong aria-hidden="true">11.</strong> Tracciamento</a></li><li class="chapter-item "><div><strong aria-hidden="true">12.</strong> Grafica</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../part1/tiles.html"><strong aria-hidden="true">12.1.</strong> Tiles</a></li><li class="chapter-item "><a href="../part1/palettes.html"><strong aria-hidden="true">12.2.</strong> Palette</a></li><li class="chapter-item "><a href="../part1/tilemap.html"><strong aria-hidden="true">12.3.</strong> Tilemap</a></li></ol></li><li class="chapter-item "><a href="../part1/wrapup.html"><strong aria-hidden="true">13.</strong> In conclusione</a></li><li class="chapter-item affix "><li class="part-title">Parte Ⅱ - Il nostro primo gioco</li><li class="chapter-item "><a href="../part2/getting-started.html"><strong aria-hidden="true">14.</strong> Per iniziare</a></li><li class="chapter-item "><a href="../part2/objects.html"><strong aria-hidden="true">15.</strong> Oggetti</a></li><li class="chapter-item "><a href="../part2/functions.html"><strong aria-hidden="true">16.</strong> Funzioni</a></li><li class="chapter-item "><a href="../part2/input.html"><strong aria-hidden="true">17.</strong> Input</a></li><li class="chapter-item "><a href="../part2/collision.html"><strong aria-hidden="true">18.</strong> Collisioni</a></li><li class="chapter-item "><a href="../part2/bricks.html"><strong aria-hidden="true">19.</strong> Bricks</a></li><li class="chapter-item "><a href="../part2/wip.html"><strong aria-hidden="true">20.</strong> Lavori in corso</a></li><li class="chapter-item affix "><li class="part-title">Part III — Our second game</li><li class="chapter-item "><a href="../part3/getting-started.html"><strong aria-hidden="true">21.</strong> Getting Started</a></li><li class="chapter-item "><a href="../part3/project-structure.html"><strong aria-hidden="true">22.</strong> Project Structure</a></li><li class="chapter-item expanded "><a href="../part3/entry-point.html" class="active"><strong aria-hidden="true">23.</strong> Entry Point</a></li><li class="chapter-item "><a href="../part3/changing-game-states.html"><strong aria-hidden="true">24.</strong> Changing Game States</a></li><li class="chapter-item "><a href="../part3/title-screen.html"><strong aria-hidden="true">25.</strong> Title Screen</a></li><li class="chapter-item "><a href="../part3/story-screen.html"><strong aria-hidden="true">26.</strong> Story Screen</a></li><li class="chapter-item "><a href="../part3/gameplay.html"><strong aria-hidden="true">27.</strong> Gameplay</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../part3/scrolling-background.html"><strong aria-hidden="true">27.1.</strong> Scrolling Background</a></li><li class="chapter-item "><a href="../part3/heads-up-interface.html"><strong aria-hidden="true">27.2.</strong> Heads-Up Interface</a></li><li class="chapter-item "><a href="../part3/sprites-metasprites.html"><strong aria-hidden="true">27.3.</strong> Sprites & Metasprites</a></li><li class="chapter-item "><a href="../part3/object-pools.html"><strong aria-hidden="true">27.4.</strong> Object Pools</a></li><li class="chapter-item "><a href="../part3/the-player.html"><strong aria-hidden="true">27.5.</strong> The Player</a></li><li class="chapter-item "><a href="../part3/bullets.html"><strong aria-hidden="true">27.6.</strong> Bullets</a></li><li class="chapter-item "><a href="../part3/enemies.html"><strong aria-hidden="true">27.7.</strong> Enemies</a></li><li class="chapter-item "><a href="../part3/collision.html"><strong aria-hidden="true">27.8.</strong> Collision Detection</a></li><li class="chapter-item "><a href="../part3/enemy-player-collision.html"><strong aria-hidden="true">27.9.</strong> Enemy-Player Collision</a></li><li class="chapter-item "><a href="../part3/enemy-bullet-collision.html"><strong aria-hidden="true">27.10.</strong> Enemy-Bullet Collision</a></li></ol></li><li class="chapter-item "><a href="../part3/conclusion.html"><strong aria-hidden="true">28.</strong> Conclusion</a></li><li class="chapter-item affix "><a href="../next.html">Prossimi passi</a></li><li class="chapter-item affix "><a href="../resources.html">Risorse</a></li><li class="chapter-item affix "><a href="../thanks.html">Ringraziamenti</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">GB ASM Tutorial</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        <button id="language-toggle" class="icon-button" type="button"
+                                title="Change language" aria-label="Change language"
+                                aria-haspopup="true" aria-expanded="false"
+                                aria-controls="language-list">
+                            <i class="fa fa-globe"></i>
+                        </button>
+                        <ul id="language-list" class="theme-popup" aria-label="Languages" role="menu">
+                          <li role="none"><button role="menuitem" class="theme">
+                              <a id="en">English</a>
+                          </button></li>
+                          <li role="none"><button role="menuitem" class="theme">
+                              <a id="it">Italian</a>
+                          </button></li>
+                        </ul>
+
+                        <script>
+                          let langToggle = document.getElementById("language-toggle");
+                          let langList = document.getElementById("language-list");
+                          langToggle.addEventListener("click", (event) => {
+                              langList.style.display = langList.style.display == "block" ? "none" : "block";
+                          });
+                          let selectedLang = document.getElementById("it");
+                          selectedLang.parentNode.classList.add("theme-selected");
+
+                          // The path to the root, taking the current
+                          // language into account.
+                          let full_path_to_root = "../../";
+                          // The page path (mdbook only gives us
+                          // access to the path to the Markdown file).
+                          let path = "part3/entry-point.md".replace(/\.md$/, ".html");
+                          for (let lang of langList.querySelectorAll("a")) {
+                              if (lang.id == "en") {
+                                  lang.href = `${full_path_to_root}${path}`;
+                              } else {
+                                  lang.href = `${full_path_to_root}${lang.id}/${path}`;
+                              }
+                          }
+                        </script>
+
+                        
+                        <a href="https://github.com/gbdev/gb-asm-tutorial" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/gbdev/gb-asm-tutorial/edit/main/po/it.po"
+                           title="Suggest an edit to the translation" aria-label="Suggest an edit to the translation">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="entry-point"><a class="header" href="#entry-point">Entry Point</a></h2>
+<p>We’ll start this tutorial out like the previous, with our “header” section (at address: $100). We’re also going to declare some global variables that will be used throughout the game.</p>
+<ul>
+<li>wLastKeys and wCurKeys are used for joypad input</li>
+<li>wGameState will keep track what our current game state is</li>
+</ul>
+<pre><code class="language-rgbasm linenos start=1">INCLUDE &quot;src/main/utils/hardware.inc&quot;
+
+SECTION &quot;GameVariables&quot;, WRAM0
+
+wLastKeys:: db
+wCurKeys:: db
+wNewKeys:: db
+wGameState::db
+
+SECTION &quot;Header&quot;, ROM0[$100]
+
+	jp EntryPoint
+
+	ds $150 - @, 0 ; Make room for the header
+
+EntryPoint:
+</code></pre>
+<p>after our “EntryPoint” label, well do the following:</p>
+<ul>
+<li>set our default game state</li>
+<li>initiate the sprite library were going to use</li>
+<li>setup our display registers</li>
+<li>load tile data for our font into VRAM. </li>
+</ul>
+<p>You can find the sprite library, by eivu15, <a href="https://github.com/eievui5/gb-sprobj-lib">here</a> on github. </p>
+<p>The tile data we are going to load is used by all game states, which is why we’ll do it here &amp; now, for them all to use.</p>
+<p><img src="../assets/part3/img/text-font-large.png" alt="Untitled" /></p>
+<p>This character-set is called “Area51”. It, and more 8x8 pixel fonts can ne found here: <a href="https://damieng.com/typography/zx-origins/">https://damieng.com/typography/zx-origins/</a> . These 52 tiles will be placed at the beginning of our background/window VRAM region.</p>
+<p><img src="../assets/part3/img/TextFontDiagram.png" alt="TextFontDiagram.png" /></p>
+<p>One important thing to note. Character maps for each letter must be defined. This let’s RGBDS know what byte value to give a specific letter.</p>
+<p>For the Galactic Armada space mapping, we’re going off the “text-font.png” image. Our space character is the first character in VRAM. Our alphabet starts at 26. Special additions could be added if desired. For now, this is all that we’ll need. We’ll define that map in “src/main/utils/macros/text-macros.inc”.</p>
+<pre><code class="language-rgbasm linenos start=1">; The character map for the text-font 
+CHARMAP &quot; &quot;, 0
+CHARMAP &quot;.&quot;, 24
+CHARMAP &quot;-&quot;, 25
+CHARMAP &quot;a&quot;, 26
+CHARMAP &quot;b&quot;, 27
+CHARMAP &quot;c&quot;, 28
+CHARMAP &quot;d&quot;, 29
+CHARMAP &quot;e&quot;, 30
+CHARMAP &quot;f&quot;, 31
+CHARMAP &quot;g&quot;, 32
+CHARMAP &quot;h&quot;, 33
+CHARMAP &quot;i&quot;, 34
+CHARMAP &quot;j&quot;, 35
+CHARMAP &quot;k&quot;, 36
+CHARMAP &quot;l&quot;, 37
+CHARMAP &quot;m&quot;, 38
+CHARMAP &quot;n&quot;, 39
+CHARMAP &quot;o&quot;, 40
+CHARMAP &quot;p&quot;, 41
+CHARMAP &quot;q&quot;, 42
+CHARMAP &quot;r&quot;, 43
+CHARMAP &quot;s&quot;, 44
+CHARMAP &quot;t&quot;, 45
+CHARMAP &quot;u&quot;, 46
+CHARMAP &quot;v&quot;, 47
+CHARMAP &quot;w&quot;, 48
+CHARMAP &quot;x&quot;, 49
+CHARMAP &quot;y&quot;, 50
+CHARMAP &quot;z&quot;, 51
+</code></pre>
+<p>Getting back to our entry point. Were going to wait until a vertical blank begins to do all of this. We’ll also turn the LCD off before loading our tile data into VRAM..</p>
+<pre><code class="language-rgbasm linenos start=18">	; Shut down audio circuitry
+	ld a, 0
+	ld [rNR52], a
+
+	ld a, 0
+	ld [wGameState], a
+
+	; Wait for the vertical blank phase before initiating the library
+    call WaitForOneVBlank
+
+	; from: https://github.com/eievui5/gb-sprobj-lib
+	; The library is relatively simple to get set up. First, put the following in your initialization code:
+	; Initilize Sprite Object Library.
+	call InitSprObjLibWrapper
+
+	; Turn the LCD off
+	ld a, 0
+	ld [rLCDC], a
+
+	; Load our common text font into VRAM
+	call LoadTextFontIntoVRAM
+
+	; Turn the LCD on
+	ld a, LCDCF_ON  | LCDCF_BGON|LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WINON | LCDCF_WIN9C00
+	ld [rLCDC], a
+
+	; During the first (blank) frame, initialize display registers
+	ld a, %11100100
+	ld [rBGP], a
+    ld a, %11100100
+	ld [rOBP0], a
+
+</code></pre>
+<blockquote>
+<p><em>NOTE</em>: Even though we haven’t specifically defined a color palette. The <a href="https://emulicious.net/">emulicious</a> emulator may automatically apply a cdefault color palette if in “Automatic” or “Gameboy Color” Mode</p>
+</blockquote>
+<p>In the above snippet you saw use of a function called “WaitFOrOneVBLank”. We’ve setup some vblank utility functions in the “src/main/utils/vblank-utils.asm” file:</p>
+<pre><code class="language-rgbasm linenos start=1">INCLUDE &quot;src/main/utils/hardware.inc&quot;
+
+SECTION &quot;VBlankVariables&quot;, WRAM0
+
+wVBlankCount:: db 
+
+SECTION &quot;VBlankFunctions&quot;, ROM0
+
+WaitForOneVBlank::
+
+    ; Wait a small amount of time
+    ; Save our count in this variable
+    ld a, 1
+    ld [wVBlankCount], a
+
+WaitForVBlankFunction::
+
+WaitForVBlankFunction_Loop::
+
+	ld a, [rLY] ; Copy the vertical line to a
+	cp 144 ; Check if the vertical line (in a) is 0
+	jp c, WaitForVBlankFunction_Loop ; A conditional jump. The condition is that 'c' is set, the last operation overflowed
+
+    ld a, [wVBlankCount]
+    sub a, 1
+    ld [wVBlankCount], a
+    ret z
+
+WaitForVBlankFunction_Loop2::
+
+	ld a, [rLY] ; Copy the vertical line to a
+	cp 144 ; Check if the vertical line (in a) is 0
+	jp nc, WaitForVBlankFunction_Loop2 ; A conditional jump. The condition is that 'c' is set, the last operation overflowed
+
+    jp WaitForVBlankFunction_Loop
+
+</code></pre>
+<p>In the next section, we’ll go on next to setup our “NextGameState” label. Which is used for changing game states.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part3/project-structure.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../part3/changing-game-states.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part3/project-structure.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../part3/changing-game-states.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../js/linenos.js"></script>
+
+
+    </body>
+</html>

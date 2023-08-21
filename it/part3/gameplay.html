@@ -1,0 +1,425 @@
+<!DOCTYPE HTML>
+<html lang="it" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Gameplay - GB ASM Tutorial</title>
+
+        <!-- Custom HTML head -->
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:site:id" content="@gbdev0"/>
+        <meta property="og:title" content="Gameplay - GB ASM Tutorial" />
+        <meta property="og:image" content="https://gbdev.io/gb-asm-tutorial/assets/banner/1200x628.png" />
+        <meta property="og:site_name" content="GB ASM Tutorial"/>
+
+        <meta name="description" content="A complete guide to programming Game Boy games in assembly.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../css/custom.css">
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item affix "><a href="../index.html">Home</a></li><li class="chapter-item affix "><a href="../roadmap.html">Tabella di marcia</a></li><li class="chapter-item affix "><a href="../help-feedback.html">Help</a></li><li class="chapter-item affix "><li class="part-title">Parte Ⅰ - Hello World!</li><li class="chapter-item "><a href="../part1/setup.html"><strong aria-hidden="true">1.</strong> Configurazione</a></li><li class="chapter-item "><a href="../part1/hello_world.html"><strong aria-hidden="true">2.</strong> Hello World!</a></li><li class="chapter-item "><a href="../part1/toolchain.html"><strong aria-hidden="true">3.</strong> Strumenti di lavoro</a></li><li class="chapter-item "><a href="../part1/bin_and_hex.html"><strong aria-hidden="true">4.</strong> Binario ed esadecimale</a></li><li class="chapter-item "><a href="../part1/registers.html"><strong aria-hidden="true">5.</strong> Registri</a></li><li class="chapter-item "><a href="../part1/assembly.html"><strong aria-hidden="true">6.</strong> Basi di Assembly</a></li><li class="chapter-item "><a href="../part1/memory.html"><strong aria-hidden="true">7.</strong> Memoria</a></li><li class="chapter-item "><a href="../part1/header.html"><strong aria-hidden="true">8.</strong> L'header</a></li><li class="chapter-item "><a href="../part1/operations.html"><strong aria-hidden="true">9.</strong> Operazioni e flags</a></li><li class="chapter-item "><a href="../part1/jumps.html"><strong aria-hidden="true">10.</strong> Salti</a></li><li class="chapter-item "><a href="../part1/tracing.html"><strong aria-hidden="true">11.</strong> Tracciamento</a></li><li class="chapter-item "><div><strong aria-hidden="true">12.</strong> Grafica</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../part1/tiles.html"><strong aria-hidden="true">12.1.</strong> Tiles</a></li><li class="chapter-item "><a href="../part1/palettes.html"><strong aria-hidden="true">12.2.</strong> Palette</a></li><li class="chapter-item "><a href="../part1/tilemap.html"><strong aria-hidden="true">12.3.</strong> Tilemap</a></li></ol></li><li class="chapter-item "><a href="../part1/wrapup.html"><strong aria-hidden="true">13.</strong> In conclusione</a></li><li class="chapter-item affix "><li class="part-title">Parte Ⅱ - Il nostro primo gioco</li><li class="chapter-item "><a href="../part2/getting-started.html"><strong aria-hidden="true">14.</strong> Per iniziare</a></li><li class="chapter-item "><a href="../part2/objects.html"><strong aria-hidden="true">15.</strong> Oggetti</a></li><li class="chapter-item "><a href="../part2/functions.html"><strong aria-hidden="true">16.</strong> Funzioni</a></li><li class="chapter-item "><a href="../part2/input.html"><strong aria-hidden="true">17.</strong> Input</a></li><li class="chapter-item "><a href="../part2/collision.html"><strong aria-hidden="true">18.</strong> Collisioni</a></li><li class="chapter-item "><a href="../part2/bricks.html"><strong aria-hidden="true">19.</strong> Bricks</a></li><li class="chapter-item "><a href="../part2/wip.html"><strong aria-hidden="true">20.</strong> Lavori in corso</a></li><li class="chapter-item affix "><li class="part-title">Part III — Our second game</li><li class="chapter-item "><a href="../part3/getting-started.html"><strong aria-hidden="true">21.</strong> Getting Started</a></li><li class="chapter-item "><a href="../part3/project-structure.html"><strong aria-hidden="true">22.</strong> Project Structure</a></li><li class="chapter-item "><a href="../part3/entry-point.html"><strong aria-hidden="true">23.</strong> Entry Point</a></li><li class="chapter-item "><a href="../part3/changing-game-states.html"><strong aria-hidden="true">24.</strong> Changing Game States</a></li><li class="chapter-item "><a href="../part3/title-screen.html"><strong aria-hidden="true">25.</strong> Title Screen</a></li><li class="chapter-item "><a href="../part3/story-screen.html"><strong aria-hidden="true">26.</strong> Story Screen</a></li><li class="chapter-item expanded "><a href="../part3/gameplay.html" class="active"><strong aria-hidden="true">27.</strong> Gameplay</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../part3/scrolling-background.html"><strong aria-hidden="true">27.1.</strong> Scrolling Background</a></li><li class="chapter-item "><a href="../part3/heads-up-interface.html"><strong aria-hidden="true">27.2.</strong> Heads-Up Interface</a></li><li class="chapter-item "><a href="../part3/sprites-metasprites.html"><strong aria-hidden="true">27.3.</strong> Sprites & Metasprites</a></li><li class="chapter-item "><a href="../part3/object-pools.html"><strong aria-hidden="true">27.4.</strong> Object Pools</a></li><li class="chapter-item "><a href="../part3/the-player.html"><strong aria-hidden="true">27.5.</strong> The Player</a></li><li class="chapter-item "><a href="../part3/bullets.html"><strong aria-hidden="true">27.6.</strong> Bullets</a></li><li class="chapter-item "><a href="../part3/enemies.html"><strong aria-hidden="true">27.7.</strong> Enemies</a></li><li class="chapter-item "><a href="../part3/collision.html"><strong aria-hidden="true">27.8.</strong> Collision Detection</a></li><li class="chapter-item "><a href="../part3/enemy-player-collision.html"><strong aria-hidden="true">27.9.</strong> Enemy-Player Collision</a></li><li class="chapter-item "><a href="../part3/enemy-bullet-collision.html"><strong aria-hidden="true">27.10.</strong> Enemy-Bullet Collision</a></li></ol></li><li class="chapter-item "><a href="../part3/conclusion.html"><strong aria-hidden="true">28.</strong> Conclusion</a></li><li class="chapter-item affix "><a href="../next.html">Prossimi passi</a></li><li class="chapter-item affix "><a href="../resources.html">Risorse</a></li><li class="chapter-item affix "><a href="../thanks.html">Ringraziamenti</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">GB ASM Tutorial</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        <button id="language-toggle" class="icon-button" type="button"
+                                title="Change language" aria-label="Change language"
+                                aria-haspopup="true" aria-expanded="false"
+                                aria-controls="language-list">
+                            <i class="fa fa-globe"></i>
+                        </button>
+                        <ul id="language-list" class="theme-popup" aria-label="Languages" role="menu">
+                          <li role="none"><button role="menuitem" class="theme">
+                              <a id="en">English</a>
+                          </button></li>
+                          <li role="none"><button role="menuitem" class="theme">
+                              <a id="it">Italian</a>
+                          </button></li>
+                        </ul>
+
+                        <script>
+                          let langToggle = document.getElementById("language-toggle");
+                          let langList = document.getElementById("language-list");
+                          langToggle.addEventListener("click", (event) => {
+                              langList.style.display = langList.style.display == "block" ? "none" : "block";
+                          });
+                          let selectedLang = document.getElementById("it");
+                          selectedLang.parentNode.classList.add("theme-selected");
+
+                          // The path to the root, taking the current
+                          // language into account.
+                          let full_path_to_root = "../../";
+                          // The page path (mdbook only gives us
+                          // access to the path to the Markdown file).
+                          let path = "part3/gameplay.md".replace(/\.md$/, ".html");
+                          for (let lang of langList.querySelectorAll("a")) {
+                              if (lang.id == "en") {
+                                  lang.href = `${full_path_to_root}${path}`;
+                              } else {
+                                  lang.href = `${full_path_to_root}${lang.id}/${path}`;
+                              }
+                          }
+                        </script>
+
+                        
+                        <a href="https://github.com/gbdev/gb-asm-tutorial" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/gbdev/gb-asm-tutorial/edit/main/po/it.po"
+                           title="Suggest an edit to the translation" aria-label="Suggest an edit to the translation">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gameplay-state"><a class="header" href="#gameplay-state">Gameplay State</a></h1>
+<p>In this game state, the player will control a spaceship. Flying over a vertically scrolling space background. They’ll be able to freely move in 4 directions , and shoot oncoming alien ships. As alien ships are destroyed by bullets, the player’s score will increase.</p>
+<p><img src="../assets/part3/img/rgbds-shmup-gameplay.gif" alt="rgbds-shmup-gameplay.gif" /></p>
+<p>Gameplay is the core chunk of the source code. It also took the most time to create. Because of such, this game state has to be split into multiple sub-pages. Each page will explain a different gameplay concept.</p>
+<p>Our gameplay state defines the following data and variables:</p>
+<pre><code class="language-rgbasm linenos start=1">INCLUDE &quot;src/main/utils/hardware.inc&quot;
+INCLUDE &quot;src/main/utils/macros/text-macros.inc&quot;
+
+SECTION &quot;GameplayVariables&quot;, WRAM0
+
+wScore:: ds 6
+wLives:: db
+
+SECTION &quot;GameplayState&quot;, ROM0
+
+wScoreText::  db &quot;score&quot;, 255
+wLivesText::  db &quot;lives&quot;, 255
+</code></pre>
+<p>For simplicity reasons, our score uses 6 bytes. Each byte repesents one digit in the score.</p>
+<h2 id="initiating-the-gameplay-game-state"><a class="header" href="#initiating-the-gameplay-game-state">Initiating the Gameplay Game State:</a></h2>
+<p>When gameplay starts we want to do all of the following:</p>
+<ul>
+<li>reset the player’s score to 0</li>
+<li>reset the player’s lives to 3. </li>
+<li>Initialize all of our gameplay elements ( background, player, bullets, and enemies)</li>
+<li>Enable STAT interrupts for the HUD</li>
+<li>Draw our “score” &amp; “lives”  on the HUD.</li>
+<li>Reset the window’s position back to 7,0</li>
+<li>Turn the LCD on with the window enabled at $9C00</li>
+</ul>
+<pre><code class="language-rgbasm linenos start=14">InitGameplayState::
+
+	ld a, 3
+	ld [wLives+0], a
+
+	ld a, 0
+	ld [wScore+0], a
+	ld [wScore+1], a
+	ld [wScore+2], a
+	ld [wScore+3], a
+	ld [wScore+4], a
+	ld [wScore+5], a
+
+	call InitializeBackground
+	call InitializePlayer
+	call InitializeBullets
+	call InitializeEnemies
+
+	; Initiate STAT interrupts
+	call InitStatInterrupts
+
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+	; Call Our function that draws text onto background/window tiles
+    ld de, $9c00
+    ld hl, wScoreText
+    call DrawTextTilesLoop
+
+	; Call Our function that draws text onto background/window tiles
+    ld de, $9c0D
+    ld hl, wLivesText
+    call DrawTextTilesLoop
+	
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+	call DrawScore
+	call DrawLives
+
+	ld a, 0
+	ld [rWY], a
+
+	ld a, 7
+	ld [rWX], a
+
+	; Turn the LCD on
+	ld a, LCDCF_ON  | LCDCF_BGON|LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WINON | LCDCF_WIN9C00|LCDCF_BG9800
+	ld [rLCDC], a
+
+    ret;
+</code></pre>
+<p>The initialization logic for our the background, the player, the enemies, the bullets will be explained in later pages. Every game state is responsible for turning the LCD back on. The gameplay game state needs to use the window layer, so we’ll make sure that’s enabled before we return.</p>
+<h2 id="updating-the-gameplay-game-state"><a class="header" href="#updating-the-gameplay-game-state">Updating the Gameplay Game State</a></h2>
+<p>Our “UpdateGameplayState” function doesn’t have very complicated logic. Most of the logic has been split into separate files for the background, player, enemies, and bullets.</p>
+<p>During gameplay, we do all of the following:</p>
+<ul>
+<li>Poll for input</li>
+<li>Reset our Shadow OAM</li>
+<li>Reset our current shadow OAM sprite</li>
+<li>Update our gameplay elements (player, background, enemies, bullets, background)</li>
+<li>Remove any unused sprites from the screen</li>
+<li>End gameplay if we’ve lost all of our lives</li>
+<li>inside of the vertical blank phase
+<ul>
+<li>Apply shadow OAM sprites </li>
+<li>Update our background tilemap’s position</li>
+</ul>
+</li>
+</ul>
+<p>We’ll poll for input like in the previous tutorial. We’ll always save the previous state of the gameboy’s buttons in the “wLastKeys” variable.</p>
+<pre><code class="language-rgbasm linenos start=66">UpdateGameplayState::
+
+	; save the keys last frame
+	ld a, [wCurKeys]
+	ld [wLastKeys], a
+
+	; This is in input.asm
+	; It's straight from: https://gbdev.io/gb-asm-tutorial/part2/input.html
+	; In their words (paraphrased): reading player input for gameboy is NOT a trivial task
+	; So it's best to use some tested code
+    call Input
+</code></pre>
+<p>Next, we’ll reset our Shadow OAM and reset current Shadow OAM sprite address. </p>
+<pre><code class="language-rgbasm linenos start=78">	; from: https://github.com/eievui5/gb-sprobj-lib
+	; hen put a call to ResetShadowOAM at the beginning of your main loop.
+	call ResetShadowOAM
+	call ResetOAMSpriteAddress
+</code></pre>
+<p>Because we are going to be dealing with a lot of sprites on the screen, we will not be directly manipulating the gameboy’s OAM sprites. We’ll define a set of “shadow” (copy“) OAM sprites, that all objects will use instaed. At the end of the gameplay looop, we’ll copy the shadow OAM sprite objects into the hardware.</p>
+<p>Each object will use a random shadow OAM sprite. We need a way to keep track of what shadow OAM sprite is being used currently. For this, we’ve created a 16-bit pointer called “wLastOAMAddress”. Defined in “src/main/utils/sprites.asm”, this points to the data for the next inactive shadow OAM sprite. </p>
+<p>When we reset our current Shadow OAM sprite address, we just set the “mLastOAMAddress” RAM variable to point to the first shadow OAM sprite. </p>
+<blockquote>
+<p><strong>NOTE:</strong> We also keep a counter on how many shadow OAM sprites are used. In our “ResetOAMSpriteAddress” function, we’ll reset that counter too.</p>
+</blockquote>
+<pre><code class="language-rgbasm linenos start=64">ResetOAMSpriteAddress::
+    
+    ld a, 0
+    ld [wSpritesUsed], a
+
+	ld a, LOW(wShadowOAM)
+	ld [wLastOAMAddress+0], a
+	ld a, HIGH(wShadowOAM)
+	ld [wLastOAMAddress+1], a
+
+    ret
+</code></pre>
+<p>Next we’ll update our gameplay elements:</p>
+<pre><code class="language-rgbasm linenos start=83">	call UpdatePlayer
+	call UpdateEnemies
+	call UpdateBullets
+	call UpdateBackground
+</code></pre>
+<p>After all of that, at this point in time, the majority of gameplay is done for this iteration. We’ll clear any remaining spirtes. This is very necessary becaus the number of active sprites changes from frame to frame. If there are any visible OAM sprites left onscreen, they will look weird and/or mislead the player. </p>
+<pre><code class="language-rgbasm linenos start=88">	; Clear remaining sprites to avoid lingering rogue sprites
+	call ClearRemainingSprites
+</code></pre>
+<p>The clear remaining sprites function, for all remaining shadow OAM sprites, moves the sprite offscreen so they are no longer visible. This function starts at wherever the “wLastOAMAddress” variable last left-off.</p>
+<h4 id="end-of-the-gameplay-loop"><a class="header" href="#end-of-the-gameplay-loop">End of The Gameplay loop</a></h4>
+<p>At this point in time, we need to check if gameplay needs to continue. When the vertical blank phase starts, we check if the player has lost all of their lives. If so, we end gameplay. We end gameplay similar to how we started it, we’ll update our ‘wGameState’ variable and jump to “NextGameState”.</p>
+<p>If the player hasn’t lost all of their lives, we’ll copy our shadow OAM sprites over to the actual hardware OAM sprites and loop background.</p>
+<pre><code class="language-rgbasm linenos start=91">	ld a, [wLives]
+	cp a, 250
+	jp nc, EndGameplay
+
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ; Call our function that performs the code
+    call WaitForOneVBlank
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+	; from: https://github.com/eievui5/gb-sprobj-lib
+	; Finally, run the following code during VBlank:
+	ld a, HIGH(wShadowOAM)
+	call hOAMDMA
+
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ; Call our function that performs the code
+    call WaitForOneVBlank
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	
+	jp UpdateGameplayState
+
+EndGameplay:
+	
+    ld a, 0
+    ld [wGameState],a
+    jp NextGameState
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part3/story-screen.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../part3/scrolling-background.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part3/story-screen.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../part3/scrolling-background.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../js/linenos.js"></script>
+
+
+    </body>
+</html>

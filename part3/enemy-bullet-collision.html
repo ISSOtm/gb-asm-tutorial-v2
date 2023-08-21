@@ -1,0 +1,453 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Enemy-Bullet Collision - GB ASM Tutorial</title>
+
+        <!-- Custom HTML head -->
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:site:id" content="@gbdev0"/>
+        <meta property="og:title" content="Enemy-Bullet Collision - GB ASM Tutorial" />
+        <meta property="og:image" content="https://gbdev.io/gb-asm-tutorial/assets/banner/1200x628.png" />
+        <meta property="og:site_name" content="GB ASM Tutorial"/>
+
+        <meta name="description" content="A complete guide to programming Game Boy games in assembly.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../css/custom.css">
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item affix "><a href="../index.html">Home</a></li><li class="chapter-item affix "><a href="../roadmap.html">Roadmap</a></li><li class="chapter-item affix "><a href="../help-feedback.html">Help</a></li><li class="chapter-item affix "><li class="part-title">Part Ⅰ — Hello World!</li><li class="chapter-item "><a href="../part1/setup.html"><strong aria-hidden="true">1.</strong> Setup</a></li><li class="chapter-item "><a href="../part1/hello_world.html"><strong aria-hidden="true">2.</strong> Hello World!</a></li><li class="chapter-item "><a href="../part1/toolchain.html"><strong aria-hidden="true">3.</strong> The toolchain</a></li><li class="chapter-item "><a href="../part1/bin_and_hex.html"><strong aria-hidden="true">4.</strong> Binary and hexadecimal</a></li><li class="chapter-item "><a href="../part1/registers.html"><strong aria-hidden="true">5.</strong> Registers</a></li><li class="chapter-item "><a href="../part1/assembly.html"><strong aria-hidden="true">6.</strong> Assembly basics</a></li><li class="chapter-item "><a href="../part1/memory.html"><strong aria-hidden="true">7.</strong> Memory</a></li><li class="chapter-item "><a href="../part1/header.html"><strong aria-hidden="true">8.</strong> The header</a></li><li class="chapter-item "><a href="../part1/operations.html"><strong aria-hidden="true">9.</strong> Operations & flags</a></li><li class="chapter-item "><a href="../part1/jumps.html"><strong aria-hidden="true">10.</strong> Jumps</a></li><li class="chapter-item "><a href="../part1/tracing.html"><strong aria-hidden="true">11.</strong> Tracing</a></li><li class="chapter-item "><div><strong aria-hidden="true">12.</strong> Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../part1/tiles.html"><strong aria-hidden="true">12.1.</strong> Tiles</a></li><li class="chapter-item "><a href="../part1/palettes.html"><strong aria-hidden="true">12.2.</strong> Palettes</a></li><li class="chapter-item "><a href="../part1/tilemap.html"><strong aria-hidden="true">12.3.</strong> Tilemap</a></li></ol></li><li class="chapter-item "><a href="../part1/wrapup.html"><strong aria-hidden="true">13.</strong> Wrapping up</a></li><li class="chapter-item affix "><li class="part-title">Part Ⅱ — Our first game</li><li class="chapter-item "><a href="../part2/getting-started.html"><strong aria-hidden="true">14.</strong> Getting started</a></li><li class="chapter-item "><a href="../part2/objects.html"><strong aria-hidden="true">15.</strong> Objects</a></li><li class="chapter-item "><a href="../part2/functions.html"><strong aria-hidden="true">16.</strong> Functions</a></li><li class="chapter-item "><a href="../part2/input.html"><strong aria-hidden="true">17.</strong> Input</a></li><li class="chapter-item "><a href="../part2/collision.html"><strong aria-hidden="true">18.</strong> Collision</a></li><li class="chapter-item "><a href="../part2/bricks.html"><strong aria-hidden="true">19.</strong> Bricks</a></li><li class="chapter-item "><a href="../part2/wip.html"><strong aria-hidden="true">20.</strong> Work in progress</a></li><li class="chapter-item affix "><li class="part-title">Part III — Our second game</li><li class="chapter-item "><a href="../part3/getting-started.html"><strong aria-hidden="true">21.</strong> Getting Started</a></li><li class="chapter-item "><a href="../part3/project-structure.html"><strong aria-hidden="true">22.</strong> Project Structure</a></li><li class="chapter-item "><a href="../part3/entry-point.html"><strong aria-hidden="true">23.</strong> Entry Point</a></li><li class="chapter-item "><a href="../part3/changing-game-states.html"><strong aria-hidden="true">24.</strong> Changing Game States</a></li><li class="chapter-item "><a href="../part3/title-screen.html"><strong aria-hidden="true">25.</strong> Title Screen</a></li><li class="chapter-item "><a href="../part3/story-screen.html"><strong aria-hidden="true">26.</strong> Story Screen</a></li><li class="chapter-item expanded "><a href="../part3/gameplay.html"><strong aria-hidden="true">27.</strong> Gameplay</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../part3/scrolling-background.html"><strong aria-hidden="true">27.1.</strong> Scrolling Background</a></li><li class="chapter-item "><a href="../part3/heads-up-interface.html"><strong aria-hidden="true">27.2.</strong> Heads-Up Interface</a></li><li class="chapter-item "><a href="../part3/sprites-metasprites.html"><strong aria-hidden="true">27.3.</strong> Sprites & Metasprites</a></li><li class="chapter-item "><a href="../part3/object-pools.html"><strong aria-hidden="true">27.4.</strong> Object Pools</a></li><li class="chapter-item "><a href="../part3/the-player.html"><strong aria-hidden="true">27.5.</strong> The Player</a></li><li class="chapter-item "><a href="../part3/bullets.html"><strong aria-hidden="true">27.6.</strong> Bullets</a></li><li class="chapter-item "><a href="../part3/enemies.html"><strong aria-hidden="true">27.7.</strong> Enemies</a></li><li class="chapter-item "><a href="../part3/collision.html"><strong aria-hidden="true">27.8.</strong> Collision Detection</a></li><li class="chapter-item "><a href="../part3/enemy-player-collision.html"><strong aria-hidden="true">27.9.</strong> Enemy-Player Collision</a></li><li class="chapter-item expanded "><a href="../part3/enemy-bullet-collision.html" class="active"><strong aria-hidden="true">27.10.</strong> Enemy-Bullet Collision</a></li></ol></li><li class="chapter-item "><a href="../part3/conclusion.html"><strong aria-hidden="true">28.</strong> Conclusion</a></li><li class="chapter-item affix "><a href="../next.html">Where to go next</a></li><li class="chapter-item affix "><a href="../resources.html">Resources</a></li><li class="chapter-item affix "><a href="../thanks.html">Thanks</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">GB ASM Tutorial</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        <button id="language-toggle" class="icon-button" type="button"
+                                title="Change language" aria-label="Change language"
+                                aria-haspopup="true" aria-expanded="false"
+                                aria-controls="language-list">
+                            <i class="fa fa-globe"></i>
+                        </button>
+                        <ul id="language-list" class="theme-popup" aria-label="Languages" role="menu">
+                          <li role="none"><button role="menuitem" class="theme">
+                              <a id="en">English</a>
+                          </button></li>
+                          <li role="none"><button role="menuitem" class="theme">
+                              <a id="it">Italian</a>
+                          </button></li>
+                        </ul>
+
+                        <script>
+                          let langToggle = document.getElementById("language-toggle");
+                          let langList = document.getElementById("language-list");
+                          langToggle.addEventListener("click", (event) => {
+                              langList.style.display = langList.style.display == "block" ? "none" : "block";
+                          });
+                          let selectedLang = document.getElementById("en");
+                          selectedLang.parentNode.classList.add("theme-selected");
+
+                          // The path to the root, taking the current
+                          // language into account.
+                          let full_path_to_root = "../";
+                          // The page path (mdbook only gives us
+                          // access to the path to the Markdown file).
+                          let path = "part3/enemy-bullet-collision.md".replace(/\.md$/, ".html");
+                          for (let lang of langList.querySelectorAll("a")) {
+                              if (lang.id == "en") {
+                                  lang.href = `${full_path_to_root}${path}`;
+                              } else {
+                                  lang.href = `${full_path_to_root}${lang.id}/${path}`;
+                              }
+                          }
+                        </script>
+
+                        
+                        <a href="https://github.com/gbdev/gb-asm-tutorial" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/gbdev/gb-asm-tutorial/edit/master/src/part3/enemy-bullet-collision.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="enemy-bullet-collision"><a class="header" href="#enemy-bullet-collision">Enemy-Bullet Collision</a></h1>
+<p>When we are udating enemies, we’ll call a function called “CheckCurrentEnemyAgainstBullets”. This will check the current enemy against all active bullets.</p>
+<p>This fuction needs to loop through the bullet object pool, and check if our current enemy overlaps any bullet on both the x and y axis. If so, we’ll deactivate the enemy and bullet.</p>
+<p>Our “CheckCurrentEnemyAgainstBullets” function starts off in a manner similar to how we updated enemies &amp; bullets.</p>
+<blockquote>
+<p>This function expects “hl” points to the curent enemy. We’ll save that in a variable for later usage.</p>
+</blockquote>
+<pre><code class="language-rgbasm linenos start=2">include &quot;src/main/utils/hardware.inc&quot;
+include &quot;src/main/utils/constants.inc&quot;
+include &quot;src/main/utils/hardware.inc&quot;
+
+SECTION &quot;EnemyBulletCollisionVariables&quot;, WRAM0
+
+wEnemyBulletCollisionCounter: db
+wBulletAddresses: dw
+
+SECTION &quot;EnemyBulletCollision&quot;, ROM0
+
+; called from enemies.asm
+CheckCurrentEnemyAgainstBullets::
+
+
+    ld a, l
+    ld [wUpdateEnemiesCurrentEnemyAddress+0], a
+    ld a, h
+    ld [wUpdateEnemiesCurrentEnemyAddress+1], a
+
+    ld a, 0
+    ld [wEnemyBulletCollisionCounter], a
+    
+    ; Copy our bullets address into wBulletAddress
+    ld a, LOW(wBullets)
+    ld l, a
+    ld a, HIGH(wBullets)
+    ld h, a
+
+    jp CheckCurrentEnemyAgainstBullets_PerBullet
+</code></pre>
+<p>As we loop through the bullets, we need to make sure we only check active bullets. Inactive bullets will be skipped.</p>
+<pre><code class="language-rgbasm linenos start=53">CheckCurrentEnemyAgainstBullets_PerBullet:
+
+    ld a, [hl]
+    cp a, 1
+    jp nz, CheckCurrentEnemyAgainstBullets_Loop
+</code></pre>
+<p>First, we need to check if the current enemy and current bullet are overlapping on the x axis. We’ll get the enemy’s x position in e, and the bullet’s x position in b. From there, we’ll again call our “CheckObjectPositionDifference” function. If it returns a failure (wResult=0), we’ll start with the next bullet.</p>
+<blockquote>
+<p>We add an offset to the x coordinates so they measure from their centers. That offset is half it’s respective object’s width.</p>
+</blockquote>
+<pre><code class="language-rgbasm linenos start=59">CheckCurrentEnemyAgainstBullets_Check_X_Overlap:
+
+    ; Save our first byte address
+    push hl
+
+    inc hl
+
+    ; Get our x position
+    ld a, [hli]
+    add a, 4
+    ld b, a
+
+    push hl
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Start: Checking the absolute difference
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    ; The first value
+    ld a, b
+    ld [wObject1Value], a
+
+    ; The second value
+    ld a, [wCurrentEnemyX]
+    add a, 8
+    ld [wObject2Value], a
+
+    ; Save if the minimum distance
+    ld a, 12
+    ld [wSize], a
+
+    call CheckObjectPositionDifference
+
+    
+    ld a, [wResult]
+    cp a, 0
+    jp z, CheckCurrentEnemyAgainstBullets_Check_X_Overlap_Fail
+
+    
+    pop hl
+
+    jp CheckCurrentEnemyAgainstBullets_PerBullet_Y_Overlap
+
+CheckCurrentEnemyAgainstBullets_Check_X_Overlap_Fail:
+
+    pop hl
+    pop hl
+
+    jp CheckCurrentEnemyAgainstBullets_Loop
+</code></pre>
+<p>Next we restore our hl variable so we can get the y position of our current bullet. Once we have that y position, we’ll get the current enemy’s y position and check for an overlap on the y axis. If no overlap is found, we’ll loop to the next bullet. Otherwise, we have a collision.</p>
+<pre><code class="language-rgbasm linenos start=113">    
+CheckCurrentEnemyAgainstBullets_PerBullet_Y_Overlap:
+
+    ; get our bullet 16-bit y position
+    ld a, [hli]
+    ld b, a
+
+    ld a, [hli]
+    ld c, a
+
+    ; Descale our 16 bit y position
+    srl c
+    rr b
+    srl c
+    rr b
+    srl c
+    rr b
+    srl c
+    rr b
+
+    ; preserve our first byte addresss
+    pop hl
+    push hl
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Start: Checking the absolute difference
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    ; The first value
+    ld a, b
+    ld [wObject1Value], a
+
+    ; The second value
+    ld a, [wCurrentEnemyY]
+    ld [wObject2Value], a
+
+    ; Save if the minimum distance
+    ld a, 16
+    ld [wSize], a
+
+    call CheckObjectPositionDifference
+
+    pop hl
+    
+    ld a, [wResult]
+    cp a, 0
+    jp z, CheckCurrentEnemyAgainstBullets_Loop
+    jp CheckCurrentEnemyAgainstBullets_PerBullet_Collision
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; End: Checking the absolute difference
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    
+</code></pre>
+<p>If a collision was detected (overlap on x and y axis), we’ll set the current active byte for that bullet to 0. Also , we’ll set the active byte for the current enemy to zero. Before we end the function, we’ll increase and redraw the score, and decrease how many bullets &amp; enemies we have by one.</p>
+<pre><code class="language-rgbasm linenos start=168">CheckCurrentEnemyAgainstBullets_PerBullet_Collision:
+
+    ; set the active byte  and x value to 0 for bullets
+    ld a, 0
+    ld [hli], a
+    ld [hl], a
+
+    ld a, [wUpdateEnemiesCurrentEnemyAddress+0]
+    ld l, a
+    ld a, [wUpdateEnemiesCurrentEnemyAddress+1]
+    ld h, a
+
+    ; set the active byte  and x value to 0 for enemies
+    ld a, 0
+    ld [hli], a
+    ld [hl], a
+    
+    call IncreaseScore;
+    call DrawScore
+
+    ; Decrease how many active enemies their are
+    ld a, [wActiveEnemyCounter]
+    dec a
+    ld [wActiveEnemyCounter], a
+
+    ; Decrease how many active bullets their are
+    ld a, [wActiveBulletCounter]
+    dec a
+    ld [wActiveBulletCounter], a
+
+    ret
+</code></pre>
+<p>If no collision happened, we’ll continue our loop through the enemy bullets. When we’ve checked all the bullets, we’ll end the function.</p>
+<pre><code class="language-rgbasm linenos start=33">CheckCurrentEnemyAgainstBullets_Loop:
+
+    ; increase our counter
+    ld a, [wEnemyBulletCollisionCounter]
+    inc a
+    ld [wEnemyBulletCollisionCounter], a
+
+    ; Stop if we've checked all bullets
+    cp a, MAX_BULLET_COUNT
+    ret nc
+
+    ; Increase the  data our address is pointing to
+    ld a, l
+    add a, PER_BULLET_BYTES_COUNT
+    ld  l, a
+    ld a, h
+    adc a, 0
+    ld  h, a
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part3/enemy-player-collision.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../part3/conclusion.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part3/enemy-player-collision.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../part3/conclusion.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../js/linenos.js"></script>
+
+
+    </body>
+</html>

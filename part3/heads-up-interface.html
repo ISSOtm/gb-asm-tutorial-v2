@@ -1,0 +1,417 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Heads-Up Interface - GB ASM Tutorial</title>
+
+        <!-- Custom HTML head -->
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:site:id" content="@gbdev0"/>
+        <meta property="og:title" content="Heads-Up Interface - GB ASM Tutorial" />
+        <meta property="og:image" content="https://gbdev.io/gb-asm-tutorial/assets/banner/1200x628.png" />
+        <meta property="og:site_name" content="GB ASM Tutorial"/>
+
+        <meta name="description" content="A complete guide to programming Game Boy games in assembly.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../css/custom.css">
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item affix "><a href="../index.html">Home</a></li><li class="chapter-item affix "><a href="../roadmap.html">Roadmap</a></li><li class="chapter-item affix "><a href="../help-feedback.html">Help</a></li><li class="chapter-item affix "><li class="part-title">Part Ⅰ — Hello World!</li><li class="chapter-item "><a href="../part1/setup.html"><strong aria-hidden="true">1.</strong> Setup</a></li><li class="chapter-item "><a href="../part1/hello_world.html"><strong aria-hidden="true">2.</strong> Hello World!</a></li><li class="chapter-item "><a href="../part1/toolchain.html"><strong aria-hidden="true">3.</strong> The toolchain</a></li><li class="chapter-item "><a href="../part1/bin_and_hex.html"><strong aria-hidden="true">4.</strong> Binary and hexadecimal</a></li><li class="chapter-item "><a href="../part1/registers.html"><strong aria-hidden="true">5.</strong> Registers</a></li><li class="chapter-item "><a href="../part1/assembly.html"><strong aria-hidden="true">6.</strong> Assembly basics</a></li><li class="chapter-item "><a href="../part1/memory.html"><strong aria-hidden="true">7.</strong> Memory</a></li><li class="chapter-item "><a href="../part1/header.html"><strong aria-hidden="true">8.</strong> The header</a></li><li class="chapter-item "><a href="../part1/operations.html"><strong aria-hidden="true">9.</strong> Operations & flags</a></li><li class="chapter-item "><a href="../part1/jumps.html"><strong aria-hidden="true">10.</strong> Jumps</a></li><li class="chapter-item "><a href="../part1/tracing.html"><strong aria-hidden="true">11.</strong> Tracing</a></li><li class="chapter-item "><div><strong aria-hidden="true">12.</strong> Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../part1/tiles.html"><strong aria-hidden="true">12.1.</strong> Tiles</a></li><li class="chapter-item "><a href="../part1/palettes.html"><strong aria-hidden="true">12.2.</strong> Palettes</a></li><li class="chapter-item "><a href="../part1/tilemap.html"><strong aria-hidden="true">12.3.</strong> Tilemap</a></li></ol></li><li class="chapter-item "><a href="../part1/wrapup.html"><strong aria-hidden="true">13.</strong> Wrapping up</a></li><li class="chapter-item affix "><li class="part-title">Part Ⅱ — Our first game</li><li class="chapter-item "><a href="../part2/getting-started.html"><strong aria-hidden="true">14.</strong> Getting started</a></li><li class="chapter-item "><a href="../part2/objects.html"><strong aria-hidden="true">15.</strong> Objects</a></li><li class="chapter-item "><a href="../part2/functions.html"><strong aria-hidden="true">16.</strong> Functions</a></li><li class="chapter-item "><a href="../part2/input.html"><strong aria-hidden="true">17.</strong> Input</a></li><li class="chapter-item "><a href="../part2/collision.html"><strong aria-hidden="true">18.</strong> Collision</a></li><li class="chapter-item "><a href="../part2/bricks.html"><strong aria-hidden="true">19.</strong> Bricks</a></li><li class="chapter-item "><a href="../part2/wip.html"><strong aria-hidden="true">20.</strong> Work in progress</a></li><li class="chapter-item affix "><li class="part-title">Part III — Our second game</li><li class="chapter-item "><a href="../part3/getting-started.html"><strong aria-hidden="true">21.</strong> Getting Started</a></li><li class="chapter-item "><a href="../part3/project-structure.html"><strong aria-hidden="true">22.</strong> Project Structure</a></li><li class="chapter-item "><a href="../part3/entry-point.html"><strong aria-hidden="true">23.</strong> Entry Point</a></li><li class="chapter-item "><a href="../part3/changing-game-states.html"><strong aria-hidden="true">24.</strong> Changing Game States</a></li><li class="chapter-item "><a href="../part3/title-screen.html"><strong aria-hidden="true">25.</strong> Title Screen</a></li><li class="chapter-item "><a href="../part3/story-screen.html"><strong aria-hidden="true">26.</strong> Story Screen</a></li><li class="chapter-item expanded "><a href="../part3/gameplay.html"><strong aria-hidden="true">27.</strong> Gameplay</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../part3/scrolling-background.html"><strong aria-hidden="true">27.1.</strong> Scrolling Background</a></li><li class="chapter-item expanded "><a href="../part3/heads-up-interface.html" class="active"><strong aria-hidden="true">27.2.</strong> Heads-Up Interface</a></li><li class="chapter-item "><a href="../part3/sprites-metasprites.html"><strong aria-hidden="true">27.3.</strong> Sprites & Metasprites</a></li><li class="chapter-item "><a href="../part3/object-pools.html"><strong aria-hidden="true">27.4.</strong> Object Pools</a></li><li class="chapter-item "><a href="../part3/the-player.html"><strong aria-hidden="true">27.5.</strong> The Player</a></li><li class="chapter-item "><a href="../part3/bullets.html"><strong aria-hidden="true">27.6.</strong> Bullets</a></li><li class="chapter-item "><a href="../part3/enemies.html"><strong aria-hidden="true">27.7.</strong> Enemies</a></li><li class="chapter-item "><a href="../part3/collision.html"><strong aria-hidden="true">27.8.</strong> Collision Detection</a></li><li class="chapter-item "><a href="../part3/enemy-player-collision.html"><strong aria-hidden="true">27.9.</strong> Enemy-Player Collision</a></li><li class="chapter-item "><a href="../part3/enemy-bullet-collision.html"><strong aria-hidden="true">27.10.</strong> Enemy-Bullet Collision</a></li></ol></li><li class="chapter-item "><a href="../part3/conclusion.html"><strong aria-hidden="true">28.</strong> Conclusion</a></li><li class="chapter-item affix "><a href="../next.html">Where to go next</a></li><li class="chapter-item affix "><a href="../resources.html">Resources</a></li><li class="chapter-item affix "><a href="../thanks.html">Thanks</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">GB ASM Tutorial</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        <button id="language-toggle" class="icon-button" type="button"
+                                title="Change language" aria-label="Change language"
+                                aria-haspopup="true" aria-expanded="false"
+                                aria-controls="language-list">
+                            <i class="fa fa-globe"></i>
+                        </button>
+                        <ul id="language-list" class="theme-popup" aria-label="Languages" role="menu">
+                          <li role="none"><button role="menuitem" class="theme">
+                              <a id="en">English</a>
+                          </button></li>
+                          <li role="none"><button role="menuitem" class="theme">
+                              <a id="it">Italian</a>
+                          </button></li>
+                        </ul>
+
+                        <script>
+                          let langToggle = document.getElementById("language-toggle");
+                          let langList = document.getElementById("language-list");
+                          langToggle.addEventListener("click", (event) => {
+                              langList.style.display = langList.style.display == "block" ? "none" : "block";
+                          });
+                          let selectedLang = document.getElementById("en");
+                          selectedLang.parentNode.classList.add("theme-selected");
+
+                          // The path to the root, taking the current
+                          // language into account.
+                          let full_path_to_root = "../";
+                          // The page path (mdbook only gives us
+                          // access to the path to the Markdown file).
+                          let path = "part3/heads-up-interface.md".replace(/\.md$/, ".html");
+                          for (let lang of langList.querySelectorAll("a")) {
+                              if (lang.id == "en") {
+                                  lang.href = `${full_path_to_root}${path}`;
+                              } else {
+                                  lang.href = `${full_path_to_root}${lang.id}/${path}`;
+                              }
+                          }
+                        </script>
+
+                        
+                        <a href="https://github.com/gbdev/gb-asm-tutorial" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/gbdev/gb-asm-tutorial/edit/master/src/part3/heads-up-interface.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="heads-up-interface"><a class="header" href="#heads-up-interface">Heads Up Interface</a></h1>
+<p>The gameboy normally draws sprites over both the window and background, and the window over the background. In Galactic Armada, The background is vertically scrolling. This means the HUD (the score text and number) needs to be draw on the window, which is separate from the background. </p>
+<p>On our HUD, we’ll draw both our score and our lives. We’ll also use STAT interrupts to make sure nothing covers the HUD.</p>
+<h2 id="stat-interrupts--the-window"><a class="header" href="#stat-interrupts--the-window">STAT Interrupts &amp; the window</a></h2>
+<p>The window is not enabled by default. We can enable the window using the <code>LCDC</code> register. RGBDS comes with constants that will help us. </p>
+<blockquote>
+<p>⚠️ NOTE: The window can essentially be a copy of the background. The <code>LCDCF_WIN9C00|LCDCF_BG9800</code> portion makes the background and window use different tilemaps when drawn.
+There’s only one problem. Since the window is drawn between sprites and the background. Without any extra effort, our scrolling background tilemap will be covered by our window. In addition, our sprites will be drawn over our hud. For this, we’ll need STAT interrupts. Fore more information on STAT interrupts, check out the pandocs: <a href="https://gbdev.io/pandocs/Interrupt_Sources.html">https://gbdev.io/pandocs/Interrupt_Sources.html</a></p>
+</blockquote>
+<p><img src="../assets/part3/img/StatInterruptsVisualized.png" alt="InterruptsDiagram.png" /></p>
+<blockquote>
+<h3 id="using-the-stat-interrupt"><a class="header" href="#using-the-stat-interrupt"><strong><a href="https://gbdev.io/pandocs/Interrupt_Sources.html#using-the-stat-interrupt">Using the STAT interrupt</a></strong></a></h3>
+<p>One very popular use is to indicate to the user when the video hardware is about to redraw a given LCD line. This can be useful for dynamically controlling the SCX/SCY registers ($FF43/$FF42) to <a href="https://github.com/gb-archive/DeadCScroll">perform special video effects</a>.</p>
+<p>Example application: set LYC to WY, enable LY=LYC interrupt, and have the handler disable sprites. This can be used if you use the window for a text box (at the bottom of the screen), and you want sprites to be hidden by the text box.</p>
+</blockquote>
+<p>With STAT interrupts, we can implement raster effects. in our case, we’ll enable the window and stop drawing sprites on the first 8 scanlines. Afterwards, we’ll show sprites and disable the window layer for the remaining scanlines. This makes sure nothing overlaps our HUD, and that our background is fully shown also.</p>
+<h3 id="initiating--disabling-stat-interrupts"><a class="header" href="#initiating--disabling-stat-interrupts">Initiating &amp; Disabling STAT interrupts</a></h3>
+<p>In our gameplay game state, at different points in time, we initialized and disabled interrupts. Here’s the logic for those functions in our “src/main/states/gameplay/hud.asm” file:</p>
+<pre><code class="language-rgbasm linenos start=2">INCLUDE &quot;src/main/utils/hardware.inc&quot;
+
+ SECTION &quot;Interrupts&quot;, ROM0
+
+ DisableInterrupts::
+	ld a, 0
+	ldh [rSTAT], a
+	di
+	ret
+
+InitStatInterrupts::
+
+    ld a, IEF_STAT
+	ldh [rIE], a
+	xor a, a ; This is equivalent to `ld a, 0`!
+	ldh [rIF], a
+	ei
+
+	; This makes our stat interrupts occur when the current scanline is equal to the rLYC register
+	ld a, STATF_LYC
+	ldh [rSTAT], a
+
+	; We'll start with the first scanline
+	; The first stat interrupt will call the next time rLY = 0
+	ld a, 0
+	ldh [rLYC], a
+
+    ret
+</code></pre>
+<h3 id="defining-stat-interrupts"><a class="header" href="#defining-stat-interrupts">Defining STAT interrupts</a></h3>
+<p>Our actual STAT interrupts must be located at $0048. We’ll define different paths depending on what our LYC variable’s value is when executed.</p>
+<pre><code class="language-rgbasm linenos start=31">; Define a new section and hard-code it to be at $0048.
+SECTION &quot;Stat Interrupt&quot;, ROM0[$0048]
+StatInterrupt:
+
+	push af
+
+	; Check if we are on the first scanline
+	ldh a, [rLYC]
+	cp 0
+	jp z, LYCEqualsZero
+
+LYCEquals8:
+
+	; Don't call the next stat interrupt until scanline 8
+	ld a, 0
+	ldh [rLYC], a
+
+	; Turn the LCD on including sprites. But no window
+	ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WINOFF | LCDCF_WIN9C00
+	ldh [rLCDC], a
+
+	jp EndStatInterrupts
+
+LYCEqualsZero:
+
+	; Don't call the next stat interrupt until scanline 8
+	ld a, 8
+	ldh [rLYC], a
+
+	; Turn the LCD on including the window. But no sprites
+	ld a, LCDCF_ON | LCDCF_BGON | LCDCF_OBJOFF | LCDCF_OBJ16| LCDCF_WINON | LCDCF_WIN9C00
+	ldh [rLCDC], a
+
+
+EndStatInterrupts:
+
+	pop af
+
+	reti;
+</code></pre>
+<p>That should be all it takes to get a properly drawn HUD. For more details, check out the code in the repo or <a href="https://gbdev.io/gb-asm-tutorial/help-feedback.html">ask questions</a> on the gbdev discord server.</p>
+<h2 id="keeping-score-and-drawing-score-on-the-hud"><a class="header" href="#keeping-score-and-drawing-score-on-the-hud">Keeping Score and Drawing Score on the HUD</a></h2>
+<p>To keep things simple, back in our gameplay game state, we used 6 different bytes to hold our score.Each byte will hold a value between 0 and 9, and represents a specific digit in the score. So it’s easy to loop through and edit the score number on the HUD: The First byte represents the left-most digit, and the last byte represents the right-most digit. </p>
+<p><img src="../assets/part3/img/DrawingScoreVisualized.png" alt="DrawingScoreVisualized.png" /></p>
+<p>When the score increases, we’ll increase digits on the right. As they go higher than 9, we’ll reset back to 0 and increase the previous byte .</p>
+<pre><code class="language-rgbasm linenos start=6">IncreaseScore::
+
+    ; We have 6 digits, start with the right-most digit (the last byte)
+    ld c, 0
+    ld hl, wScore+5
+
+IncreaseScore_Loop:
+
+    ; Increase the digit 
+    ld a, [hl]
+    inc a
+    ld [hl], a
+
+    ; Stop if it hasn't gone past 0
+    cp a, 9
+    ret c
+
+; If it HAS gone past 9
+IncreaseScore_Next:
+
+    ; Increase a counter so we can not go out of our scores bounds
+    ld a, c
+    inc a 
+    ld c, a
+
+    ; Check if we've gone our o our scores bounds
+    cp a, 6
+    ret z
+
+    ; Reset the current digit to zero
+    ; Then go to the previous byte (visually: to the left)
+    ld a, 0
+    ld [hl], a
+    ld [hld], a
+
+    jp IncreaseScore_Loop
+</code></pre>
+<p>We can call that score whenever a bullet hits an enemy. This function however does not draw our score on the background. We do that the same way we drew text previously:</p>
+<pre><code class="language-rgbasm linenos start=55">DrawScore::
+
+    ; Our score has max 6 digits
+    ; We'll start with the left-most digit (visually) which is also the first byte
+    ld c, 6
+    ld hl, wScore
+    ld de, $9C06 ; The window tilemap starts at $9C00
+
+DrawScore_Loop:
+
+    ld a, [hli]
+    add a, 10 ; our numeric tiles start at tile 10, so add to 10 to each bytes value
+    ld [de], a
+
+    ; Decrease how many numbers we have drawn
+    ld a, c
+    dec a
+    ld c, a
+		
+    ; Stop when we've drawn all the numbers
+    ret z
+
+    ; Increase which tile we are drawing to
+    inc de
+
+    jp DrawScore_Loop
+</code></pre>
+<p>Because we’ll only ever have 3 lives, drawing our lives is much easier. The numeric characters in our text font start at 10, so  we just need to put on the window, our lives plus 10.</p>
+<pre><code class="language-rgbasm linenos start=44">DrawLives::
+
+    ld hl, wLives
+    ld de, $9C13 ; The window tilemap starts at $9C00
+
+    ld a, [hl]
+    add a, 10 ; our numeric tiles start at tile 10, so add to 10 to each bytes value
+    ld [de], a
+
+    ret
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part3/scrolling-background.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="../part3/sprites-metasprites.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part3/scrolling-background.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../part3/sprites-metasprites.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../js/linenos.js"></script>
+
+
+    </body>
+</html>
