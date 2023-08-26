@@ -1254,7 +1254,7 @@ See, each row of 8 pixels is stored in 2 bytes, but neither of these bytes conta
 Since each byte is a collection of one of the bits for each pixel, it’s called a <strong>bitplane</strong>.</p>
 <p>The leftmost pixel is stored in the leftmost bit of both bytes, the pixel to its right in the second leftmost bit, and so on.
 The first pair of bytes stores the topmost row, the second byte the row below that, and so on.</p>
-<p>Here is a more visual demonstration; note that it’s for the SNES, but its 2BPP format is the same as the Game Boy’s.</p>
+<p>Here is a more visual demonstration:</p>
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/txkHN6izK2Y" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 <p>This encoding may seem a little weird at first, and it can be; it’s made to be more convenient for the hardware to decode, keeping the circuitry simple and low-power.
 It even makes a few cool tricks possible, as we will see (much) later!</p>
