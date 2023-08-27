@@ -55,3 +55,12 @@ pre > code.linenos > .line::before {
 .console-line::before {
 	content: "$ ";
 }
+
+
+.pixelated {
+	image-rendering: pixelated;
+}
+
+.sprites {
+	margin: 10px;
+}

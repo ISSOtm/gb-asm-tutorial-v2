@@ -195,13 +195,13 @@
                     <main>
                         <h1 id="story-screen"><a class="header" href="#story-screen">Story Screen</a></h1>
 <p>The story screen shows a basic story on 2 pages. Afterwards, it sends the player to the gameplay game state.</p>
-<p><img src="../assets/part3/img/GalacticArmada-1.png" alt="GalacticArmada-1.png" />
-<img src="../assets/part3/img/GalacticArmada-2.png" alt="GalacticArmada-2.png" /></p>
+<img src="../assets/part3/img/GalacticArmada-1.png" class="pixelated" height="288px">
+<img src="../assets/part3/img/GalacticArmada-2.png" class="pixelated" height="288px">
 <h2 id="initiating-up-the-story-screen"><a class="header" href="#initiating-up-the-story-screen">Initiating up the Story Screen</a></h2>
-<p>In the “InitStoryState” we’ll just going to turn on the LCD. Most of the game state’s logic will occur in its update function.</p>
-<blockquote>
-<p><strong>NOTE:</strong> The text macros file is included so our story text has the proper character maps.</p>
-</blockquote>
+<p>In the <code>InitStoryState</code> we’ll just going to turn on the LCD. Most of the game state’s logic will occur in its update function.</p>
+<div class="box tip">
+<p>The text macros file is included so our story text has the proper character maps.</p>
+</div>
 <pre><code class="language-rgbasm linenos start=1">INCLUDE &quot;src/main/utils/hardware.inc&quot;
 INCLUDE &quot;src/main/utils/macros/text-macros.inc&quot;
 
@@ -216,7 +216,7 @@ InitStoryState::
     ret;
 </code></pre>
 <h2 id="updating-the-story-screen"><a class="header" href="#updating-the-story-screen">Updating the Story Screen</a></h2>
-<p>Here’s the data for our story screen. We have this defined just above our “UpdateStoryState” function:</p>
+<p>Here’s the data for our story screen. We have this defined just above our <code>UpdateStoryState</code> function:</p>
 <pre><code class="language-rgbasm linenos start=14">Story: 
     .Line1 db &quot;the galatic empire&quot;, 255
     .Line2 db &quot;rules the galaxy&quot;, 255
@@ -261,7 +261,7 @@ InitStoryState::
 
     jp DrawText_WithTypewriterEffect
 </code></pre>
-<p>We’ll call the “DrawText_WithTypewriterEffect” function exactly how we called the “DrawTextTilesLoop” function. We’ll pass this function which tile to start on in de, and the address of our text in hl.</p>
+<p>We’ll call the <code>DrawText_WithTypewriterEffect</code> function exactly how we called the <code>DrawTextTilesLoop</code> function. We’ll pass this function which tile to start on in de, and the address of our text in hl.</p>
 <p>We’ll do that four times for the first page, and then wait for the A button to be pressed:</p>
 <pre><code class="language-rgbasm linenos start=23">UpdateStoryState::
 
@@ -369,7 +369,7 @@ ClearBackgroundLoop:
 
     
 </code></pre>
-<p>With our story full shown, we’re ready to move onto the next game state: Gameplay. We’ll end our “UpdateStoryState” function by updating our game state variable and jump back to the “NextGameState” label like previously discussed.</p>
+<p>With our story full shown, we’re ready to move onto the next game state: Gameplay. We’ll end our <code>UpdateStoryState</code> function by updating our game state variable and jump back to the <code>NextGameState</code> label like previously discussed.</p>
 <pre><code class="language-rgbasm linenos start=98">    ld a, 2
     ld [wGameState],a
     jp NextGameState

@@ -254,13 +254,15 @@
 </ul>
 </li>
 </ul>
-<p><img src="../assets/part3/img/star-field.png" alt="star-field.png" /></p>
-<p><img src="../assets/part3/img/text-font.png" alt="text-font.png" /></p>
-<p><img src="../assets/part3/img/title-screen.png" alt="title-screen.png" /></p>
-<p><img src="../assets/part3/img/player-ship.png" alt="player-ship.png" /></p>
-<p><img src="../assets/part3/img/enemy-ship.png" alt="enemy-ship.png" /></p>
-<p><img src="../assets/part3/img/bullet.png" alt="bullet.png" /></p>
-<p>These images were originally created in Aseprite. The original templates are also included in the repository. They were exported as a PNG <strong>with a specific color palette</strong>. Ater being exported as a PNG, when you run <code>make</code>, they are converted into .2bpp and .tilemap files via the RGBDS tool: RGBGFX.</p>
+<img class="pixelated" src="../assets/part3/img/star-field.png">
+<img class="pixelated" src="../assets/part3/img/title-screen.png">
+<br>
+<img class="pixelated" src="../assets/part3/img/text-font.png" height="48px">
+<br>
+<img class="pixelated sprites" src="../assets/part3/img/player-ship.png" height="48px">
+<img class="pixelated sprites" src="../assets/part3/img/enemy-ship.png" height="48px">
+<img class="pixelated sprites" src="../assets/part3/img/bullet.png" height="48x">
+<p>These images were originally created in Aseprite. The original templates are also included in the repository. They were exported as a PNG <strong>with a specific color palette</strong>. Ater being exported as a PNG, when you run <code>make</code>, they are converted into <code>.2bpp</code> and <code>.tilemap</code> files via the RGBDS tool: RGBGFX.</p>
 <blockquote>
 <p>The <strong><code>rgbgfx</code></strong> program converts PNG images into data suitable for display on the Game Boy and Game Boy Color, or vice-versa.</p>
 <p>The main function of <strong><code>rgbgfx</code></strong> is to divide the input PNG into 8×8 pixel <em><a href="https://rgbds.gbdev.io/docs/v0.6.1/rgbgfx.1#squares">squares</a></em>, convert each of those squares into 1bpp or 2bpp tile data, and save all of the tile data in a file. It also has options to generate a tile map, attribute map, and/or palette set as well; more on that and how the conversion process can be tweaked below.</p>

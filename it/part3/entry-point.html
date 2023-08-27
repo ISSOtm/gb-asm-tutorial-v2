@@ -196,8 +196,8 @@
                         <h2 id="entry-point"><a class="header" href="#entry-point">Entry Point</a></h2>
 <p>We’ll start this tutorial out like the previous, with our “header” section (at address: $100). We’re also going to declare some global variables that will be used throughout the game.</p>
 <ul>
-<li>wLastKeys and wCurKeys are used for joypad input</li>
-<li>wGameState will keep track what our current game state is</li>
+<li><code>wLastKeys</code> and <code>wCurKeys</code> are used for joypad input</li>
+<li><code>wGameState</code> will keep track what our current game state is</li>
 </ul>
 <pre><code class="language-rgbasm linenos start=1">INCLUDE &quot;src/main/utils/hardware.inc&quot;
 
@@ -216,16 +216,15 @@ SECTION &quot;Header&quot;, ROM0[$100]
 
 EntryPoint:
 </code></pre>
-<p>after our “EntryPoint” label, well do the following:</p>
+<p>after our <code>EntryPoint</code> label, well do the following:</p>
 <ul>
 <li>set our default game state</li>
-<li>initiate the sprite library were going to use</li>
+<li>initiate <a href="https://github.com/eievui5/gb-sprobj-lib">gb-sprobj-lib</a>, the sprite library we’re going to use</li>
 <li>setup our display registers</li>
-<li>load tile data for our font into VRAM. </li>
+<li>load tile data for our font into VRAM.</li>
 </ul>
-<p>You can find the sprite library, by eivu15, <a href="https://github.com/eievui5/gb-sprobj-lib">here</a> on github. </p>
 <p>The tile data we are going to load is used by all game states, which is why we’ll do it here &amp; now, for them all to use.</p>
-<p><img src="../assets/part3/img/text-font-large.png" alt="Untitled" /></p>
+<img class="pixelated" src="../assets/part3/img/text-font-large.png">
 <p>This character-set is called “Area51”. It, and more 8x8 pixel fonts can ne found here: <a href="https://damieng.com/typography/zx-origins/">https://damieng.com/typography/zx-origins/</a> . These 52 tiles will be placed at the beginning of our background/window VRAM region.</p>
 <p><img src="../assets/part3/img/TextFontDiagram.png" alt="TextFontDiagram.png" /></p>
 <p>One important thing to note. Character maps for each letter must be defined. This let’s RGBDS know what byte value to give a specific letter.</p>
@@ -295,10 +294,10 @@ CHARMAP &quot;z&quot;, 51
 	ld [rOBP0], a
 
 </code></pre>
-<blockquote>
-<p><em>NOTE</em>: Even though we haven’t specifically defined a color palette. The <a href="https://emulicious.net/">emulicious</a> emulator may automatically apply a cdefault color palette if in “Automatic” or “Gameboy Color” Mode</p>
-</blockquote>
-<p>In the above snippet you saw use of a function called “WaitFOrOneVBLank”. We’ve setup some vblank utility functions in the “src/main/utils/vblank-utils.asm” file:</p>
+<div class="box tip">
+<p>Even though we haven’t specifically defined a color palette. The <a href="https://emulicious.net/">emulicious</a> emulator may automatically apply a default color palette if in “Automatic” or “Gameboy Color” Mode</p>
+</div>
+<p>In the above snippet you saw use of a function called <code>WaitFOrOneVBLank</code>. We’ve setup some vblank utility functions in the “src/main/utils/vblank-utils.asm” file:</p>
 <pre><code class="language-rgbasm linenos start=1">INCLUDE &quot;src/main/utils/hardware.inc&quot;
 
 SECTION &quot;VBlankVariables&quot;, WRAM0
@@ -336,7 +335,7 @@ WaitForVBlankFunction_Loop2::
     jp WaitForVBlankFunction_Loop
 
 </code></pre>
-<p>In the next section, we’ll go on next to setup our “NextGameState” label. Which is used for changing game states.</p>
+<p>In the next section, we’ll go on next to setup our <code>NextGameState</code> label. Which is used for changing game states.</p>
 
                     </main>
 
