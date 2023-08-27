@@ -2461,46 +2461,46 @@ Sorry!</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="project-structure"><a class="header" href="#project-structure">Project Structure</a></h1>
 <p>This page is going to give you an idea of how the Galactic Armada project is structured. This includes the folders, resources, tools, entry point, and compilation process.</p>
 <h2 id="folder-layout"><a class="header" href="#folder-layout">Folder Layout</a></h2>
-<p>For organizational purposes, many parts of the logic are separated into reusable functions. This is to reduce file size, and make logic more clear.</p>
-<p>Here’s a basic look at how the project is structured</p>
-<blockquote>
-<p>NOTE: Generated files should never be included in VCS repositories. It unneccessarily bloats the repo. The folders below that are not included in the project contain assets generated from running the Makefile.</p>
-</blockquote>
+<p>For organizational purposes, many parts of the logic are separated into reusable functions. This is to reduce duplicate code, and make logic more clear.</p>
+<p>Here’s a basic look at how the project is structured:</p>
+<div class="box tip">
+<p>Generated files should never be included in VCS repositories. It unneccessarily bloats the repo. The folders below marked with * contains assets generated from running the Makefile and are not included in the repository.</p>
+</div>
 <ul>
-<li>libs - Two assembly files for input and sprites are located here.</li>
-<li>src
+<li><code>libs</code> - Two assembly files for input and sprites are located here.</li>
+<li><code>src</code>
 <ul>
-<li>generated - the results of RGBGFX are stored here. <strong>This is not included in the repo</strong></li>
-<li>resources - Here exist some PNGs and Aseprite files for usage with RGBGFX</li>
-<li>main - All assembly files are located here, or in subfolders
+<li><code>generated</code> - the results of RGBGFX are stored here. *</li>
+<li><code>resources</code> - Here exist some PNGs and Aseprite files for usage with RGBGFX</li>
+<li><code>main</code> - All assembly files are located here, or in subfolders
 <ul>
-<li>states
+<li><code>states</code>
 <ul>
-<li>gameplay - for gameplay related files
+<li><code>gameplay</code> - for gameplay related files
 <ul>
-<li>objects - for gameplay objects like the player, bullets, and enemies
+<li><code>objects</code> - for gameplay objects like the player, bullets, and enemies
 <ul>
-<li>collision  - for collision among objects</li>
+<li>collision - for collision among objects</li>
 </ul>
 </li>
 </ul>
 </li>
-<li>story - for our story state’s related files</li>
-<li>title-screen - for our title screen’s related files</li>
+<li><code>story</code> - for our story state’s related files</li>
+<li><code>title-screen</code> - for our title screen’s related files</li>
 </ul>
 </li>
-<li>utils - Extra functions includes to assist with development
+<li><code>utils</code> - Extra functions includes to assist with development
 <ul>
-<li>macros</li>
+<li><code>macros</code></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li>dist - The final ROM file will be created here. <strong>This is not included in the repo</strong></li>
-<li>obj - Intermediate files from the compile process. <strong>This is not included in the repo</strong></li>
-<li>Makefile - used to create the final ROM file and intermediate files</li>
+<li><code>dist</code> - The final ROM file will be created here. *</li>
+<li><code>obj</code> - Intermediate files from the compile process. *</li>
+<li><code>Makefile</code> - used to create the final ROM file and intermediate files</li>
 </ul>
 <h2 id="background--sprite-resources"><a class="header" href="#background--sprite-resources">Background &amp; Sprite Resources</a></h2>
 <p>The following backgrounds and sprites are used in Galactic Armada:</p>
@@ -2526,13 +2526,13 @@ Sorry!</p>
 <p><img src="part3/../assets/part3/img/player-ship.png" alt="player-ship.png" /></p>
 <p><img src="part3/../assets/part3/img/enemy-ship.png" alt="enemy-ship.png" /></p>
 <p><img src="part3/../assets/part3/img/bullet.png" alt="bullet.png" /></p>
-<p>These images were originally created in Aseprite. The original templates are also included in the repository.  They were exported as a PNG <strong>with a specific color palette</strong>. Ater being exported as a PNG, when you run <code>make</code>, they are converted into .2bpp and .tilemap files via the RGBDS tool: RGBGFX.</p>
+<p>These images were originally created in Aseprite. The original templates are also included in the repository. They were exported as a PNG <strong>with a specific color palette</strong>. Ater being exported as a PNG, when you run <code>make</code>, they are converted into .2bpp and .tilemap files via the RGBDS tool: RGBGFX.</p>
 <blockquote>
 <p>The <strong><code>rgbgfx</code></strong> program converts PNG images into data suitable for display on the Game Boy and Game Boy Color, or vice-versa.</p>
 <p>The main function of <strong><code>rgbgfx</code></strong> is to divide the input PNG into 8×8 pixel <em><a href="https://rgbds.gbdev.io/docs/v0.6.1/rgbgfx.1#squares">squares</a></em>, convert each of those squares into 1bpp or 2bpp tile data, and save all of the tile data in a file. It also has options to generate a tile map, attribute map, and/or palette set as well; more on that and how the conversion process can be tweaked below.</p>
 </blockquote>
 <p>RGBGFX can be found here: <a href="https://rgbds.gbdev.io/docs/v0.6.1/rgbgfx.1">https://rgbds.gbdev.io/docs/v0.6.1/rgbgfx.1</a></p>
-<p>We’ll use it to convert all of our graphics to .2bpp,  and .tilemap formats (binary files)</p>
+<p>We’ll use it to convert all of our graphics to .2bpp, and .tilemap formats (binary files)</p>
 <pre><code class="language-bash linenos start=48">NEEDED_GRAPHICS = \
 	$(GENSPRITES)/player-ship.2bpp \
 	$(GENSPRITES)/enemy-ship.2bpp \
@@ -2570,24 +2570,26 @@ bulletTileData:: INCBIN &quot;src/generated/sprites/bullet.2bpp&quot;
 bulletTileDataEnd::
 
 </code></pre>
-<p>You can find more about the INCBIN command here: <a href="https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.5#Including_binary_files">https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.5#Including_binary_files</a></p>
-<blockquote>
-<h3 id="including-binary-files"><a class="header" href="#including-binary-files"><a href="https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.5#Including_binary_files">Including binary files</a></a></h3>
-<p>You probably have some graphics, level data, etc. you’d like to include. Use <strong><code>INCBIN</code></strong> to include a raw binary file as it is. If the file isn’t found in the current directory, the include-path list passed to <a href="https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.1">rgbasm(1)</a> (see the <strong><code>-i</code></strong> option) on the command line will be searched.</p>
-<p><strong><code>INCBIN &quot;titlepic.bin&quot; INCBIN &quot;sprites/hero.bin&quot;</code></strong></p>
+<div class="box tip">
+<p class="box-title">Including binary files</p><p>You probably have some graphics, level data, etc. you’d like to include. Use <strong><code>INCBIN</code></strong> to include a raw binary file as it is. If the file isn’t found in the current directory, the include-path list passed to <a href="https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.1">rgbasm(1)</a> (see the <strong><code>-i</code></strong> option) on the command line will be searched.</p>
+<pre><code>INCBIN &quot;titlepic.bin&quot;
+INCBIN &quot;sprites/hero.bin&quot;
+</code></pre>
 <p>You can also include only part of a file with <strong><code>INCBIN</code></strong>. The example below includes 256 bytes from data.bin, starting from byte 78.</p>
-<p><strong><code>INCBIN &quot;data.bin&quot;,78,256</code></strong></p>
+<pre><code>INCBIN &quot;data.bin&quot;,78,256
+</code></pre>
 <p>The length argument is optional. If only the start position is specified, the bytes from the start position until the end of the file will be included.</p>
-</blockquote>
+<p>See also: <a href="https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.5#Including_binary_files">Including binary files - RGBASM documentation</a></p>
+</div>
 <h2 id="compilation"><a class="header" href="#compilation">Compilation</a></h2>
-<p>Compilation is done via a Makefile. This makefile can be run using the <code>make</code> command. Make should be preinstalled on Linux and Mac systems. For Windows users, check out <a href="https://www.cygwin.com/">cygwin</a>.</p>
-<p>Without going over everything in detail, here’s what the makefile does:</p>
+<p>Compilation is done via a Makefile. This Makefile can be run using the <code>make</code> command. Make should be preinstalled on Linux and Mac systems. For Windows users, check out <a href="https://www.cygwin.com/">cygwin</a>.</p>
+<p>Without going over everything in detail, here’s what the Makefile does:</p>
 <ul>
 <li>Clean generated folders</li>
 <li>Recreate generated folders</li>
-<li>Convert PNGs in src/resources to .2bpp, and .tilemap formats</li>
-<li>Convert .asm files to .o</li>
-<li>Use the .o files to build the ROM file</li>
+<li>Convert PNGs in src/resources to <code>.2bpp</code>, and <code>.tilemap</code> formats</li>
+<li>Convert <code>.asm</code> files to <code>.o</code></li>
+<li>Use the <code>.o</code> files to build the ROM file</li>
 <li>Apply the RGBDS “fix” utility.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h2 id="entry-point"><a class="header" href="#entry-point">Entry Point</a></h2>
