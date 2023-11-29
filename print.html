@@ -1714,7 +1714,7 @@ Unlike ROM (“Read-Only Memory”), RAM (“Random-Access Memory”) can be wri
 wFrameCounter: db
 </code></pre>
 <p>Now we’ll use the <code>wFrameCounter</code> variable to count how many frames have passed since we last moved the paddle.
-Every 10th frame, we’ll move the paddle by one pixel, slowing it down to 6 pixels per second.
+Every 15th frame, we’ll move the paddle by one pixel, slowing it down to 4 pixels per second.
 Don’t forget that RAM is filled with garbage values when the Game Boy starts, so we need to initialize our variables before first using them.</p>
 <pre><code class="language-rgbasm linenos start=86">	ld a, 0
 	ld [wFrameCounter], a

@@ -340,9 +340,9 @@ SECTION &quot;Counter&quot;, WRAM0
 wFrameCounter: db
 ```
 
-Ora useremo la variabile `wFrameCounter` per contare quanti fotogrammi sono passati dall'ultimo spostamento della paletta.
-Ogni 10° fotogramma, sposteremo la racchetta di un pixel, rallentandola a 6 pixel al secondo.
-Non dimenticate che all'avvio del Game Boy la RAM si riempie di valori spazzatura, quindi è necessario inizializzare le variabili prima di utilizzarle.
+Now we'll use the `wFrameCounter` variable to count how many frames have passed since we last moved the paddle.
+Every 15th frame, we'll move the paddle by one pixel, slowing it down to 4 pixels per second.
+Don't forget that RAM is filled with garbage values when the Game Boy starts, so we need to initialize our variables before first using them.
 
 ```rgbasm,linenos,start=86
 	ld a, 0
