@@ -199,10 +199,10 @@
 </code></pre>
 <p>Che cos’è questo misterioso header, detto anche intestazione? Perché dobbiamo allocargli uno spazio specifico? Queste e tante altre domande troveranno una risposta in questa lezione!</p>
 <h2 id="cosè-lheader"><a class="header" href="#cosè-lheader">Cos’è l’header?</a></h2>
-<p>La prima cosa da fare è spiegare <em>cosa è</em> l’header.
-È la regione di memoria da $0104 a $014F (inclusa).
-Contiene metadati sulla ROM, come il titolo, la compatibilità con il Game Boy Color, le dimensioni,
-due checksum e, cosa interessante, il logo Nintendo che viene visualizzato durante l’animazione di accensione.</p>
+<p>First order of business is explaining what the header <em>is</em>.
+It’s the region of memory from $0104 to $014F (inclusive).
+It contains metadata about the ROM, such as its title, Game Boy Color compatibility, size,
+two checksums, and interestingly, the Nintendo logo that is displayed during the power-on animation.</p>
 <div class="box tip">
 <p>Queste e altre informazioni sono disponibili <a href="https://gbdev.io/pandocs/The_Cartridge_Header">nei documenti Pan</a>.</p>
 </div>
@@ -216,9 +216,9 @@ Gli emulatori (compresi gli emulatori hardware, come le flashcard) devono emular
 <p>L’intestazione è profondamente collegata alla cosiddetta <strong>boot ROM</strong> (ROM di “avvio”).</p>
 <p>The most observant and/or nostalgic of you may have noticed the lack of the boot-up animation and the Game Boy’s signature “ba-ding!” in Emulicious.
 When the console powers up, the CPU does not begin executing instructions at address $0100 (where our ROM’s entry point is), but at $0000.</p>
-<p>Tuttavia, in quel momento, un piccolo programma chiamato <em>boot ROM</em>, masterizzato all’interno del silicio della CPU, viene “sovrapposto” alla nostra ROM!
-La ROM di avvio è responsabile dell’animazione di avvio, ma controlla anche l’intestazione della ROM!
-In particolare, verifica che i checksum del logo Nintendo e della intestazione siano corretti; se uno dei due controlli fallisce, la ROM di avvio si <em>blocca</em> intenzionalmente e il nostro gioco non verrà mai eseguito :(</p>
+<p>However, at that time, a small program called the <em>boot ROM</em>, burned within the CPU’s silicon, is “overlaid” on top of our ROM!
+The boot ROM is responsible for the startup animation, but it also checks the ROM’s header!
+Specifically, it verifies that the Nintendo logo and header checksums are correct; if either check fails, the boot ROM intentionally <em>locks up</em>, and our game never gets to run :(</p>
 <div class="box tip">
 <p class="box-title">Per i curiosi</p><p>È possibile trovare una descrizione più dettagliata di ciò che fa la ROM di avvio <a href="https://gbdev.io/pandocs/Power_Up_Sequence">nei Pan Docs</a>, nonché una spiegazione del controllo del logo.
 Attenzione, però, perché si tratta di un argomento piuttosto avanzato.</p>
@@ -252,8 +252,8 @@ warning: Overwrote a non-zero byte in the Nintendo logo
 warning: Overwrote a non-zero byte in the header checksum
 warning: Overwrote a non-zero byte in the global checksum
 </code></pre>
-<p><em>Sono sicuro che questi avvisi non sono nulla di cui preoccuparsi…</em>
-(A seconda della versione di RGBDS in uso, è possibile che siano stati visualizzati avvisi diversi, o addirittura nessuno).</p>
+<p><em>I’m sure these warnings are nothing to be worried about…</em>
+(Depending on your version of RGBDS, you may have gotten different warnings, or none at all.)</p>
 <p>Let’s run the ROM, click on Console on the debugger’s bottom window, press <kbd><kbd>F5</kbd></kbd> a few times, and…</p>
 <figure>
   <img src="../assets/img/invalid_opcode.png" alt="Screenshot of Emulicious' debugger, PC won't advance past $0105">
@@ -267,9 +267,9 @@ warning: Overwrote a non-zero byte in the global checksum
 Cosa sta facendo lì?</p>
 <p>…Oh, <code>EntryPoint</code> è a $0103.
 Quindi il <code>jp</code> a $0100 è andato lì e ha iniziato a eseguire le istruzioni (<code>3E CE</code> è la forma grezza di <code>ld a, $CE</code>), ma poi $ED non codifica alcuna istruzione valida, quindi la CPU si blocca.</p>
-<p>Ma perché <code>EntryPoint</code> è lì?
-Come avrete capito dagli avvisi stampati da RGBFIX, esso <em>sovrascrive</em> l’area dell’header nella ROM.
-Tuttavia, RGBLINK <strong>non</strong> è a conoscenza dell’header (perché RGBLINK non è usato solo per generare ROM!), quindi è necessario riservare esplicitamente spazio per l’area dell’header.</p>
+<p>But why is <code>EntryPoint</code> there?
+Well, as you may have figured out from the warnings RGBFIX printed, it <em>overwrites</em> the header area in the ROM.
+However, RGBLINK is <strong>not</strong> aware of the header (because RGBLINK is not only used to generate ROMs!), so you must explicitly reserve space for the header area.</p>
 <div class="box danger decorated">
 <div><p>🥴</p></div>
 <div>

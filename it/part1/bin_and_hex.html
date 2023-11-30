@@ -194,13 +194,13 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="binario-ed-esadecimale"><a class="header" href="#binario-ed-esadecimale">Binario ed esadecimale</a></h1>
-<p>Prima di passare al codice dobbiamo introdurre alcuni concetti.</p>
-<p>Quando si programma ad un basso livello è fondamentale capire bene i sistemi <em><a href="https://it.wikipedia.org/wiki/Sistema_numerico_binario">binario</a></em> ed <em><a href="https://it.wikipedia.org/wiki/esadecimale">esadecimale</a></em>.
-Se già conoscessi questi concetti, in fondo alla pagina ci sono delle informazioni specifiche all’uso di RGDBS.</p>
-<p>Cos’è il binario?
-È semplicemente un modo alternativo di rappresentare i numeri, in <em>base 2</em>.
-Noi contiamo in <a href="https://it.wikipedia.org/wiki/decimale">base 10</a>, ovvero con 10 cifre: 0, 1, 2, 3, 4, 5, 6, 7, 8, e 9.
-Le cifre hanno una funzione ben specifica:</p>
+<p>Before we talk about the code, a bit of background knowledge is in order.
+When programming at a low level, understanding of <em><a href="https://en.wikipedia.org/wiki/Binary_number">binary</a></em> and <em><a href="https://en.wikipedia.org/wiki/Hexadecimal">hexadecimal</a></em> is mandatory.
+Since you may already know about both of these, a summary of the RGBDS-specific information is available at the end of this lesson.</p>
+<p>So, what’s binary?
+It’s a different way to represent numbers, in what’s called <em>base 2</em>.
+We’re used to counting in <a href="https://en.wikipedia.org/wiki/Decimal">base 10</a>, so we have 10 digits: 0, 1, 2, 3, 4, 5, 6, 7, 8, and 9.
+Here’s how digits work:</p>
 <pre><code>  42 =                       4 × 10   + 2
      =                       4 × 10^1 + 2 × 10^0
                                   ↑          ↑
@@ -217,12 +217,12 @@ Le cifre hanno una funzione ben specifica:</p>
 <p><code>^</code> qui significa “alla potenza di”, dove <code>X^N</code> è uguale a moltiplicare <code>X</code> con se stesso <code>N</code> volte, e <code>X ^ 0 = 1</code>.</p>
 </div>
 </div>
-<p>Con le cifre decimali ogni numero viene <em>scomposto</em> in maniera univoca in potenze di 10 (il <em>deci</em>male è la base 10, ricordi?).
-Ma perché fermarsi alle potenze di 10?
-Potremmo invece usare altre basi, come la base 2
-(il perché della base 2 sarà spiegato più avanti).</p>
-<p>Il sistema binario è in base 2, quindi ha solo due cifre (chiamate <em>bit</em>): 0 e 1.
-Possiamo quindi generalizzare il principio descritto sopra e riscrivere i due numeri di prima in modo simile:</p>
+<p>Decimal digits form a unique <em>decomposition</em> of numbers in powers of 10 (<em>deci</em>mal is base 10, remember?).
+But why stop at powers of 10?
+We could use other bases instead, such as base 2.
+(Why base 2 specifically will be explained later.)</p>
+<p>Binary is base 2, so there are only two digits, called <em>bits</em>: 0 and 1.
+Thus, we can generalize the principle outlined above, and write these two numbers in a similar way:</p>
 <pre><code>  42 =                                                    1 × 32  + 0 × 16  + 1 × 8   + 0 × 4   + 1 × 2   + 0
      =                                                    1 × 2^5 + 0 × 2^4 + 1 × 2^3 + 0 × 2^2 + 1 × 2^1 + 0 × 2^0
                                                               ↑         ↑         ↑         ↑         ↑         ↑
@@ -232,30 +232,30 @@ Possiamo quindi generalizzare il principio descritto sopra e riscrivere i due nu
      = 1 × 2^10 + 0 × 2^9 + 0 × 2^8 + 0 × 2^7 + 0 × 2^6 + 0 × 2^5 + 0 × 2^4 + 0 × 2^3 + 0 × 2^2 + 0 × 2^1 + 0 × 2^0
        ↑          ↑         ↑         ↑         ↑         ↑         ↑         ↑         ↑         ↑         ↑
 </code></pre>
-<p>Quindi, applicando lo stesso principio, possiamo dire che in base 2, 42 si scrive come <code>101010</code> e 1024 come <code>10000000000</code>. 
-Poiché non è possibile distinguere tra dieci (10 decimale) e due (10 binario), l’assemblaggio RGBDS prevede numeri binari preceduti da un segno di percentuale: 10 è dieci e %10 è due.</p>
-<p>Ok, ma perché proprio la base 2?
-Visto che un bit può essere solo 0 o 1, è molto facile rappresentarlo: può essere “ON” o “OFF”, vuoto o pieno, ecc!
-Se ad esempio si vuole creare una memoria da un bit basta prendere una scatola:
-se è vuota allora simboleggia uno 0; se contiene <em>qualcosa</em>, allora è un 1.
-I computer manipolano quindi principalmente numeri binari e questo ha <em>molte</em> implicazioni, come vedremo nel corso di questo tutorial.</p>
+<p>So, by applying the same principle, we can say that in base 2, 42 is written as <code>101010</code>, and 1024 as <code>10000000000</code>.
+Since you can’t tell ten (decimal 10) and two (binary 10) apart, RGBDS assembly has binary numbers prefixed by a percent sign: 10 is ten, and %10 is two.</p>
+<p>Okay, but why base 2 specifically?
+Rather conveniently, a bit can only be 0 or 1, which are easy to represent as “ON” or “OFF”, empty or full, etc!
+If you want, at home, to create a one-bit memory, just take a box.
+If it’s empty, it stores a 0; if it contains <em>something</em>, it stores a 1.
+Computers thus primarily manipulate binary numbers, and this has a <em>slew</em> of implications, as we will see throughout this entire tutorial.</p>
 <h2 id="esadecimale"><a class="header" href="#esadecimale">Esadecimale</a></h2>
 <p>Ricapitolando: il decimale non è pratico per i computer, che si affidano invece ai numeri binari (base 2).
 Ok, ma il binario è davvero difficile da usare per noi programmatori.
 Prendiamo %10000000000, ovvero 2048; mentre per scriverlo in decimale bastano solo 4 cifre, in binario ne servono 12!
 E probabilmente non avete neanche notato che ho scritto uno zero di troppo!
 Per fortuna arriva l’esadecimale a salvare la situazione! 🦸</p>
-<p>La base 16 funziona esattamente come tutte le altre basi, ma con 16 cifre (chiamate “<em>nibbles</em>” in inglese): 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, ed F.</p>
+<p>Base 16 works just the same as every other base, but with 16 digits, called <em>nibbles</em>: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, and F.</p>
 <pre><code>  42 =            2 × 16   + 10
      =            2 × 16^1 + A × 16^0
 
 1024 = 4 × 256  + 0 × 16   + 0
      = 4 × 16^2 + 0 × 16^1 + 0 × 16^0
 </code></pre>
-<p>Come per il binario useremo un prefisso per indicare l’esadecimale, cioè <code>$</code>.
-Quindi, 42 = $2A e 1024 = $400.
-Questo è <em>molto</em> più compatto del binario, e anche un po’ più del decimale; ma ciò che rende l’esadecimale molto interessante è che una sua cifra corrisponde <em>esattamente</em> a 4 bit!</p>
-<div class="table-wrapper"><table><thead><tr><th style="text-align: center">Nibble</th><th style="text-align: center">Bit</th></tr></thead><tbody>
+<p>Like binary, we will use a prefix to denote hexadecimal, namely <code>$</code>.
+So, 42 = $2A, and 1024 = $400.
+This is <em>much</em> more compact than binary, and slightly more than decimal, too; but what makes hexadecimal very interesting is that one nibble corresponds <em>exactly</em> to 4 bits!</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: center">Nibble</th><th style="text-align: center">Bits</th></tr></thead><tbody>
 <tr><td style="text-align: center">$0</td><td style="text-align: center">%0000</td></tr>
 <tr><td style="text-align: center">$1</td><td style="text-align: center">%0001</td></tr>
 <tr><td style="text-align: center">$2</td><td style="text-align: center">%0010</td></tr>

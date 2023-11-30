@@ -355,11 +355,11 @@ IsWallTile:
 	cp a, $07
 	ret
 </code></pre>
-<p>Questa funzione può sembrare un po’ strana all’inizio.
-Invece di restituire il risultato in un <em>registro</em>, come <code>a</code>, lo restituisce in <a href="../part1/operations.html#flags">un <em>flag</em></a>: <code>Z</code>!
-Se in qualsiasi punto una piastrella corrisponde, la funzione ha trovato un muro ed esce con <code>Z</code> impostato.
-Se l’ID della piastrella di destinazione (in <code>a</code>) corrisponde a uno degli ID delle piastrelle del muro, il corrispondente <code>cp</code> lascerà <code>Z</code> impostato; in tal caso, si ritorna immediatamente (tramite <code>ret z</code>), con <code>Z</code> impostato.
-Ma se, dopo aver effettuato l’ultimo confronto, <code>Z</code> non viene ancora impostato, sapremo che non abbiamo colpito un muro e non abbiamo bisogno di rimbalzare.</p>
+<p>This function might look a bit strange at first.
+Instead of returning its result in a <em>register</em>, like <code>a</code>, it returns it in <a href="../part1/operations.html#flags">a <em>flag</em></a>: <code>Z</code>!
+If at any point a tile matches, the function has found a wall and exits with <code>Z</code> set.
+If the target tile ID (in <code>a</code>) matches one of the wall tile IDs, the corresponding <code>cp</code> will leave <code>Z</code> set; if so, we return immediately (via <code>ret z</code>), with <code>Z</code> set.
+But if we reach the last comparison and it still doesn’t set <code>Z</code>, then we will know that we haven’t hit a wall and don’t need to bounce.</p>
 <h2 id="unificare-il-tutto"><a class="header" href="#unificare-il-tutto">Unificare il tutto</a></h2>
 <p>Time to use these new functions to add collision detection!
 Add the following after the code that updates the ball’s position:</p>
@@ -382,9 +382,9 @@ Add the following after the code that updates the ball’s position:</p>
 <p>Vedrete che quando carichiamo le posizioni dello sprite, le sottraiamo prima di chiamare <code>GetTileByPixel</code>.
 Forse ricorderete dall’ultimo capitolo che le posizioni OAM sono leggermente sfalsate; cioè, (0, 0) in OAM è in realtà completamente fuori dallo schermo.
 Queste istruzioni <code>sub</code> annullano questo offset.</p>
-<p>Tuttavia, c’è dell’altro: avrete notato che abbiamo sottratto un pixel in più dalla posizione Y. Questo perché (come suggerisce l’etichetta) questo codice controlla la presenza di una piastrella sopra la palla.
-Questo perché (come suggerisce l’etichetta), il codice controlla la presenza di una piastrella sopra la palla.
-In realtà abbiamo bisogno di controllare <em>tutti e quattro</em> i lati della palla, in modo da sapere come cambiare la quantità di moto a seconda del lato che si è scontrato, quindi… aggiungiamo il resto!</p>
+<p>However, there’s a bit more to this: you might have noticed that we subtracted an extra pixel from the Y position.
+That’s because (as the label suggests), this code is checking for a tile above the ball.
+We actually need to check <em>all four</em> sides of the ball so we know how to change the momentum according to which side collided, so… let’s add the rest!</p>
 <pre><code class="language-rgbasm linenos start=128">BounceOnRight:
 	ld a, [_OAMRAM + 4]
 	sub a, 16
@@ -431,9 +431,9 @@ BounceDone:
 <p>Era molto, ma ora la palla rimbalza sullo schermo!
 C’è solo un’ultima cosa da fare prima della fine di questo capitolo: la collisione tra palla e paddle.</p>
 <h2 id="rimbalzo-della-pagaia"><a class="header" href="#rimbalzo-della-pagaia">Rimbalzo della pagaia</a></h2>
-<p>A differenza di quanto accade con la tilemap, qui non è necessario effettuare conversioni di posizione, ma solo confronti diretti.
-Tuttavia, per questi ultimi, avremo bisogno <a href="../part1/operations.html#flags">del flag <em>carry</em></a>.
-Il flag di riporto è indicato con <code>C</code>, come il flag zero è indicato con <code>Z</code>, ma non bisogna confonderlo con il registro <code>c</code>!</p>
+<p>Unlike with the tilemap, there’s no position conversions to do here, just straight comparisons.
+However, for these, we will need <a href="../part1/operations.html#flags">the <em>carry</em> flag</a>.
+The carry flag is notated as <code>C</code>, like how the zero flag is notated as <code>Z</code>, but don’t confuse it with the <code>c</code> register!</p>
 <div class="box tip">
 <p class="box-title">Un ripasso sui confronti</p><p>Proprio come <code>Z</code>, è possibile utilizzare il flag di riporto per fare salti condizionati.
 Tuttavia, mentre <code>Z</code> viene utilizzato per verificare se due numeri sono uguali, <code>C</code> può essere utilizzato per verificare se un numero è maggiore o minore di un altro.
@@ -556,9 +556,9 @@ Poi annulliamo questa operazione sottraendo 16 e, già che ci siamo, sottraiamo 
 	<text x="432" y="470">+ 8 + 16</text>
 </svg>
 <div class="box tip">
-<p class="box-title">Larghezza della paletta</p><p>Ci si potrebbe chiedere perché abbiamo controllato 16 pixel a destra ma solo 8 pixel a sinistra.
-Ricordate che le posizioni OAM rappresentano l’angolo superiore <em>sinistro</em> di uno sprite, quindi il centro della nostra paletta è in realtà 4 pixel a destra della posizione in OAM.
-Se si considera questo, in realtà stiamo controllando 12 pixel su entrambi i lati dal centro della paletta.</p>
+<p class="box-title">Larghezza della paletta</p><p>You might be wondering why we checked 16 pixels to the right but only 8 pixels to the left.
+Remember that OAM positions represent the upper-<em>left</em> corner of a sprite, so the center of our paddle is actually 4 pixels to the right of the position in OAM.
+When you consider this, we’re actually checking 12 pixels out on either side from the center of the paddle.</p>
 <p>12 pixel possono sembrare molti, ma danno un po’ di tolleranza al giocatore nel caso in cui il suo posizionamento sia sbagliato.
 Se si preferisce rendere il tutto più facile o più difficile, è possibile regolare i valori!</p>
 </div>

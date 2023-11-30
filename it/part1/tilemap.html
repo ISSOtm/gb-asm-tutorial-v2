@@ -201,8 +201,8 @@
 Io userò quest’ultimo di preferenza, ma lo userò anche nel codice (<code>Tilemap</code> e non <code>TileMap</code>), così come più avanti quando parleremo di mappe di attributi (“attrmap” e <code>Attrmap</code> invece di <code>AttrMap</code>).</p>
 </div>
 </div>
-<p>Ci siamo quasi.
-Abbiamo visto come la grafica del Game Boy sia composta da “tessere” 8×8 e come il colore venga aggiunto al mix.</p>
+<p>We are <em>almost</em> there.
+We have seen how graphics on the Game Boy are composed of 8×8 “tiles”, and we have seen how color is added into the mix.</p>
 <p>Ma non abbiamo ancora visto come queste tessere vengono disposte in un’immagine finale!</p>
 <p>Tiles are basically a grid of pixels; well, the tilemaps are basically a grid of tiles!
 To allow for cheap reuse, tiles aren’t stored in the tilemap directly; instead, tiles are referred to by an <em>ID</em>, which you can see in Emulicious’ Tile Viewer.</p>
@@ -242,10 +242,9 @@ Anche la R, la L e la D condividono la loro tessera in alto a sinistra ($2D, lin
 </figure>
 <p>Tutto sommato, possiamo dedurre che la visualizzazione della grafica sul Game Boy consiste nel caricare i “modelli” (le tessere) e nel dire alla console quale tessera visualizzare per ciascuna posizione.</p>
 <hr />
-<div class="footnote-definition" id="tile_blocks"><sup class="footnote-definition-label">2</sup>
+<div class="footnote-definition" id="tile_blocks"><sup class="footnote-definition-label">2</sup></div>
 <p>The even more astute (astuter?) reader will have noticed that 384 = 3 × 128.
 Thus, tiles are often conceptually grouped into three “blocks” of 128 tiles each, which Emulicious shows as separated by thicker horizontal lines.</p>
-</div>
 
                     </main>
 

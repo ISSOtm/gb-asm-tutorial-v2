@@ -236,19 +236,19 @@ Questo perché devkitPro, un popolare pacchetto di sviluppo homebrew, include MS
 <p>Qualsiasi editor di codice va bene; personalmente uso <a href="https://www.sublimetext.com">Sublime Text</a> con il suo <a href="https://packagecontrol.io/packages/RGBDS">pacchetto sintassi RGBDS</a>; tuttavia è possibile usare qualsiasi editor di testo, compreso il Blocco Note se si è abbastanza pazzi.
 Awesome GBDev ha <a href="https://gbdev.io/resources#syntax-highlighting-packages">una sezione sui pacchetti per l’evidenziazione della sintassi</a> dove potete controllare se il vostro editor preferito supporta RGBDS.</p>
 <h2 id="emulatore"><a class="header" href="#emulatore">Emulatore</a></h2>
-<p>Usare un emulatore per giocare è una cosa; usarlo per programmare giochi è un’altra.
-I due aspetti che un emulatore deve soddisfare per consentire una piacevole esperienza di programmazione sono:</p>
+<p>Using an emulator to play games is one thing; using it to program games is another.
+The two aspects an emulator must fulfill to allow an enjoyable programming experience are:</p>
 <ul>
-<li><strong>Un supporto al debug</strong>:
-Se il tuo programma va in palla sulla console è pressoché impossibile capire cosa sia andato storto:
-non puoi controllare gli errori dal terminale, non puoi usare <code>gdb</code>, niente.
-Un emulatore, al contrario, può avere strumenti per aiutare il debug, ad esempio dandoti controllo sull’esecuzione leggere e mdoificare la memoria, e molto altro.
-Senza di questi strumenti lo sviluppo sarà tutto meno che <em>divertente</em>, fidati!</li>
-<li><strong>Emulazione Precisa</strong>:
-La precisione di un emulatore è quanto questo riproduca bene il comportamento del sistema reale.
-Un emulatore poco accurato andrà anche bene per giocare (seppur spesso con un esperienza poco fluida…), ma se vuoi <em>programmare</em>, hai bisogno di sapere se il tuo gioco sia effettivamente compatibile con il tuo sistema.
-Se sei interessato puoi leggere di più a riguardo su <a href="https://arstechnica.com/?post_type=post&amp;p=44524">questo articolo di Ars Technica</a> (in particolare la sezione <q>An emulator for every game</q> in cima alla seconda pagina).
-Puoi vedere e confrontare la precisione di alcuni degli emulatori GameBoy più popolari sul <a href="https://daid.github.io/GBEmulatorShootout/">GB-emulator-shootout</a> di Daid. Trovi una tabella con diversi test ed i risultati per emulatore.</li>
+<li><strong>Debugging tools</strong>:
+When your code goes haywire on an actual console, it’s very difficult to figure out why or how.
+There is no console output, no way to <code>gdb</code> the program, nothing.
+However, an emulator can provide debugging tools, allowing you to control execution, inspect memory, etc.
+These are vital if you want GB dev to be <em>fun</em>, trust me!</li>
+<li><strong>Good accuracy</strong>:
+Accuracy means “how faithful to the original console something is”.
+Using a bad emulator for playing games can work (to some extent, and even then…), but using it for <em>developing</em> a game makes it likely to accidentally render your game incompatible with the actual console.
+For more info, read <a href="https://arstechnica.com/?post_type=post&amp;p=44524">this article on Ars Technica</a> (especially the <q>An emulator for every game</q> section at the top of page 2).
+You can compare GB emulator accuracy on <a href="https://daid.github.io/GBEmulatorShootout/">Daid’s GB-emulator-shootout</a>.</li>
 </ul>
 <p>The emulator I will be using for this tutorial is <a href="https://emulicious.net/">Emulicious</a>.
 Users on all OSes can install the Java runtime to be able to run it.

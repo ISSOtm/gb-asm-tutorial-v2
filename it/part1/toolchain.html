@@ -198,31 +198,31 @@
 Ora è il momento di capire meglio cosa abbiamo fatto.</p>
 <h2 id="rgbasm-e-rgblink"><a class="header" href="#rgbasm-e-rgblink">RGBASM e RGBLINK</a></h2>
 <p>Iniziamo spiegando cosa fanno <code>rgbasm</code> e <code>rgblink</code>.</p>
-<p>RGBASM è un <em>assembler</em> (compilatore).
-Il suo compito è leggere il codice sorgente (nel nostro caso <code>hello-world.asm</code> e <code>hardware.inc</code>) e generare un file di codice che però è incompleto:
-RGBASM non sempre ha tutte le informazioni che gli servono a generare una ROM, quindi produce dei <em>file oggetto</em> che fanno da intermediari (con estensione <code>.o</code>).</p>
-<p>RGBLINK è un <em>linker</em>.
-Il suo compito è usare le informazioni dei file oggetto (che nel nostro caso è solo uno) ed unirli (in inglese “link”) in una ROM.
-RGBLINK potrebbe sembrare superfluo, ma è solo perché la ROM che abbiamo guardato è davvero piccola: quando nella seconda parte il nostro progetto crescerà, la sua utilità sarà più apparente.</p>
+<p>RGBASM is an <em>assembler</em>.
+It is responsible for reading the source code (in our case, <code>hello-world.asm</code> and <code>hardware.inc</code>), and generating blocks of code with some “holes”.
+RGBASM does not always have enough information to produce a full ROM, so it does most of the work, and stores its intermediary results in what’s known as <em>object files</em> (hence the <code>.o</code> extension).</p>
+<p>RGBLINK is a <em>linker</em>.
+Its job is taking object files (or, like in our case, just one), and “linking” them into a ROM, which is to say: filling the aforementioned “holes”.
+RGBLINK’s purpose may not be obvious with programs as simple as this Hello World, but it will become much clearer in Part Ⅱ.</p>
 <p>Quindi: Codice sorgente → <code>rgbasm</code> → File oggetto → <code>rgblink</code> → ROM, giusto?
 Beh, non esattamente.</p>
 <h2 id="rgbfix"><a class="header" href="#rgbfix">RGBFIX</a></h2>
-<p>RGBLINK produce sì una ROM, ma se la provassimo su un GameBoy non funzionerebbe.
-Nelle ROM deve sempre essere presente qualcosa chiamato <em>header</em>:
-questa sezione contiene <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html">informazioni sulla ROM</a>, come il nome del gioco, il nome dell’autore, se sia compatibile con il GameBoy Color ed altro.
-Per il momento abbiamo impostato tutti i valori a zero nel programma per semplicità, ma ne riparleremo nella seconda parte del tutorial.</p>
-<p>Ma nell’header ci sono anche delle componenti importantissime:</p>
+<p>RGBLINK does produces a ROM, but it’s not quite usable yet.
+See, actual ROMs have what’s called a <em>header</em>.
+It’s a special area of the ROM that contains <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html">metadata about the ROM</a>; for example, the game’s name, Game Boy Color compatibility, and more.
+For simplicity, we defaulted a lot of these values to 0 for the time being; we’ll come back to them in Part Ⅱ.</p>
+<p>However, the header contains three crucial fields:</p>
 <ul>
-<li>il <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0104-0133--nintendo-logo">logo Nintendo</a>,</li>
-<li>la <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0148--rom-size">dimensione della ROM</a>,</li>
-<li>e <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#014d--header-checksum">due valori di controllo</a> (<a href="https://it.wikipedia.org/wiki/Checksum">checksum</a>).</li>
+<li>The <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0104-0133--nintendo-logo">Nintendo logo</a>,</li>
+<li>the <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0148--rom-size">ROM’s size</a>,</li>
+<li>and <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#014d--header-checksum">two checksums</a>.</li>
 </ul>
-<p>Quando la console viene accesa viene eseguito <a href="https://github.com/ISSOtm/gb-bootroms">un programma</a> chiamato <em>ROM di avvio</em> (boot ROM) responsabile, tra l’altro, dell’animazione di avvio leggendo il logo di Nintendo dalla ROM.
-Alla fine dell’animazione, però, la ROM di avvio controlla che il logo di Nintendo sia corretto, e interrompe l’esecuzione se non lo è:
-in pratica, se non azzecchiamo il logo il nostro gioco non partirà mai… 😦
-Questo meccanismo era per evitare la pirateria; per nostra fortuna, però, <a href="https://en.wikipedia.org/wiki/Sega_v._Accolade">non è più valida</a> perciò non dobbiamo preoccuparci! 😄</p>
-<p>Allo stesso modo, la ROM di avvio calcola anche un <em><a href="https://en.wikipedia.org/wiki/Checksum">checksum</a></em> dell’header, presumibilmente per garantire che non sia corrotto.
-L’header contiene anche una copia di questo checksum; se non corrisponde a quello calcolato dalla ROM di avvio, la ROM di avvio <strong>si blocca!</strong></p>
+<p>When the console first starts up, it runs <a href="https://github.com/ISSOtm/gb-bootroms">a little program</a> known as the <em>boot ROM</em>, which reads and draws the logo from the cartridge, and displays the little boot animation.
+When the animation is finished, the console checks if the logo matches a copy that it stores internally; if there is a mismatch, <strong>it locks up!</strong>
+And, since it locks up, our game never gets to run… 😦
+This was meant as an anti-piracy measure; however, that measure <a href="https://en.wikipedia.org/wiki/Sega_v._Accolade">has since then been ruled as invalid</a>, so don’t worry, we are clear! 😄</p>
+<p>Similarly, the boot ROM also computes a <em><a href="https://en.wikipedia.org/wiki/Checksum">checksum</a></em> of the header, supposedly to ensure that it isn’t corrupted.
+The header also contains a copy of this checksum; if it doesn’t match what the boot ROM computed, then the boot ROM <strong>also locks up!</strong></p>
 <p>L’header contiene anche un checksum dell’intera ROM, ma non viene mai utilizzato.
 Non costa niente ed è una buona idea, comunque, farlo bene.</p>
 <p>Infine, l’header contiene anche la dimensione della ROM, necessaria per emulatori e dalle flash cart.</p>

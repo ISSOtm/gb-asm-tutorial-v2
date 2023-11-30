@@ -194,30 +194,30 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="oggetti"><a class="header" href="#oggetti">Oggetti</a></h1>
-<p>Lo sfondo è molto utile quando l’intero schermo deve muoversi contemporaneamente, ma non è l’ideale per tutto.
-Ad esempio, il cursore in un menu, i PNG e il giocatore in un RPG, i proiettili in uno shmup o le palline in un clone di <em>Arkanoid</em>… devono tutti muoversi indipendentemente dallo sfondo.
-Fortunatamente, il Game Boy ha una funzione perfetta per queste situazioni!
-In questa lezione parleremo di <em>oggetti</em> (talvolta chiamati “OBJ”).</p>
+<p>The background is very useful when the whole screen should move at once, but this is not ideal for everything.
+For example, a cursor in a menu, NPCs and the player in a RPG, bullets in a shmup, or balls in an <em>Arkanoid</em> clone… all need to move independently of the background.
+Thankfully, the Game Boy has a feature that’s perfect for these!
+In this lesson, we will talk about <em>objects</em> (sometimes called “OBJ”).</p>
 <div class="box tip">
-<p>La descrizione precedente potrebbe avervi fatto pensare al termine “sprite” invece che a “oggetto”.
-Il termine “sprite” ha <em>molti</em> significati a seconda del contesto, quindi, per evitare confusione, questo tutorial cerca di usare alternative specifiche, come <em>oggetto</em>, <em>metasprite</em>, <em>attore</em>, ecc.</p>
+<p>The above description may have made you think of the term “sprite” instead of “object”.
+The term “sprite” has a <em>lot</em> of meanings depending on context, so, to avoid confusion, this tutorial tries to use specific alternatives instead, such as <em>object</em>, <em>metasprite</em>, <em>actor</em>, etc.</p>
 </div>
 <p>Ogni oggetto permette di disegnare una o due piastrelle (rispettivamente 8×8 o 8×16 pixel) in qualsiasi posizione sullo schermo, a differenza dello sfondo, dove tutte le piastrelle sono disegnate in una griglia.
 Pertanto, un oggetto è composto dalla sua posizione sullo schermo, da un ID tile (come <a href="../part1/tilemap.html">con la tilemap</a>) e da alcune proprietà extra chiamate “attributi”.
 Queste proprietà extra consentono, ad esempio, di visualizzare la piastrella capovolta.
 Ne parleremo più avanti.</p>
-<p>Proprio come la tilemap è memorizzata nella VRAM, gli oggetti vivono in una regione di memoria chiamata OAM, ovvero <strong>Object Attribute Memory</strong>.
-Ricordiamo che un oggetto è composto da:</p>
+<p>Just like how the tilemap is stored in VRAM, objects live in a region of memory called OAM, meaning <strong>Object Attribute Memory</strong>.
+Recall from above that an object consists of:</p>
 <ul>
-<li>La sua posizione sullo schermo</li>
-<li>Un ID tile</li>
-<li>Gli “attributi”</li>
+<li>Its on-screen position</li>
+<li>A tile ID</li>
+<li>The “attributes”</li>
 </ul>
 <p>Questi sono memorizzati in 4 byte: uno per la coordinata Y, uno per la coordinata X, uno per l’ID della piastrella e uno per gli attributi.
 L’OAM è lungo 160 byte e poiché 160 ∕ 4 = 40, il Game Boy memorizza un totale di <strong>40</strong> oggetti in qualsiasi momento.</p>
-<p>C’è però un problema: i byte delle coordinate Y e X di un oggetto in OAM non memorizzano la sua posizione sullo schermo!
-Invece, la posizione X <em>sullo schermo</em> è la posizione X <em>memorizzata</em> <strong>meno 8</strong>, e la posizione Y <em>sullo schermo</em> è la posizione Y <em>memorizzata</em> <strong>meno 16</strong>.
-Per interrompere la visualizzazione di un oggetto, è sufficiente metterlo fuori dallo schermo, ad esempio impostando la sua posizione Y a 0.</p>
+<p>There is a catch, though: an object’s Y and X coordinate bytes in OAM do <em>not</em> store its on-screen position!
+Instead, the <em>on-screen</em> X position is the <em>stored</em> X position <strong>minus 8</strong>, and the <em>on-screen</em> Y position is the <em>stored</em> Y position <strong>minus 16</strong>.
+To stop displaying an object, we can simply put it off-screen, e.g. by setting its Y position to 0.</p>
 <div class="box tip">
 <p>Questi offset non sono arbitrari!
 Si consideri la dimensione massima di un oggetto: 8 x 16 pixel.
@@ -327,7 +327,7 @@ Per spiegarne il motivo è necessaria una spiegazione più approfondita del rend
 
 Now you should see the paddle moving... very quickly.
 Because it moves by a pixel every frame, it's going at a speed of 60 pixels per second!
-To slow this down, we'll use a *variable*.
+To slow this down, we'll use a _variable_.
 
 Finora abbiamo lavorato solo con i registri della CPU, ma è possibile creare anche variabili globali!
 Per farlo, creiamo un'altra sezione, ma mettiamola in `WRAM0` invece che in `ROM0`.

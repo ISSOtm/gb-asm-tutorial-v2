@@ -230,17 +230,17 @@ Non è una coincidenza: le tile sono molto utili.
 Invece di memorizzare ogni pixel sullo schermo (144 × 160 pixel × 2 bit/pixel = 46080 bit = 5760 byte, rispetto agli 8192 byte di VRAM della console), i pixel vengono raggruppati in tile, che vengono poi assemblate in vari modi per produrre l’immagine finale.</p>
 <p>In particolare, le tile possono essere riutilizzate molto facilmente e praticamente a costo zero, risparmiando molta memoria!
 Inoltre, la manipolazione di intere tile in una sola volta è molto più economica rispetto alla manipolazione dei singoli pixel e questo fa risparmiare tempo di elaborazione.</p>
-<p>Il concetto di “tile” è molto generico, ma sul Game Boy le tile sono <em>sempre</em> di 8 per 8 pixel.
-Spesso le tile hardware vengono raggruppate per essere manipolate come tile più grandi (spesso 16×16); per evitare la confusione, queste vengono chiamate <strong>meta-tile</strong>.</p>
+<p>The concept of a “tile” is very general, but on the Game Boy, tiles are <em>always</em> 8 by 8 pixels.
+Often, hardware tiles are grouped to manipulate them as larger tiles (often 16×16); to avoid the confusion, those are referred to as <strong>meta-tiles</strong>.</p>
 <h3 id="bpp"><a class="header" href="#bpp">“bpp”?</a></h3>
 <p>Vi starete chiedendo da dove provenga la cifra di “2 bit/pixel” di cui sopra…
 Si tratta della cosiddetta “profondità di bit”.</p>
-<p>I colori non sono memorizzati nelle tile stesse!
-Invece, funziona come un libro da colorare: la tile in sé contiene <em>indici</em> di 8 x 8, non colori; si dà all’hardware una tile e un insieme di colori - una <strong>tavolozza</strong> - e lui li colora!
-(Questo è anche il motivo per cui le varianti di colore erano molto comuni all’epoca: si potevano creare diverse versioni di un nemico memorizzando piccole tavolozze invece di grandi grafiche diverse.)</p>
-<p>In ogni caso, le tavolozze del Game Boy sono grandi 4 colori.<sup class="footnote-reference"><a href="#pal_size">1</a></sup>
-Ciò significa che gli indici di tali tavolozze, memorizzati nelle tile, possono essere rappresentati con solo <em>due bit</em>!
-Questo si definisce “2 bit per pixel”, noto come “2bpp”.</p>
+<p>See, colors are <em>not</em> stored in the tiles themselves!
+Instead, it works like a coloring book: the tile itself contains 8 by 8 <em>indices</em>, not colors; you give the hardware a tile and a set of colors—a <strong>palette</strong>—and it colorizes them!
+(This is also why color swaps were very common back then: you could create enemy variations by storing tiny palettes instead of large different graphics.)</p>
+<p>Anyway, as it is, Game Boy palettes are 4 colors large.<sup class="footnote-reference"><a href="#pal_size">1</a></sup>
+This means that the indices into those palettes, stored in the tiles, can be represented in only <em>two bits</em>!
+This is called “2 bits per pixel”, noted “2bpp”.</p>
 <p>Con queste premesse, siamo pronti a spiegare come questi byte si trasformano in pixel!</p>
 <h2 id="codifica"><a class="header" href="#codifica">Codifica</a></h2>
 <p>Come ho spiegato, ogni pixel occupa 2 bit.
@@ -258,9 +258,8 @@ Rende possibili anche alcuni trucchi interessanti, come vedremo (molto) più ava
 <p>Si possono trovare ulteriori informazioni sulla codifica <a href="https://gbdev.io/pandocs/Tile_Data.html">nei Pan Docs</a> e <a href="https://www.huderlem.com/demos/gameboy2bpp.html">nel sito di ShantyTown</a>.</p>
 <p>Nella prossima lezione vedremo come si applicano i colori!</p>
 <hr />
-<div class="footnote-definition" id="pal_size"><sup class="footnote-definition-label">1</sup>
-<p>Altre console possono avere profondità di bit diverse; ad esempio, lo SNES ha 2bpp, 4bpp e 8bpp a seconda della modalità grafica e di alcuni altri parametri.</p>
-</div>
+<div class="footnote-definition" id="pal_size"><sup class="footnote-definition-label">1</sup></div>
+<p>Other consoles can have varying bit depths; for example, the SNES has 2bpp, 4bpp, and 8bpp depending on the graphics mode and a few other parameters.</p>
 
                     </main>
 

@@ -195,36 +195,36 @@
                     <main>
                         <h1 id="operazioni-e-flag"><a class="header" href="#operazioni-e-flag">Operazioni e flag</a></h1>
 <p>Va bene, sappiamo come passare i valori, ma copiare semplicemente i numeri non è divertente; vogliamo modificarli!</p>
-<p>La CPU GB non fornisce tutte le operazioni sotto il sole (per esempio, non esiste un’istruzione di moltiplicazione), ma possiamo programmarle da soli con ciò che abbiamo.
-Parliamo di alcune delle operazioni di cui dispone; per ora ne ometterò alcune non utilizzate in Hello World.</p>
+<p>The GB CPU does not provide every operation under the sun (for example, there is no multiplication instruction), but we can just program those ourselves with what we have.
+Let’s talk about some of the operations that it <em>does</em> have; I will be omitting some not used in the Hello World for now.</p>
 <h2 id="aritmetica"><a class="header" href="#aritmetica">Aritmetica</a></h2>
 <p>Le istruzioni aritmetiche più semplici supportate dalla CPU sono <code>inc</code> e <code>dec</code>, che rispettivamente INCrementano e DECrementano il loro operando.
 (Se non siete sicuri, “incrementare” significa “aggiungere 1” e “decrementare” significa “sottrarre 1”).
 Quindi, per esempio, il <code>dec bc</code> alla riga 32 di <code>hello-world.asm</code> sottrae semplicemente 1 da <code>bc</code>.</p>
-<p>Ok, bene!
-Possiamo però andare un po’ più veloci?
-Certo che sì, con <code>add</code> e <code>sub</code>!
-Questi rispettivamente aggiungono e sottraggono valori arbitrari (una costante o un registro).
-Nessuno dei due viene usato nel tutorial, ma c’è un parente di <code>sub</code>: avete notato il piccolo <code>cp</code> alla riga 17?
-<code>cp</code> permette di confrontare i valori.
-Funziona come <code>sub</code>, ma scarta il risultato invece di riscriverlo.
-“Aspettate, quindi non fa nulla?”, vi chiederete; beh, aggiorna le <strong>flag</strong>.</p>
+<p>Okay, cool!
+Can we go a bit faster, though?
+Sure we can, with <code>add</code> and <code>sub</code>!
+These respectively ADD and SUBtract arbitrary values (either a constant, or a register).
+Neither is used in the tutorial, but a sibling of <code>sub</code>’s is: have you noticed little <code>cp</code> over at line 17?
+<code>cp</code> allows ComParing values.
+It works the same as <code>sub</code>, but it discards the result instead of writing it back.
+“Wait, so it does nothing?” you may ask; well, it <em>does</em> update the <strong>flags</strong>.</p>
 <h2 id="flag"><a class="header" href="#flag">Flag</a></h2>
-<p>È arrivato il momento di parlare del registro speciale (ve lo ricordate?) <code>f</code>, per, beh, <em>flag</em>.
-Il registro <code>f</code> contiene 4 bit, chiamati “flag”, che vengono aggiornati a seconda dei risultati di un’operazione.
-Questi 4 flag sono:</p>
-<div class="table-wrapper"><table><thead><tr><th>Nome</th><th>Descrizione</th></tr></thead><tbody>
-<tr><td>Z</td><td>Flag di zero</td></tr>
-<tr><td>N</td><td>Addizione/sottrazione</td></tr>
+<p>The time has come to talk about the special-purpose register (remember those?) <code>f</code>, for, well, <em>flags</em>.
+The <code>f</code> register contains 4 bits, called “flags”, which are updated depending on an operation’s results.
+These 4 flags are:</p>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>Z</td><td>Zero flag</td></tr>
+<tr><td>N</td><td>Addition/subtraction</td></tr>
 <tr><td>H</td><td>Half-carry</td></tr>
 <tr><td>C</td><td>Carry</td></tr>
 </tbody></table>
 </div>
 <p>Sì, esistono sia un flag chiamato “C” che un registro chiamato “c” e <strong>sono cose diverse e non correlate</strong>.
 Questo rende la sintassi un po’ confusa all’inizio, ma vengono sempre usati in contesti diversi, quindi basta farci caso.</p>
-<p>Per ora dimentichiamo N e H; concentriamoci su Z e C.
-Z è il flag più semplice: viene impostato quando il risultato di un’operazione è 0 e viene azzerato altrimenti.
-C viene impostato quando un’operazione va in <em>overflow</em> o in <em>underflow</em>.</p>
+<p>We will forget about N and H for now; let’s focus on Z and C.
+Z is the simplest flag: it gets set when an operation’s result is 0, and gets reset otherwise.
+C is set when an operation <em>overflows</em> or <em>underflows</em>.</p>
 <p>Che cos’è un overflow?
 Prendiamo la semplice istruzione <code>add a, 42</code>.
 Questa istruzione aggiunge semplicemente 42 al contenuto del registro <code>a</code> e scrive il risultato in <code>a</code>.</p>
@@ -239,14 +239,14 @@ Ma se invece scrivessi questo?
     ld a, 220
     add a, 42
 </code></pre>
-<p>Si potrebbe pensare che <code>a</code> sia uguale a 220 + 42 = 262, ma non sarebbe corretto.
-Ricordate che <code>a</code> è un registro a 8 bit, <em>può memorizzare solo otto bit di informazione</em>!
-E se dovessimo scrivere 262 in binario, otterremmo %100000110, che richiede almeno 9 bit…
-Quindi cosa succede?
-Semplicemente, il nono bit viene <em>perduto</em> e il valore che otteniamo è %00000110 = 6. Questo si chiama <em>overflow</em>.
-Questo si chiama <em>overflow</em>: dopo l’<strong>aggiunta</strong>, otteniamo un valore <strong>più piccolo</strong> di quello con cui abbiamo iniziato.</p>
-<p>Possiamo anche fare l’opposto con <code>sub</code>, e —per esempio— sottrarre 42 da 6; come sappiamo, per tutti gli <code>X</code> e <code>Y</code>, <code>X + Y - Y = X</code>, e abbiamo appena visto che 220 + 42 = 6 (questo è chiamato <em>modulo 256 aritmetico</em>, a proposito); quindi, 6 - 42 = (220 + 42) - 42 = 220.
-Questo si chiama <em>underflow</em>: dopo la <strong>sottrazione</strong>, otteniamo un valore <strong>superiore</strong> a quello di partenza.</p>
+<p>Well, one could think that <code>a</code> would be equal to 220 + 42 = 262, but that would be incorrect.
+Remember, <code>a</code> is an 8-bit register, <em>it can only store eight bits of information</em>!
+And if we were to write 262 in binary, we would get %100000110, which requires at least 9 bits…
+So what happens?
+Simply, that ninth bit is <em>lost</em>, and the value that we end up with is %00000110 = 6.
+This is called an <em>overflow</em>: after <strong>adding</strong>, we get a value <strong>smaller</strong> than what we started with.</p>
+<p>We can also do the opposite with <code>sub</code>, and—for example—subtract 42 from 6; as we know, for all <code>X</code> and <code>Y</code>, <code>X + Y - Y = X</code>, and we just saw that 220 + 42 = 6 (this is called <em>modulo 256 arithmetic</em>, by the way); so, 6 - 42 = (220 + 42) - 42 = 220.
+This is called an <em>underflow</em>: after <strong>subtracting</strong>, we get a value <strong>greater</strong> than what we started with.</p>
 <p>Quando viene eseguita un’operazione, imposta il flag di riporto se si è verificato un overflow o un underflow, altrimenti lo azzera.
 (Vedremo più avanti che non tutte le operazioni aggiornano il flag di riporto)</p>
 <div class="box tip">
@@ -265,17 +265,17 @@ Possiamo usare i flag per controllare le proprietà dei valori confrontati e ved
 <p>L’interazione più semplice è quella con il flag Z.
 Se è impostato, sappiamo che la sottrazione ha prodotto 0, cioè <code>a - operando == 0</code>; quindi, <code>a == operando</code>!
 Se non è impostato, allora sappiamo che <code>a != operando</code>.</p>
-<p>Ok, controllare l’uguaglianza è bello, ma potremmo anche voler eseguire dei <em>confronti</em>.
-Non preoccupatevi, perché il flag di riporto serve proprio a questo!
-Quando si esegue una sottrazione, il flag di riporto viene impostato quando il risultato scende sotto lo 0, ma è solo un modo elegante per dire “diventa negativo”!</p>
-<p>Quindi, quando il flag di riporto viene impostato, sappiamo che <code>a - operando &lt; 0</code> e di conseguenza che <code>a &lt; operando</code>…!
-E, al contrario, sappiamo che se non è impostato, <code>a &gt;= operando</code>.
-Ottimo!</p>
+<p>Okay, checking for equality is nice, but we may also want to perform <em>comparisons</em>.
+Fret not, for the carry flag is here to do just that!
+See, when performing a subtraction, the carry flag gets set when the result goes below 0—but that’s just a fancy way of saying “becomes negative”!</p>
+<p>So, when the carry flag gets set, we know that <code>a - operand &lt; 0</code>, therefore that <code>a &lt; operand</code>..!
+And, conversely, we know that if it’s <em>not</em> set, <code>a &gt;= operand</code>.
+Great!</p>
 <h2 id="riassunto-dellistruzione"><a class="header" href="#riassunto-dellistruzione">Riassunto dell’istruzione</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>Istruzione</th><th>Mnemonico</th><th>Effetto</th></tr></thead><tbody>
-<tr><td>Add</td><td><code>add</code></td><td>Aggiunge valori ad <code>a</code></td></tr>
-<tr><td>Subtract</td><td><code>sub</code></td><td>Sottrae valori da <code>a</code></td></tr>
-<tr><td>Compare</td><td><code>cp</code></td><td>Confronta valori con quelli contenuti in <code>a</code></td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Mnemonic</th><th>Effect</th></tr></thead><tbody>
+<tr><td>Add</td><td><code>add</code></td><td>Adds values to <code>a</code></td></tr>
+<tr><td>Subtract</td><td><code>sub</code></td><td>Subtracts values from <code>a</code></td></tr>
+<tr><td>Compare</td><td><code>cp</code></td><td>Compares values with what’s contained in <code>a</code></td></tr>
 </tbody></table>
 </div>
                     </main>

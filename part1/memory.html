@@ -292,21 +292,18 @@ It functions as <code>[hl]</code>, but <code>hl</code> is <em>incremented</em> j
 Here, <code>a</code> serves as temporary storage, since the CPU is unable to perform <code>ld [hl], [de]</code> directly.</p>
 <p>While we’re at this, let’s examine the rest of <code>.copyTiles</code> in the following lessons!</p>
 <hr />
-<div class="footnote-definition" id="memory_magnetic"><sup class="footnote-definition-label">1</sup>
+<div class="footnote-definition" id="memory_magnetic"><sup class="footnote-definition-label">1</sup></div>
 <p>Actually, this depends a lot on the type of memory.
 A lot of memory nowadays uses magnetic storage, but to keep the explanation simple, and to parallel the explanation of binary given earlier, let’s assume that current is being used.</p>
-</div>
-<div class="footnote-definition" id="rom_ram_and"><sup class="footnote-definition-label">2</sup>
+<div class="footnote-definition" id="rom_ram_and"><sup class="footnote-definition-label">2</sup></div>
 <p>There are other types of memory, such as flash memory or EEPROM, but only Flash has been used on the Game Boy, and for only a handful of games; so we can mostly forget about them.</p>
-</div>
-<div class="footnote-definition" id="rom_ro"><sup class="footnote-definition-label">3</sup>
+<div class="footnote-definition" id="rom_ro"><sup class="footnote-definition-label">3</sup></div>
 <p>No, really!
 Mask ROM is created by literally punching holes into a layer of silicon using acid, and e.g. the console’s boot ROM is made of hard-wired transitors within the CPU die.
 Good luck writing to that!
 <br>
 “ROM” is sometimes (mis)used to refer to “persistent memory” chips, such as flash memory, whose write functionality was disabled.
 Most bootleg / “repro” Game Boy cartridges you can find nowadays actually contain flash; this is why you can reflash them using specialized hardware, but original cartridges cannot be.</p>
-</div>
 
                     </main>
 

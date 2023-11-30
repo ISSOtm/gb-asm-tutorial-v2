@@ -201,40 +201,40 @@
 Dal momento che avete le basi, d’ora in poi vedremo codice sempre più concreto.</p>
 </div>
 </div>
-<p>Se guardiamo alla riga 29 leggiamo <code>ld a, [de]</code>.
-Stando a quanto abbiamo appena appreso, questo copia un valore nel registro <code>a</code>… ma da dove?
-Cosa significano queste parentesi?
-Per rispondere dobbiamo parlare della <em>memoria</em>.</p>
+<p>If we look at line 29, we see <code>ld a, [de]</code>.
+Given what we just learned, this copies a value into register <code>a</code>… but where from?
+What do these brackets mean?
+To answer that, we need to talk about <em>memory</em>.</p>
 <h2 id="cosè-una-memoria"><a class="header" href="#cosè-una-memoria">Cos’è una memoria?</a></h2>
-<p>Lo scopo della memoria è quello di immagazzinare informazioni.
-Su un foglio di carta o su una lavagna si possono scrivere lettere per memorizzare, ad esempio, la lista della spesa.
-Ma cosa si può memorizzare nella memoria di un computer?
-La risposta a questa domanda è <em>corrente</em><sup class="footnote-reference"><a href="#memoria_magnetica">1</a></sup>.
-La memoria del computer è costituita da piccole celle in grado di immagazzinare corrente.
-Ma, come abbiamo visto nella lezione sul binario, la presenza o l’assenza di corrente può essere utilizzata per codificare i numeri binari!</p>
-<p>Per farla breve: la memoria <strong>immagazzina numeri</strong>.
-Difatti la memoria è una <em>lunga</em> lista di numeri, memorizzati in celle.
-Per identificare in modo univoco ogni cella, le viene assegnato un numero (e che altro!) chiamato <em>indirizzo</em>.
-Come i numeri civici!
-La prima cella ha l’indirizzo 0, poi l’indirizzo 1, 2 e così via.
-Sul Game Boy ogni cella contiene <em>8 bit</em>, cioè un <em>byte</em>.</p>
+<p>The purpose of memory is to store information.
+On a piece of paper or a whiteboard, you can write letters to store the grocery list, for example.
+But what can you store in a computer memory?
+The answer to that question is <em>current</em><sup class="footnote-reference"><a href="#memory_magnetic">1</a></sup>.
+Computer memory is made of little cells that can store current.
+But, as we saw in the lesson about binary, the presence or absence of current can be used to encode binary numbers!</p>
+<p>tl;dr: memory <strong>stores numbers</strong>.
+In fact, memory is a <em>long</em> array of numbers, stored in cells.
+To uniquely identify each cell, it’s given a number (what else!) called its <em>address</em>.
+Like street numbers!
+The first cell has address 0, then address 1, 2, and so on.
+On the Game Boy, each cell contains <em>8 bits</em>, i.e. a <em>byte</em>.</p>
 <p>Quante cellule ci sono?
 In realtà questa è una domanda trabocchetto…</p>
 <h2 id="i-tanti-tipi-di-memoria"><a class="header" href="#i-tanti-tipi-di-memoria">I tanti tipi di memoria</a></h2>
 <p>Nel Game Boy sono presenti diversi circuiti di memoria, ma possiamo suddividerli in due categorie: <abbr title="Read-Only Memory">ROM</abbr> e <abbr title="Random Access Memory">RAM</abbr><sup class="footnote-reference"><a href="#rom_ram_and">2</a></sup>.
 ROM indica semplicemente la memoria su cui non è possibile scrivere<sup class="footnote-reference"><a href="#rom_ro">3</a></sup>, e RAM la memoria su cui è possibile scrivere.</p>
-<p>Per via del loro funzionamento il processore ed i circuiti di memoria possono utilizzare un solo numero per gli indirizzi.
-Torniamo all’analogia dei “numeri civici”: ogni circuito di memoria è una strada, con la sua serie di numeri, ma il processore non ha idea di cosa sia una strada, si occupa solo di numeri civici.
-Per consentire al processore di parlare con più circuiti serve una sorta di “servizio postale”, il <em>selezionatore di circuito</em> (“chip selector” in inglese), che ha il compito di tradurre i numeri civici del processore in una via ed un numero civico effettivi.</p>
-<p>Ad esempio, supponiamo che sia stata stabilita una convenzione per cui gli indirizzi da 0 a 1999 vanno agli indirizzi 0–1999 del circuito A, 2000–2999 allo 0–999 del circuito B e 3000–3999 allo 0–999 del circuito C.
-Quindi, se il processore chiede il byte all’indirizzo 2791, il selettore di chip chiederà al circuito B il byte al <em>suo</em> indirizzo 791 ed inoltrerà la risposta al processore.</p>
-<p>Poiché gli indirizzi trattati dal processore non corrispondono direttamente a quelli dei circuiti si parla di indirizzi <em>logici</em> (qui, quelli del processore) e di indirizzi <em>fisici</em> (qui, quelli dei circuiti), e la corrispondenza è chiamata <em>mappa di memoria</em> (“memory map” in inglese).
-Poiché stiamo programmando il processore ci occuperemo solo di indirizzi <strong>logici</strong>, ma è fondamentale tenere presente che indirizzi diversi possono essere supportati da circuiti di memoria diversi, poiché ogni circuito ha caratteristiche uniche.</p>
-<p>Può sembrare complicato, quindi ecco un riassunto:</p>
+<p>Due to how they work, the CPU, as well as the memory chips, can only use a single number for addresses.
+Let’s go back to the “street numbers” analogy: each memory chip is a street, with its own set of numbers, but the CPU has no idea what a street is, it only deals with street numbers.
+To allow the CPU to talk to multiple chips, a sort of “postal service”, the <em>chip selector</em>, is tasked with translating the CPU’s street numbers into a street &amp; street number.</p>
+<p>For example, let’s say a convention is established where addresses 0 through 1999 go to chip A’s addresses 0–1999, 2000–2999 to chip B’s 0–999, and 3000–3999 to chip C’s 0–999.
+Then, if the CPU asks for the byte at address 2791, the chip selector will ask chip B for the byte at its <em>own</em> address 791, and forward the reply to the CPU.</p>
+<p>Since addresses dealt with by the CPU do not directly correspond to the chips’ addresses, we talk about <em>logical</em> addresses (here, the CPU’s) versus <em>physical</em> addresses (here, the chips’), and the correspondence is called a <em>memory map</em>.
+Since we are programming the CPU, we will only be dealing with <strong>logical</strong> addresses, but it’s crucial to keep in mind that different addresses may be backed by different memory chips, since each chip has unique characteristics.</p>
+<p>This may sound complicated, so here is a summary:</p>
 <ul>
-<li>La memoria contiene numeri, ognuno dei quali sul Game Boy è ad 8 bit.</li>
-<li>Si accede alla memoria byte per byte e la cella a cui si accede è determinata da un <em>indirizzo</em>, che è semplicemente un numero.</li>
-<li>Il processore tratta tutta la memoria come se fosse uniforme, ma esistono diversi circuiti di memoria ognuno con le proprie caratteristiche.</li>
+<li>Memory stores numbers, each 8-bit on the Game Boy.</li>
+<li>Memory is accessed byte by byte, and the cell being accessed is determined by an <em>address</em>, which is just a number.</li>
+<li>The CPU deals with all memory uniformly, but there are several memory chips each with their own characteristics.</li>
 </ul>
 <h3 id="mappa-di-memoria-del-game-boy"><a class="header" href="#mappa-di-memoria-del-game-boy">Mappa di memoria del Game Boy</a></h3>
 <p>Adesso rispondiamo alla domanda che ci aveva portato a questa sezione: quante celle di memoria ci sono sul Game Boy?
@@ -243,19 +243,19 @@ Ora possiamo riformulare meglio questa domanda come “quanti indirizzi logici c
 Pertanto, ci sono 2^16 = 65536 indirizzi logici, da $0000 a $FFFF.
 Ma quanti sono gli indirizzi fisici?
 Ecco una mappa della memoria <a href="https://gbdev.io/pandocs/Memory_Map.html">per gentile concessione di Pan Docs</a> (anche se la semplificherò un po’):</p>
-<div class="table-wrapper"><table><thead><tr><th>Inizio</th><th>Fine</th><th>Nome</th><th>Descrizione</th></tr></thead><tbody>
-<tr><td>$0000</td><td>$7FFF</td><td>ROM</td><td>La ROM del gioco, fornita dalla cartuccia.</td></tr>
-<tr><td>$8000</td><td>$9FFF</td><td>VRAM</td><td>RAM video, dove viene memorizzata e organizzata la grafica.</td></tr>
-<tr><td>$A000</td><td>$BFFF</td><td>SRAM</td><td>RAM di salvataggio, fornita opzionalmente da certe cartucce per salvare i dati.</td></tr>
-<tr><td>$C000</td><td>$DFFF</td><td>WRAM</td><td>RAM di lavoro, RAM a uso generico in cui il gioco può memorizzare i dati.</td></tr>
-<tr><td>$FE00</td><td>$FE9F</td><td>OAM</td><td>Object Attribute Memory, dove vengono memorizzati gli “oggetti”.</td></tr>
-<tr><td>$FF00</td><td>$FF7F</td><td>I/O</td><td>Né ROM né RAM, ma è qui che si controlla la console.</td></tr>
-<tr><td>$FF80</td><td>$FFFE</td><td>HRAM</td><td>High RAM, una piccola porzione di RAM generica a cui si accede più velocemente.</td></tr>
-<tr><td>$FFFF</td><td>$FFFF</td><td>IE</td><td>Un solo byte di I/O separato dal resto per qualche motivo.</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Start</th><th>End</th><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>$0000</td><td>$7FFF</td><td>ROM</td><td>The game ROM, supplied by the cartridge.</td></tr>
+<tr><td>$8000</td><td>$9FFF</td><td>VRAM</td><td>Video RAM, where graphics are stored and arranged.</td></tr>
+<tr><td>$A000</td><td>$BFFF</td><td>SRAM</td><td>Save RAM, optionally supplied by the cartridge to save data to.</td></tr>
+<tr><td>$C000</td><td>$DFFF</td><td>WRAM</td><td>Work RAM, general-purpose RAM for the game to store things in.</td></tr>
+<tr><td>$FE00</td><td>$FE9F</td><td>OAM</td><td>Object Attribute Memory, where “objects” are stored.</td></tr>
+<tr><td>$FF00</td><td>$FF7F</td><td>I/O</td><td>Neither ROM nor RAM, but this is where you control the console.</td></tr>
+<tr><td>$FF80</td><td>$FFFE</td><td>HRAM</td><td>High RAM, a tiny bit of general-purpose RAM which can be accessed faster.</td></tr>
+<tr><td>$FFFF</td><td>$FFFF</td><td>IE</td><td>A lone I/O byte that’s separated from the rest for some reason.</td></tr>
 </tbody></table>
 </div>
-<p>$8000 + $2000 + $2000 + $2000 + $A0 + $80 + $7F + 1 fanno in totale $E1A0, ovvero 57760 byte di memoria che si possono <em>effettivamente</em> usare.
-E a questo punto potreste chiedervi: “E i restanti 7776 byte? Cosa succede quando provo ad usarli?”; la risposta è: “Dipende, è complicato; evitate di accedervi”.</p>
+<p>$8000 + $2000 + $2000 + $2000 + $A0 + $80 + $7F + 1 adds up to $E1A0, or 57760 bytes of memory that can be <em>actually</em> accessed.
+The curious reader will naturally ask, “What about the remaining 7776 bytes? What happens when accessing them?”; the answer is: “It depends, it’s complicated; avoid accessing them”.</p>
 <h2 id="etichette"><a class="header" href="#etichette">Etichette</a></h2>
 <p>Ok, tutto questo è molto bello, ma non vi aspetterete certo che io tenga in mente tutti questi indirizzi per conto mio, giusto??
 Beh, non temere, perché abbiamo le etichette!</p>
@@ -263,8 +263,8 @@ Beh, non temere, perché abbiamo le etichette!</p>
 Un’etichetta viene dichiarata come alla riga 9 (<code>EntryPoint:</code>): all’inizio della riga si scrive il nome dell’etichetta, seguito da due punti, ed essa si riferirà al byte immediatamente successivo.
 Quindi, per esempio, <code>EntryPoint</code> si riferisce al <code>ld a, 0</code> subito dopo (più precisamente, al primo byte di quell’istruzione, ma ci arriveremo quando ci arriveremo).</p>
 <div class="box tip">
-<p>Sbirciando all’interno di <code>hardware.inc</code> si vedrà che, per esempio, <code>rNR52</code> non è definito come un’etichetta.
-Il motivo è che queste sono <em>costanti</em>, di cui parleremo più in là; visto che si usano in modo quasi identico alle etichette, per il momento le considereremo uguali.</p>
+<p>If you peek inside <code>hardware.inc</code>, you will see that for example <code>rNR52</code> is not defined as a label.
+That’s because they are <em>constants</em>, which we will touch on later; since they can be used mostly like labels, we will conflate the two for now.</p>
 </div>
 <p>Scrivere il nome di un’etichetta equivale a scrivere l’indirizzo del byte a cui fa riferimento (con alcune eccezioni che vedremo nella Parte Ⅱ).
 Per esempio, si consideri la <code>ld de, Tiles</code> alla riga 25.
@@ -279,35 +279,32 @@ Beh, se <code>de</code> contiene il valore $5414, allora <code>ld a, [de]</code>
 <p>Se avete familiarità con il C, queste parentesi sono sostanzialmente il modo in cui viene implementato l’operatore di dereferenziazione.</p>
 </div>
 <h3 id="hli"><a class="header" href="#hli"><code>hli</code></a></h3>
-<p>I lettori attenti avranno notato il <code>ld [hli], a</code> appena sotto il <code>ld a, [de]</code> che abbiamo appena studiato.
-<code>[de]</code> ha senso perché è una delle coppie di registri che abbiamo visto un paio di lezioni fa, ma <code>[hli]</code>?
-In realtà, è una notazione speciale, che può essere scritta anche come <code>[hl+]</code>.
-Funziona come <code>[hl]</code>, ma <code>hl</code> viene <em>incrementato</em> subito dopo l’accesso alla memoria.
-<code>[hld]</code>/<code>[hl-]</code> è lo specchio di questa, <em>decrementando</em> <code>hl</code> invece di incrementarlo.</p>
+<p>An astute reader will have noticed the <code>ld [hli], a</code> just below the <code>ld a, [de]</code> we have just studied.
+<code>[de]</code> makes sense because it’s one of the register pairs we saw a couple lessons ago, but <code>[hli]</code>?
+It’s actually a special notation, which can also be written as <code>[hl+]</code>.
+It functions as <code>[hl]</code>, but <code>hl</code> is <em>incremented</em> just after memory is accessed.
+<code>[hld]</code>/<code>[hl-]</code> is the mirror of this one, <em>decrementing</em> <code>hl</code> instead of incrementing it.</p>
 <h2 id="un-esempio"><a class="header" href="#un-esempio">Un esempio</a></h2>
 <p>Quindi, se osserviamo le prime due istruzioni di <code>CopyTiles</code>:</p>
 <pre><code class="language-rgbasm linenos start=29">	ld a, [de]
 	ld [hli], a
 </code></pre>
-<p>…possiamo vedere che stiamo copiando il byte in memoria <em>puntato</em> da <code>de</code> (cioè il cui indirizzo è contenuto in <code>de</code>) nel byte puntato da <code>hl</code>.
-Qui, <code>a</code> serve come memoria temporanea, poiché la CPU non è in grado di eseguire direttamente <code>ld [hl], [de]</code>.</p>
+<p>…we can see that we’re copying the byte in memory <em>pointed to</em> by <code>de</code> (that is, whose address is contained in <code>de</code>) into the byte pointed to by <code>hl</code>.
+Here, <code>a</code> serves as temporary storage, since the CPU is unable to perform <code>ld [hl], [de]</code> directly.</p>
 <p>Già che ci siamo, esaminiamo il resto di <code>.copyTiles</code> nelle lezioni successive!</p>
 <hr />
-<div class="footnote-definition" id="memory_magnetic"><sup class="footnote-definition-label">4</sup>
-<p>In realtà, questo dipende molto dal tipo di memoria.
-Molte memorie oggi utilizzano un’archiviazione magnetica, ma per mantenere il discordo più semplice e per fare un parallelo con la spiegazione del binario data in precedenza, supponiamo che venga utilizzata un’archiviazione a corrente elettrica.</p>
-</div>
-<div class="footnote-definition" id="rom_ram_e"><sup class="footnote-definition-label">5</sup>
-<p>Esistono altri tipi di memoria, come la memoria flash o l’EEPROM, ma solo la flash è stata utilizzata sul Game Boy, e solo per una manciata di giochi; quindi possiamo dimenticarci di loro.</p>
-</div>
-<div class="footnote-definition" id="rom_ro"><sup class="footnote-definition-label">3</sup>
-<p>No, davvero!
-La ROM a maschera viene creata letteralmente bucando uno strato di silicio con l’acido e, ad esempio, la ROM di avvio della console è fatta di transistor cablati all’interno del die della CPU.
-Buona fortuna a scriverci!
+<div class="footnote-definition" id="memory_magnetic"><sup class="footnote-definition-label">1</sup></div>
+<p>Actually, this depends a lot on the type of memory.
+A lot of memory nowadays uses magnetic storage, but to keep the explanation simple, and to parallel the explanation of binary given earlier, let’s assume that current is being used.</p>
+<div class="footnote-definition" id="rom_ram_and"><sup class="footnote-definition-label">2</sup></div>
+<p>There are other types of memory, such as flash memory or EEPROM, but only Flash has been used on the Game Boy, and for only a handful of games; so we can mostly forget about them.</p>
+<div class="footnote-definition" id="rom_ro"><sup class="footnote-definition-label">3</sup></div>
+<p>No, really!
+Mask ROM is created by literally punching holes into a layer of silicon using acid, and e.g. the console’s boot ROM is made of hard-wired transitors within the CPU die.
+Good luck writing to that!
 <br>
-Il termine “ROM” viene a volte (erroneamente) utilizzato per indicare i chip di “memoria persistente”, come la memoria flash, la cui funzionalità di scrittura è stata disabilitata.
-La maggior parte delle cartucce Game Boy bootleg / “repro” che si possono trovare al giorno d’oggi contengono effettivamente la memoria flash; questo è il motivo per cui è possibile riflasharle utilizzando hardware specializzato, mentre non è possibile farlo con le cartucce originali.</p>
-</div>
+“ROM” is sometimes (mis)used to refer to “persistent memory” chips, such as flash memory, whose write functionality was disabled.
+Most bootleg / “repro” Game Boy cartridges you can find nowadays actually contain flash; this is why you can reflash them using specialized hardware, but original cartridges cannot be.</p>
 
                     </main>
 

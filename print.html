@@ -454,7 +454,7 @@ Thus, we can generalize the principle outlined above, and write these two number
      = 1 × 2^10 + 0 × 2^9 + 0 × 2^8 + 0 × 2^7 + 0 × 2^6 + 0 × 2^5 + 0 × 2^4 + 0 × 2^3 + 0 × 2^2 + 0 × 2^1 + 0 × 2^0
        ↑          ↑         ↑         ↑         ↑         ↑         ↑         ↑         ↑         ↑         ↑
 </code></pre>
-<p>So, by applying the same principle, we can say that in base 2, 42 is written as <code>101010</code>, and 1024 as <code>10000000000</code>. 
+<p>So, by applying the same principle, we can say that in base 2, 42 is written as <code>101010</code>, and 1024 as <code>10000000000</code>.
 Since you can’t tell ten (decimal 10) and two (binary 10) apart, RGBDS assembly has binary numbers prefixed by a percent sign: 10 is ten, and %10 is two.</p>
 <p>Okay, but why base 2 specifically?
 Rather conveniently, a bit can only be 0 or 1, which are easy to represent as “ON” or “OFF”, empty or full, etc!
@@ -698,25 +698,20 @@ We will explore the different types of symbols throughout the tutorial, starting
 <p>Oh, but you may be wondering what the “memory addresses” I keep mentioning are.
 Let’s see about those!</p>
 <hr />
-<div class="footnote-definition" id="instr_directive"><sup class="footnote-definition-label">1</sup>
+<div class="footnote-definition" id="instr_directive"><sup class="footnote-definition-label">1</sup></div>
 <p>Technically, instructions in RGBASM are implemented as directives, basically writing their encoded form to the ROM; but the distinction between the instructions in the source code and those in the final ROM is not worth bringing up right now.</p>
-</div>
-<div class="footnote-definition" id="ld_imm_from"><sup class="footnote-definition-label">2</sup>
+<div class="footnote-definition" id="ld_imm_from"><sup class="footnote-definition-label">2</sup></div>
 <p>The curious reader may ask where the value is copied <em>from</em>. The answer is simply that the &quot;immediate&quot; byte ($00 in this example) is stored in ROM just after the instruction’s opcode byte, and it’s what gets copied to <code>a</code>.
 We will come back to this when we talk about how instructions are encoded later on.</p>
-</div>
-<div class="footnote-definition" id="hw_inc_directives"><sup class="footnote-definition-label">3</sup>
+<div class="footnote-definition" id="hw_inc_directives"><sup class="footnote-definition-label">3</sup></div>
 <p><code>hardware.inc</code> itself contains more directives, in particular to define a lot of symbols.
 They will be touched upon much later, so we won’t look into <code>hardware.inc</code> yet.</p>
-</div>
-<div class="footnote-definition" id="sect_name"><sup class="footnote-definition-label">4</sup>
+<div class="footnote-definition" id="sect_name"><sup class="footnote-definition-label">4</sup></div>
 <p>Section names actually only need to be unique for “plain” sections, and function differently with “unionized” and “fragment” sections, which we will discuss much later.</p>
-</div>
-<div class="footnote-definition" id="ds_pattern"><sup class="footnote-definition-label">5</sup>
+<div class="footnote-definition" id="ds_pattern"><sup class="footnote-definition-label">5</sup></div>
 <p>Actually, since RGBASM 0.5.0, <code>ds</code> can accept a <em>list</em> of bytes, and will repeat the pattern for as many bytes as specified.
 It just complicates the explanation slightly, so I omitted it for now.
 Also, if the argument is omitted, it defaults to what is specified using the <code>-p</code> option <strong>to RGBASM</strong>.</p>
-</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="memory"><a class="header" href="#memory">Memory</a></h1>
 <div class="box tip decorated">
 <div><p>🎉</p></div>
@@ -817,21 +812,18 @@ It functions as <code>[hl]</code>, but <code>hl</code> is <em>incremented</em> j
 Here, <code>a</code> serves as temporary storage, since the CPU is unable to perform <code>ld [hl], [de]</code> directly.</p>
 <p>While we’re at this, let’s examine the rest of <code>.copyTiles</code> in the following lessons!</p>
 <hr />
-<div class="footnote-definition" id="memory_magnetic"><sup class="footnote-definition-label">1</sup>
+<div class="footnote-definition" id="memory_magnetic"><sup class="footnote-definition-label">1</sup></div>
 <p>Actually, this depends a lot on the type of memory.
 A lot of memory nowadays uses magnetic storage, but to keep the explanation simple, and to parallel the explanation of binary given earlier, let’s assume that current is being used.</p>
-</div>
-<div class="footnote-definition" id="rom_ram_and"><sup class="footnote-definition-label">2</sup>
+<div class="footnote-definition" id="rom_ram_and"><sup class="footnote-definition-label">2</sup></div>
 <p>There are other types of memory, such as flash memory or EEPROM, but only Flash has been used on the Game Boy, and for only a handful of games; so we can mostly forget about them.</p>
-</div>
-<div class="footnote-definition" id="rom_ro"><sup class="footnote-definition-label">3</sup>
+<div class="footnote-definition" id="rom_ro"><sup class="footnote-definition-label">3</sup></div>
 <p>No, really!
 Mask ROM is created by literally punching holes into a layer of silicon using acid, and e.g. the console’s boot ROM is made of hard-wired transitors within the CPU die.
 Good luck writing to that!
 <br>
 “ROM” is sometimes (mis)used to refer to “persistent memory” chips, such as flash memory, whose write functionality was disabled.
 Most bootleg / “repro” Game Boy cartridges you can find nowadays actually contain flash; this is why you can reflash them using specialized hardware, but original cartridges cannot be.</p>
-</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="header"><a class="header" href="#header">Header</a></h1>
 <p>Let’s go back to a certain line near the top of <code>hello-world.asm</code>.</p>
 <pre><code class="language-rgbasm linenos start=7">	ds $150 - @, 0 ; Make room for the header
@@ -1111,11 +1103,10 @@ Since we’re jumping <em>backwards</em>, we will repeat the instructions again:
 <p>Okay, we’ve been talking about the code a lot, and we have seen it run, but we haven’t really seen <em>how</em> it runs.
 Let’s watch the magic unfold in slow-motion in the next lesson!</p>
 <hr />
-<div class="footnote-definition" id="pc_updates"><sup class="footnote-definition-label">1</sup>
+<div class="footnote-definition" id="pc_updates"><sup class="footnote-definition-label">1</sup></div>
 <p>Not exactly; instructions may be several bytes long, and PC increments after reading each byte.
 Notably, this means that when an instruction finishes executing, PC is pointing to the following instruction.
 Still, it’s pretty much “where the CPU is currently reading from”, but it’s better to keep it simple and avoid mentioning instruction encoding for now.</p>
-</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tracing"><a class="header" href="#tracing">Tracing</a></h1>
 <p>Ever dreamed of being a wizard?
 Well, this won’t give you magical powers, but let’s see how emulators can be used to control time!</p>
@@ -1260,9 +1251,8 @@ It even makes a few cool tricks possible, as we will see (much) later!</p>
 <p>You can read up more about the encoding <a href="https://gbdev.io/pandocs/Tile_Data.html">in the Pan Docs</a> and <a href="https://www.huderlem.com/demos/gameboy2bpp.html">ShantyTown’s site</a>.</p>
 <p>In the next lesson, we shall see how colors are applied!</p>
 <hr />
-<div class="footnote-definition" id="pal_size"><sup class="footnote-definition-label">1</sup>
+<div class="footnote-definition" id="pal_size"><sup class="footnote-definition-label">1</sup></div>
 <p>Other consoles can have varying bit depths; for example, the SNES has 2bpp, 4bpp, and 8bpp depending on the graphics mode and a few other parameters.</p>
-</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="palettes"><a class="header" href="#palettes">Palettes</a></h1>
 <p>In the previous lesson, I briefly mentioned that colors are applied to tiles via <em>palettes</em>, but we haven’t talked much about those yet.</p>
 <p>The black &amp; white Game Boy has three palettes, one for the background called <a href="https://gbdev.io/pandocs/Palettes.html#ff47---bgp-bg-palette-data-rw---non-cgb-mode-only"><code>BGP</code></a> (“BackGround Palette”), and two for the objects called <a href="https://gbdev.io/pandocs/Palettes.html#ff48---obp0-object-palette-0-data-rw---non-cgb-mode-only"><code>OBP0</code></a> and <a href="https://gbdev.io/pandocs/Palettes.html#ff48---obp1-object-palette-1-data-rw---non-cgb-mode-only"><code>OBP1</code></a> (“OBject Palette 0/1”).
@@ -1385,10 +1375,9 @@ You can confirm this by hovering over tiles in the BG map tab, which shows the I
 </figure>
 <p>All in all, we can surmise that displaying graphics on the Game Boy consists of loading “patterns” (the tiles), and then telling the console which tile to display for each given location.</p>
 <hr />
-<div class="footnote-definition" id="tile_blocks"><sup class="footnote-definition-label">1</sup>
+<div class="footnote-definition" id="tile_blocks"><sup class="footnote-definition-label">1</sup></div>
 <p>The even more astute (astuter?) reader will have noticed that 384 = 3 × 128.
 Thus, tiles are often conceptually grouped into three “blocks” of 128 tiles each, which Emulicious shows as separated by thicker horizontal lines.</p>
-</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="wrapping-up"><a class="header" href="#wrapping-up">Wrapping up</a></h1>
 <p>Congrats!
 You have made it through the first part of this tutorial.

@@ -199,19 +199,19 @@
 </div>
 <p>Finora tutto il codice che abbiamo visto era lineare: veniva eseguito dall’alto verso il basso.
 Ma questo non è sufficiente: a volte è necessario eseguire alcune azioni in base al risultato di altre (“se le crêpes iniziano ad attaccarsi, ungi di nuovo la padella”), e a volte è necessario eseguire azioni ripetutamente (“se è rimasta della pastella, ripeti dal passo 5”).</p>
-<p>Entrambe le cose implicano una lettura non lineare della ricetta.
-In assembly, questo si ottiene con i <em>salti</em>.</p>
-<p>La CPU dispone di un registro speciale chiamato “PC”, che sta per Program Counter.
-Esso contiene l’indirizzo dell’istruzione in corso di esecuzione<sup class="footnote-reference"><a href="#pc_updates">1</a></sup>, come se si tenesse a mente il numero del passo della ricetta che si sta eseguendo.
-Il PC aumenta automaticamente quando la CPU legge le istruzioni, quindi “per impostazione predefinita” vengono lette in sequenza; tuttavia, le istruzioni di salto consentono di scrivere un valore diverso nel PC, saltando di fatto a un’altra parte del programma.
-Da qui il nome.</p>
+<p>Both of these imply reading the recipe non-linearly.
+In assembly, this is achieved using <em>jumps</em>.</p>
+<p>The CPU has a special-purpose register called “PC”, for Program Counter.
+It contains the address of the instruction currently being executed<sup class="footnote-reference"><a href="#pc_updates">1</a></sup>, like how you’d keep in mind the number of the recipe step you’re currently doing.
+PC increases automatically as the CPU reads instructions, so “by default” they are read sequentially; however, jump instructions allow writing a different value to PC, effectively <em>jumping</em> to another piece of the program.
+Hence the name.</p>
 <p>Ok, allora parliamo di queste istruzioni di salto, che ne dite?
 Ce ne sono quattro:</p>
-<div class="table-wrapper"><table><thead><tr><th>Istruzione</th><th>Mnemonico</th><th>Effetto</th></tr></thead><tbody>
-<tr><td>Jump</td><td><code>jp</code></td><td>Salta l’esecuzione a una locazione</td></tr>
-<tr><td>Jump Relativo</td><td><code>jr</code></td><td>Salta a una locazione vicina</td></tr>
-<tr><td>Call</td><td><code>call</code></td><td>Chiama una subroutine</td></tr>
-<tr><td>Return</td><td><code>ret</code></td><td>Ritorna da una subroutine</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Mnemonic</th><th>Effect</th></tr></thead><tbody>
+<tr><td>Jump</td><td><code>jp</code></td><td>Jump execution to a location</td></tr>
+<tr><td>Jump Relative</td><td><code>jr</code></td><td>Jump to a location close by</td></tr>
+<tr><td>Call</td><td><code>call</code></td><td>Call a subroutine</td></tr>
+<tr><td>Return</td><td><code>ret</code></td><td>Return from a subroutine</td></tr>
 </tbody></table>
 </div>
 <p>Per ora ci concentreremo su <code>jp</code>.
@@ -225,8 +225,8 @@ Non preoccupatevi, vedremo più avanti perché è necessario.</p>
 </div>
 </div>
 <h2 id="salti-condizionati"><a class="header" href="#salti-condizionati">Salti condizionati</a></h2>
-<p>Passiamo ora alla parte <em>davvero</em> interessante.
-Esaminiamo il ciclo responsabile della copia delle tile:</p>
+<p>Now to the <em>really</em> interesting part.
+Let’s examine the loop responsible for copying tiles:</p>
 <pre><code class="language-rgbasm linenos start=24">	; Copy the tile data
 	ld de, Tiles
 	ld hl, $9000
@@ -244,9 +244,9 @@ CopyTiles:
 <p>Non preoccupatevi se non capite bene quanto segue, perché lo vedremo in azione nella prossima lezione.
 Se avete problemi, provate ad andare alla prossima lezione e guardate il codice eseguito passo per passo; poi, tornando a questo punto, dovrebbe avere tutto più senso.</p>
 </div>
-<p>Per prima cosa, copiamo <code>Tiles</code>, l’indirizzo del primo byte dei dati delle tile, in <code>de</code>.
-Poi, impostiamo <code>hl</code> a $9000, che è l’indirizzo in cui inizieremo a copiare i dati delle tile.
-<code>ld bc, TilesEnd - Tiles</code> imposta <code>bc</code> sulla lunghezza dei dati delle tile: <code>TilesEnd</code> è l’indirizzo del primo byte <em>dopo</em> i dati delle tile, quindi sottraendogli <code>Tiles</code> si ottiene la lunghezza.</p>
+<p>First, we copy <code>Tiles</code>, the address of the first byte of tile data, into <code>de</code>.
+Then, we set <code>hl</code> to $9000, which is the address where we will start copying the tile data to.
+<code>ld bc, TilesEnd - Tiles</code> sets <code>bc</code> to the length of the tile data: <code>TilesEnd</code> is the address of the first byte <em>after</em> the tile data, so subtracting <code>Tiles</code> to that yields the length.</p>
 <p>Quindi, in pratica:</p>
 <ul>
 <li><code>de</code> contiene l’indirizzo da cui verranno copiati i dati;</li>
@@ -271,23 +271,22 @@ Quindi, dopo la riga 34, il flag Z è impostato se e solo se <code>bc</code> == 
 <p>Ed è qui che entrano in gioco i salti condizionati!
 È possibile “prendere” <strong>condizionatamente</strong> un salto a seconda dello stato dei flag.</p>
 <p>Le “condizioni” sono quattro:</p>
-<div class="table-wrapper"><table><thead><tr><th>Nome</th><th>Mnemonico</th><th>Descrizione</th></tr></thead><tbody>
-<tr><td>Zero</td><td><code>z</code></td><td>Z è impostato (l’ultima operazione ha avuto un risultato pari a 0)</td></tr>
-<tr><td>Non zero</td><td><code>nz</code></td><td>Z non è impostato (l’ultima operazione ha avuto un risultato diverso da 0)</td></tr>
-<tr><td>Carry</td><td><code>c</code></td><td>C è impostato (l’ultima operazione è andata in overflow)</td></tr>
-<tr><td>No carry</td><td><code>nc</code></td><td>C non è impostato (l’ultima operazione non è andata in overflow)</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Mnemonic</th><th>Description</th></tr></thead><tbody>
+<tr><td>Zero</td><td><code>z</code></td><td>Z is set (last operation had a result of 0)</td></tr>
+<tr><td>Non-zero</td><td><code>nz</code></td><td>Z is not set (last operation had a non-zero result)</td></tr>
+<tr><td>Carry</td><td><code>c</code></td><td>C is set (last operation overflowed)</td></tr>
+<tr><td>No carry</td><td><code>nc</code></td><td>C is not set (last operation did not overflow)</td></tr>
 </tbody></table>
 </div>
-<p>Quindi, <code>jp nz, CopyTiles</code> può essere letto come “se il flag Z non è impostato, allora salta a <code>CopyTiles</code>”.
-Poiché stiamo saltando <em>all’indietro</em>, ripeteremo di nuovo le istruzioni: abbiamo appena creato un <strong>ciclo</strong>!</p>
-<p>Ok, abbiamo parlato molto del codice e lo abbiamo visto girare, ma non abbiamo visto <em>come</em> gira.
-Guardiamo la magia che si svolge al rallentatore nella prossima lezione!</p>
+<p>Thus, <code>jp nz, CopyTiles</code> can be read as “if the Z flag is not set, then jump to <code>CopyTiles</code>”.
+Since we’re jumping <em>backwards</em>, we will repeat the instructions again: we have just created a <strong>loop</strong>!</p>
+<p>Okay, we’ve been talking about the code a lot, and we have seen it run, but we haven’t really seen <em>how</em> it runs.
+Let’s watch the magic unfold in slow-motion in the next lesson!</p>
 <hr />
-<div class="footnote-definition" id="pc_updates"><sup class="footnote-definition-label">1</sup>
-<p>Non esattamente; le istruzioni possono essere lunghe diversi byte e PC si incrementa dopo aver letto ogni byte.
-In particolare, ciò significa che quando un’istruzione finisce di essere eseguita, PC punta all’istruzione successiva.
-Comunque, è più o meno “da dove la CPU sta leggendo”, ma è meglio mantenere le cose semplici ed evitare di parlare della codifica delle istruzioni per ora.</p>
-</div>
+<div class="footnote-definition" id="pc_updates"><sup class="footnote-definition-label">1</sup></div>
+<p>Not exactly; instructions may be several bytes long, and PC increments after reading each byte.
+Notably, this means that when an instruction finishes executing, PC is pointing to the following instruction.
+Still, it’s pretty much “where the CPU is currently reading from”, but it’s better to keep it simple and avoid mentioning instruction encoding for now.</p>
 
                     </main>
 
