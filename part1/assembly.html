@@ -324,20 +324,25 @@ We will explore the different types of symbols throughout the tutorial, starting
 <p>Oh, but you may be wondering what the “memory addresses” I keep mentioning are.
 Let’s see about those!</p>
 <hr />
-<div class="footnote-definition" id="instr_directive"><sup class="footnote-definition-label">1</sup></div>
+<div class="footnote-definition" id="instr_directive"><sup class="footnote-definition-label">1</sup>
 <p>Technically, instructions in RGBASM are implemented as directives, basically writing their encoded form to the ROM; but the distinction between the instructions in the source code and those in the final ROM is not worth bringing up right now.</p>
-<div class="footnote-definition" id="ld_imm_from"><sup class="footnote-definition-label">2</sup></div>
+</div>
+<div class="footnote-definition" id="ld_imm_from"><sup class="footnote-definition-label">2</sup>
 <p>The curious reader may ask where the value is copied <em>from</em>. The answer is simply that the &quot;immediate&quot; byte ($00 in this example) is stored in ROM just after the instruction’s opcode byte, and it’s what gets copied to <code>a</code>.
 We will come back to this when we talk about how instructions are encoded later on.</p>
-<div class="footnote-definition" id="hw_inc_directives"><sup class="footnote-definition-label">3</sup></div>
+</div>
+<div class="footnote-definition" id="hw_inc_directives"><sup class="footnote-definition-label">3</sup>
 <p><code>hardware.inc</code> itself contains more directives, in particular to define a lot of symbols.
 They will be touched upon much later, so we won’t look into <code>hardware.inc</code> yet.</p>
-<div class="footnote-definition" id="sect_name"><sup class="footnote-definition-label">4</sup></div>
+</div>
+<div class="footnote-definition" id="sect_name"><sup class="footnote-definition-label">4</sup>
 <p>Section names actually only need to be unique for “plain” sections, and function differently with “unionized” and “fragment” sections, which we will discuss much later.</p>
-<div class="footnote-definition" id="ds_pattern"><sup class="footnote-definition-label">5</sup></div>
+</div>
+<div class="footnote-definition" id="ds_pattern"><sup class="footnote-definition-label">5</sup>
 <p>Actually, since RGBASM 0.5.0, <code>ds</code> can accept a <em>list</em> of bytes, and will repeat the pattern for as many bytes as specified.
 It just complicates the explanation slightly, so I omitted it for now.
 Also, if the argument is omitted, it defaults to what is specified using the <code>-p</code> option <strong>to RGBASM</strong>.</p>
+</div>
 
                     </main>
 

@@ -207,14 +207,14 @@ Then in the debugger’s menu, click “View”, then click “Show Addresses”
 <pre><code>&lt;img src=&quot;../assets/vid/debugger.gif&quot; alt=&quot;Video demonstration in Emulicious&quot;&gt;
 </code></pre>
 </video>
-<p>The debugger may look intimidating at first, but don’t worry, soon we’ll be very familiar with it!
-For now, let’s focus on this small box near the top-right, the <em>register viewer</em>.</p>
+<p>Il debugger potrebbe sembrare incomprensibile all’inizio, ma non ti preoccupare: ti ci abituerai in fretta!
+Per il momento guarda in alto a destra, dove c’è un piccolo spazio intitolato <em>register viewer</em> (visualizzatore dei registri).</p>
 <p><img src="../assets/img/reg_viewer.png" alt="Immagine della posizione del visualizzatore di registri" /></p>
 <div class="box warning decorated">
 <div><p>⚠️</p></div>
 <div>
-<p>The register viewer shows both <em>CPU registers</em> and some <em>hardware registers</em>.
-This lesson will only deal with CPU registers, so that’s why we will be ignoring some of these entries here.</p>
+<p>Il visualizzatore mostra sia i <em>registri della CPU</em> che alcuni <em>registri hardware</em>.
+In questa lezione parleremo solo dei registri della CPU, perciò non ti preoccupare se salteremo alcuni nomi.</p>
 </div>
 </div>
 <p>Ma cosa sono questi registri della CPU?
@@ -231,18 +231,18 @@ Eseguire le operazioni direttamente sulla memoria è scomodo, sarebbe come rompe
 </div>
 </div>
 <h2 id="registri-generici"><a class="header" href="#registri-generici">Registri Generici</a></h2>
-<p>CPU registers can be placed into two categories: <em>general-purpose</em> and <em>special-purpose</em>.
-A “general-purpose” register (<abbr title="General-Purpose Register">GPR</abbr> for short) can be used for storing arbitrary integer numbers.
-Some GPRs are special nonetheless, as we will see later; but the distinction is “can I store arbitrary integers in it?”.</p>
+<p>A grandi linee ci sono due tipi di registri: <em>registri generici</em> e <em>registri speciali</em>.
+Un registro generico (abbreviato <abbr title="inglese: General-Purpose Register">GPR</abbr>) può essere usato per dati di qualunque tipo.
+Qualche GPR ha anche delle funzioni più specifiche, come vedremo più in là; in generale per distinguerli da quelli speciali chiediti “posso inserirci dati arbitrari?”.</p>
 <p>Parleremo poi dei registri speciali;
 hanno funzioni particolari che non abbiamo ancora spiegato e perciò li spiegheremo quando parleremo della funzione specifica, visto che fino ad allora non ne capiremmo lo scopo.</p>
 <p>La CPU del Game Boy ha sette GPR a 8 bit: <code>a</code>, <code>b</code>, <code>c</code>, <code>d</code>, <code>e</code>, <code>h</code> e <code>l</code>.
 “8 bit” significa che memorizzano 8 bit.
 Pertanto, possono memorizzare numeri interi da 0 a 255 (%1111_1111 alias $FF).</p>
-<p><code>a</code> is the <em>accumulator</em>, and we will see later that it can be used in special ways.</p>
-<p>A special feature is that these registers, besides <code>a</code>, are <em>paired up</em>, and the pairs can be treated as the 16-bit registers <code>bc</code>, <code>de</code>, and <code>hl</code>.
-The pairs are <em>not</em> separate from the individual registers; for example, if <code>d</code> contains 192 ($C0) and <code>e</code> contains 222 ($DE), then <code>de</code> contains 49374 ($C0DE) = 192 × 256 + 222.
-The other pairs work similarly.</p>
+<p>`a’ è l’<em>accumulatore</em>, e come vedremo più avanti può essere usato in modi particolari.</p>
+<p>Questi registri hanno un’altra caratteristica interessante; sono tutti (tranne <code>a</code>) <em>accoppiati</em> ad un altro registro, e queste coppie possono funzionare da registri a 16 bit: <code>BC</code>, <code>DE</code>, e <code>HL</code>.
+Ma tieni sempre a mente che le coppie <em>non</em> sono indipendenti dai registri che li formano; se, ad esempio, <code>D</code> contiene 192 ($C0) ed <code>E</code> 222 ($DE) allora <code>DE</code> conterrà 49374 ($C0DE) = <code>D × 0x100 + E</code>.
+Tutte le altre coppie funzionano allo stesso modo.</p>
 <p>Quindi, cambiare il valore di <code>DE</code> modifica sia quello di <code>D</code> che di <code>E</code> allo stesso tempo e modificare <code>D</code> o <code>E</code> cambierà il valore della coppia <code>DE</code>.
 Ok, ma come facciamo a usare questi registri?
 È il momento di dare un’occhiata all’Assembly!</p>

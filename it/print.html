@@ -237,8 +237,8 @@ Se vuoi imparare a programmare giochi per il GBC e giocarci su di un GBA, puoi c
 <p>Il tutorial è suddiviso in tre sezioni.
 <strong>Consiglio vivamente di seguirle in ordine!</strong></p>
 <p>Nella parte Ⅰ, lanciamo il nostro primo programma “Hello World!”, per poi analizzarlo al fine di capire come funziona il Game Boy.</p>
-<p>In Part Ⅱ, we program our first game, a clone of <em>Arkanoid</em>; we learn how to prod the hardware into having something we can call a “game”.
-Along the way, we will make plenty of mistakes, so we can learn how to debug our code.</p>
+<p>Nella parte Ⅱ programmiamo il nostro primo gioco, un clone di <em>Arkanoid</em>; impariamo a dare le prime istruzioni all’hardware per ottenere qualcosa che si possa definire “gioco”.
+Lungo il percorso commetteremo molti errori, ma questo servirà anche a imparare a risolvere i problemi del nostro codice.</p>
 <p>Infine, la Parte Ⅲ riguarda l’uso “avanzato” dell’hardware, dove impareremo a creare giochi ancora più rifiniti e programmeremo uno “Shoot ’Em Up”!</p>
 <div class="box tip">
 <p>We hope this tutorial will work for you.</p>
@@ -296,19 +296,19 @@ Questo perché devkitPro, un popolare pacchetto di sviluppo homebrew, include MS
 <p>Qualsiasi editor di codice va bene; personalmente uso <a href="https://www.sublimetext.com">Sublime Text</a> con il suo <a href="https://packagecontrol.io/packages/RGBDS">pacchetto sintassi RGBDS</a>; tuttavia è possibile usare qualsiasi editor di testo, compreso il Blocco Note se si è abbastanza pazzi.
 Awesome GBDev ha <a href="https://gbdev.io/resources#syntax-highlighting-packages">una sezione sui pacchetti per l’evidenziazione della sintassi</a> dove potete controllare se il vostro editor preferito supporta RGBDS.</p>
 <h2 id="emulatore"><a class="header" href="#emulatore">Emulatore</a></h2>
-<p>Using an emulator to play games is one thing; using it to program games is another.
-The two aspects an emulator must fulfill to allow an enjoyable programming experience are:</p>
+<p>Usare un emulatore per giocare è una cosa; usarlo per programmare giochi è un’altra.
+I due aspetti che un emulatore deve soddisfare per consentire una piacevole esperienza di programmazione sono:</p>
 <ul>
-<li><strong>Debugging tools</strong>:
-When your code goes haywire on an actual console, it’s very difficult to figure out why or how.
-There is no console output, no way to <code>gdb</code> the program, nothing.
-However, an emulator can provide debugging tools, allowing you to control execution, inspect memory, etc.
-These are vital if you want GB dev to be <em>fun</em>, trust me!</li>
-<li><strong>Good accuracy</strong>:
-Accuracy means “how faithful to the original console something is”.
-Using a bad emulator for playing games can work (to some extent, and even then…), but using it for <em>developing</em> a game makes it likely to accidentally render your game incompatible with the actual console.
-For more info, read <a href="https://arstechnica.com/?post_type=post&amp;p=44524">this article on Ars Technica</a> (especially the <q>An emulator for every game</q> section at the top of page 2).
-You can compare GB emulator accuracy on <a href="https://daid.github.io/GBEmulatorShootout/">Daid’s GB-emulator-shootout</a>.</li>
+<li><strong>Un supporto al debug</strong>:
+Se il tuo programma va in palla sulla console è pressoché impossibile capire cosa sia andato storto:
+non puoi controllare gli errori dal terminale, non puoi usare <code>gdb</code>, niente.
+Un emulatore, al contrario, può avere strumenti per aiutare il debug, ad esempio dandoti controllo sull’esecuzione leggere e mdoificare la memoria, e molto altro.
+Senza di questi strumenti lo sviluppo sarà tutto meno che <em>divertente</em>, fidati!</li>
+<li><strong>Emulazione Precisa</strong>:
+La precisione di un emulatore è quanto questo riproduca bene il comportamento del sistema reale.
+Un emulatore poco accurato andrà anche bene per giocare (seppur spesso con un esperienza poco fluida…), ma se vuoi <em>programmare</em>, hai bisogno di sapere se il tuo gioco sia effettivamente compatibile con il tuo sistema.
+Se sei interessato puoi leggere di più a riguardo su <a href="https://arstechnica.com/?post_type=post&amp;p=44524">questo articolo di Ars Technica</a> (in particolare la sezione <q>An emulator for every game</q> in cima alla seconda pagina).
+Puoi vedere e confrontare la precisione di alcuni degli emulatori GameBoy più popolari sul <a href="https://daid.github.io/GBEmulatorShootout/">GB-emulator-shootout</a> di Daid. Trovi una tabella con diversi test ed i risultati per emulatore.</li>
 </ul>
 <p>The emulator I will be using for this tutorial is <a href="https://emulicious.net/">Emulicious</a>.
 Users on all OSes can install the Java runtime to be able to run it.
@@ -318,7 +318,7 @@ Other debugging emulators are available, such as <a href="https://www.mesen.ca/"
 Il resto del capitolo sarà dedicato a spiegare come e perché funziona.</p>
 <p>Tenete presente che da ora dovremo lanciare molti comandi, quindi è il momento di aprire una finestra del terminale.
 È buon norma creare una nuova directory (<code>mkdir gb_hello_world</code>, per esempio, poi <code>cd gb_hello_world</code> per entrare nella nuova directory).</p>
-<p>Grab the following files (right-click each link, “Save Link As…”), and place them all in this new directory:</p>
+<p>Scaricate i seguenti file (cliccate con il tasto destro del mouse su ogni link, “Salva link con nome…”) e metteteli tutti in questa nuova directory:</p>
 <ul>
 <li><a href="part1/../assets/hello-world.asm"><code>hello-world.asm</code></a></li>
 <li><a href="https://raw.githubusercontent.com/gbdev/hardware.inc/v4.0/hardware.inc"><code>hardware.inc</code></a></li>
@@ -355,7 +355,7 @@ Il resto del capitolo sarà dedicato a spiegare come e perché funziona.</p>
 </ol>
 </div>
 </div>
-<p>It should look like this:</p>
+<p>E dunque il processo sarà il seguente:</p>
 <script id="asciicast-weljUlcp1KC5GqS9jqV62dy5m" src="https://asciinema.celforyon.fr/a/weljUlcp1KC5GqS9jqV62dy5m.js" async></script>
 <p>(Se riscontrate un errore che non riuscite a risolvere da soli, non abbiate paura di <a href="part1/../index.html#feedback">chiedere</a>! Lo risolveremo insieme)</p>
 <p>Congrats!
@@ -375,31 +375,31 @@ Now, we just need to run it; open Emulicious, then go “File”, then “Open F
 Ora è il momento di capire meglio cosa abbiamo fatto.</p>
 <h2 id="rgbasm-e-rgblink"><a class="header" href="#rgbasm-e-rgblink">RGBASM e RGBLINK</a></h2>
 <p>Iniziamo spiegando cosa fanno <code>rgbasm</code> e <code>rgblink</code>.</p>
-<p>RGBASM is an <em>assembler</em>.
-It is responsible for reading the source code (in our case, <code>hello-world.asm</code> and <code>hardware.inc</code>), and generating blocks of code with some “holes”.
-RGBASM does not always have enough information to produce a full ROM, so it does most of the work, and stores its intermediary results in what’s known as <em>object files</em> (hence the <code>.o</code> extension).</p>
-<p>RGBLINK is a <em>linker</em>.
-Its job is taking object files (or, like in our case, just one), and “linking” them into a ROM, which is to say: filling the aforementioned “holes”.
-RGBLINK’s purpose may not be obvious with programs as simple as this Hello World, but it will become much clearer in Part Ⅱ.</p>
+<p>RGBASM è un <em>assembler</em> (compilatore).
+Il suo compito è leggere il codice sorgente (nel nostro caso <code>hello-world.asm</code> e <code>hardware.inc</code>) e generare un file di codice che però è incompleto:
+RGBASM non sempre ha tutte le informazioni che gli servono a generare una ROM, quindi produce dei <em>file oggetto</em> che fanno da intermediari (con estensione <code>.o</code>).</p>
+<p>RGBLINK è un <em>linker</em>.
+Il suo compito è usare le informazioni dei file oggetto (che nel nostro caso è solo uno) ed unirli (in inglese “link”) in una ROM.
+RGBLINK potrebbe sembrare superfluo, ma è solo perché la ROM che abbiamo guardato è davvero piccola: quando nella seconda parte il nostro progetto crescerà, la sua utilità sarà più apparente.</p>
 <p>Quindi: Codice sorgente → <code>rgbasm</code> → File oggetto → <code>rgblink</code> → ROM, giusto?
 Beh, non esattamente.</p>
 <h2 id="rgbfix"><a class="header" href="#rgbfix">RGBFIX</a></h2>
-<p>RGBLINK does produces a ROM, but it’s not quite usable yet.
-See, actual ROMs have what’s called a <em>header</em>.
-It’s a special area of the ROM that contains <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html">metadata about the ROM</a>; for example, the game’s name, Game Boy Color compatibility, and more.
-For simplicity, we defaulted a lot of these values to 0 for the time being; we’ll come back to them in Part Ⅱ.</p>
-<p>However, the header contains three crucial fields:</p>
+<p>RGBLINK produce sì una ROM, ma se la provassimo su un GameBoy non funzionerebbe.
+Nelle ROM deve sempre essere presente qualcosa chiamato <em>header</em>:
+questa sezione contiene <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html">informazioni sulla ROM</a>, come il nome del gioco, il nome dell’autore, se sia compatibile con il GameBoy Color ed altro.
+Per il momento abbiamo impostato tutti i valori a zero nel programma per semplicità, ma ne riparleremo nella seconda parte del tutorial.</p>
+<p>Ma nell’header ci sono anche delle componenti importantissime:</p>
 <ul>
-<li>The <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0104-0133--nintendo-logo">Nintendo logo</a>,</li>
-<li>the <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0148--rom-size">ROM’s size</a>,</li>
-<li>and <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#014d--header-checksum">two checksums</a>.</li>
+<li>il <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0104-0133--nintendo-logo">logo Nintendo</a>,</li>
+<li>la <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0148--rom-size">dimensione della ROM</a>,</li>
+<li>e <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#014d--header-checksum">due valori di controllo</a> (<a href="https://it.wikipedia.org/wiki/Checksum">checksum</a>).</li>
 </ul>
-<p>When the console first starts up, it runs <a href="https://github.com/ISSOtm/gb-bootroms">a little program</a> known as the <em>boot ROM</em>, which reads and draws the logo from the cartridge, and displays the little boot animation.
-When the animation is finished, the console checks if the logo matches a copy that it stores internally; if there is a mismatch, <strong>it locks up!</strong>
-And, since it locks up, our game never gets to run… 😦
-This was meant as an anti-piracy measure; however, that measure <a href="https://en.wikipedia.org/wiki/Sega_v._Accolade">has since then been ruled as invalid</a>, so don’t worry, we are clear! 😄</p>
-<p>Similarly, the boot ROM also computes a <em><a href="https://en.wikipedia.org/wiki/Checksum">checksum</a></em> of the header, supposedly to ensure that it isn’t corrupted.
-The header also contains a copy of this checksum; if it doesn’t match what the boot ROM computed, then the boot ROM <strong>also locks up!</strong></p>
+<p>Quando la console viene accesa viene eseguito <a href="https://github.com/ISSOtm/gb-bootroms">un programma</a> chiamato <em>ROM di avvio</em> (boot ROM) responsabile, tra l’altro, dell’animazione di avvio leggendo il logo di Nintendo dalla ROM.
+Alla fine dell’animazione, però, la ROM di avvio controlla che il logo di Nintendo sia corretto, e interrompe l’esecuzione se non lo è:
+in pratica, se non azzecchiamo il logo il nostro gioco non partirà mai… 😦
+Questo meccanismo era per evitare la pirateria; per nostra fortuna, però, <a href="https://en.wikipedia.org/wiki/Sega_v._Accolade">non è più valida</a> perciò non dobbiamo preoccuparci! 😄</p>
+<p>Allo stesso modo, la ROM di avvio calcola anche un <em><a href="https://en.wikipedia.org/wiki/Checksum">checksum</a></em> dell’header, presumibilmente per garantire che non sia corrotto.
+L’header contiene anche una copia di questo checksum; se non corrisponde a quello calcolato dalla ROM di avvio, la ROM di avvio <strong>si blocca!</strong></p>
 <p>L’header contiene anche un checksum dell’intera ROM, ma non viene mai utilizzato.
 Non costa niente ed è una buona idea, comunque, farlo bene.</p>
 <p>Infine, l’header contiene anche la dimensione della ROM, necessaria per emulatori e dalle flash cart.</p>
@@ -415,13 +415,13 @@ Ci sono ragioni nella storia di questi programmi, ma soprattutto RGBLINK può fa
 <p>A RGBDS, come alla maggior parte dei programmi, non importa come chiami i file né l’estensione che gli dai: l’importante è il contenuto.
 Per esempio molti usano l’estensione <code>.s</code> per il sorgente, oppure <code>.obj</code> per gli oggetti.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="binario-ed-esadecimale"><a class="header" href="#binario-ed-esadecimale">Binario ed esadecimale</a></h1>
-<p>Before we talk about the code, a bit of background knowledge is in order.
-When programming at a low level, understanding of <em><a href="https://en.wikipedia.org/wiki/Binary_number">binary</a></em> and <em><a href="https://en.wikipedia.org/wiki/Hexadecimal">hexadecimal</a></em> is mandatory.
-Since you may already know about both of these, a summary of the RGBDS-specific information is available at the end of this lesson.</p>
-<p>So, what’s binary?
-It’s a different way to represent numbers, in what’s called <em>base 2</em>.
-We’re used to counting in <a href="https://en.wikipedia.org/wiki/Decimal">base 10</a>, so we have 10 digits: 0, 1, 2, 3, 4, 5, 6, 7, 8, and 9.
-Here’s how digits work:</p>
+<p>Prima di passare al codice dobbiamo introdurre alcuni concetti.</p>
+<p>Quando si programma ad un basso livello è fondamentale capire bene i sistemi <em><a href="https://it.wikipedia.org/wiki/Sistema_numerico_binario">binario</a></em> ed <em><a href="https://it.wikipedia.org/wiki/esadecimale">esadecimale</a></em>.
+Se già conoscessi questi concetti, in fondo alla pagina ci sono delle informazioni specifiche all’uso di RGDBS.</p>
+<p>Cos’è il binario?
+È semplicemente un modo alternativo di rappresentare i numeri, in <em>base 2</em>.
+Noi contiamo in <a href="https://it.wikipedia.org/wiki/decimale">base 10</a>, ovvero con 10 cifre: 0, 1, 2, 3, 4, 5, 6, 7, 8, e 9.
+Le cifre hanno una funzione ben specifica:</p>
 <pre><code>  42 =                       4 × 10   + 2
      =                       4 × 10^1 + 2 × 10^0
                                   ↑          ↑
@@ -438,12 +438,12 @@ Here’s how digits work:</p>
 <p><code>^</code> qui significa “alla potenza di”, dove <code>X^N</code> è uguale a moltiplicare <code>X</code> con se stesso <code>N</code> volte, e <code>X ^ 0 = 1</code>.</p>
 </div>
 </div>
-<p>Decimal digits form a unique <em>decomposition</em> of numbers in powers of 10 (<em>deci</em>mal is base 10, remember?).
-But why stop at powers of 10?
-We could use other bases instead, such as base 2.
-(Why base 2 specifically will be explained later.)</p>
-<p>Binary is base 2, so there are only two digits, called <em>bits</em>: 0 and 1.
-Thus, we can generalize the principle outlined above, and write these two numbers in a similar way:</p>
+<p>Con le cifre decimali ogni numero viene <em>scomposto</em> in maniera univoca in potenze di 10 (il <em>deci</em>male è la base 10, ricordi?).
+Ma perché fermarsi alle potenze di 10?
+Potremmo invece usare altre basi, come la base 2
+(il perché della base 2 sarà spiegato più avanti).</p>
+<p>Il sistema binario è in base 2, quindi ha solo due cifre (chiamate <em>bit</em>): 0 e 1.
+Possiamo quindi generalizzare il principio descritto sopra e riscrivere i due numeri di prima in modo simile:</p>
 <pre><code>  42 =                                                    1 × 32  + 0 × 16  + 1 × 8   + 0 × 4   + 1 × 2   + 0
      =                                                    1 × 2^5 + 0 × 2^4 + 1 × 2^3 + 0 × 2^2 + 1 × 2^1 + 0 × 2^0
                                                               ↑         ↑         ↑         ↑         ↑         ↑
@@ -453,30 +453,30 @@ Thus, we can generalize the principle outlined above, and write these two number
      = 1 × 2^10 + 0 × 2^9 + 0 × 2^8 + 0 × 2^7 + 0 × 2^6 + 0 × 2^5 + 0 × 2^4 + 0 × 2^3 + 0 × 2^2 + 0 × 2^1 + 0 × 2^0
        ↑          ↑         ↑         ↑         ↑         ↑         ↑         ↑         ↑         ↑         ↑
 </code></pre>
-<p>So, by applying the same principle, we can say that in base 2, 42 is written as <code>101010</code>, and 1024 as <code>10000000000</code>.
-Since you can’t tell ten (decimal 10) and two (binary 10) apart, RGBDS assembly has binary numbers prefixed by a percent sign: 10 is ten, and %10 is two.</p>
-<p>Okay, but why base 2 specifically?
-Rather conveniently, a bit can only be 0 or 1, which are easy to represent as “ON” or “OFF”, empty or full, etc!
-If you want, at home, to create a one-bit memory, just take a box.
-If it’s empty, it stores a 0; if it contains <em>something</em>, it stores a 1.
-Computers thus primarily manipulate binary numbers, and this has a <em>slew</em> of implications, as we will see throughout this entire tutorial.</p>
+<p>Quindi, applicando lo stesso principio, possiamo dire che in base 2, 42 si scrive come <code>101010</code> e 1024 come <code>10000000000</code>. 
+Poiché non è possibile distinguere tra dieci (10 decimale) e due (10 binario), l’assemblaggio RGBDS prevede numeri binari preceduti da un segno di percentuale: 10 è dieci e %10 è due.</p>
+<p>Ok, ma perché proprio la base 2?
+Visto che un bit può essere solo 0 o 1, è molto facile rappresentarlo: può essere “ON” o “OFF”, vuoto o pieno, ecc!
+Se ad esempio si vuole creare una memoria da un bit basta prendere una scatola:
+se è vuota allora simboleggia uno 0; se contiene <em>qualcosa</em>, allora è un 1.
+I computer manipolano quindi principalmente numeri binari e questo ha <em>molte</em> implicazioni, come vedremo nel corso di questo tutorial.</p>
 <h2 id="esadecimale"><a class="header" href="#esadecimale">Esadecimale</a></h2>
 <p>Ricapitolando: il decimale non è pratico per i computer, che si affidano invece ai numeri binari (base 2).
 Ok, ma il binario è davvero difficile da usare per noi programmatori.
 Prendiamo %10000000000, ovvero 2048; mentre per scriverlo in decimale bastano solo 4 cifre, in binario ne servono 12!
 E probabilmente non avete neanche notato che ho scritto uno zero di troppo!
 Per fortuna arriva l’esadecimale a salvare la situazione! 🦸</p>
-<p>Base 16 works just the same as every other base, but with 16 digits, called <em>nibbles</em>: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, and F.</p>
+<p>La base 16 funziona esattamente come tutte le altre basi, ma con 16 cifre (chiamate “<em>nibbles</em>” in inglese): 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, ed F.</p>
 <pre><code>  42 =            2 × 16   + 10
      =            2 × 16^1 + A × 16^0
 
 1024 = 4 × 256  + 0 × 16   + 0
      = 4 × 16^2 + 0 × 16^1 + 0 × 16^0
 </code></pre>
-<p>Like binary, we will use a prefix to denote hexadecimal, namely <code>$</code>.
-So, 42 = $2A, and 1024 = $400.
-This is <em>much</em> more compact than binary, and slightly more than decimal, too; but what makes hexadecimal very interesting is that one nibble corresponds <em>exactly</em> to 4 bits!</p>
-<div class="table-wrapper"><table><thead><tr><th style="text-align: center">Nibble</th><th style="text-align: center">Bits</th></tr></thead><tbody>
+<p>Come per il binario useremo un prefisso per indicare l’esadecimale, cioè <code>$</code>.
+Quindi, 42 = $2A e 1024 = $400.
+Questo è <em>molto</em> più compatto del binario, e anche un po’ più del decimale; ma ciò che rende l’esadecimale molto interessante è che una sua cifra corrisponde <em>esattamente</em> a 4 bit!</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: center">Nibble</th><th style="text-align: center">Bit</th></tr></thead><tbody>
 <tr><td style="text-align: center">$0</td><td style="text-align: center">%0000</td></tr>
 <tr><td style="text-align: center">$1</td><td style="text-align: center">%0001</td></tr>
 <tr><td style="text-align: center">$2</td><td style="text-align: center">%0010</td></tr>
@@ -526,14 +526,14 @@ Then in the debugger’s menu, click “View”, then click “Show Addresses”
 <pre><code>&lt;img src=&quot;../assets/vid/debugger.gif&quot; alt=&quot;Video demonstration in Emulicious&quot;&gt;
 </code></pre>
 </video>
-<p>The debugger may look intimidating at first, but don’t worry, soon we’ll be very familiar with it!
-For now, let’s focus on this small box near the top-right, the <em>register viewer</em>.</p>
+<p>Il debugger potrebbe sembrare incomprensibile all’inizio, ma non ti preoccupare: ti ci abituerai in fretta!
+Per il momento guarda in alto a destra, dove c’è un piccolo spazio intitolato <em>register viewer</em> (visualizzatore dei registri).</p>
 <p><img src="part1/../assets/img/reg_viewer.png" alt="Immagine della posizione del visualizzatore di registri" /></p>
 <div class="box warning decorated">
 <div><p>⚠️</p></div>
 <div>
-<p>The register viewer shows both <em>CPU registers</em> and some <em>hardware registers</em>.
-This lesson will only deal with CPU registers, so that’s why we will be ignoring some of these entries here.</p>
+<p>Il visualizzatore mostra sia i <em>registri della CPU</em> che alcuni <em>registri hardware</em>.
+In questa lezione parleremo solo dei registri della CPU, perciò non ti preoccupare se salteremo alcuni nomi.</p>
 </div>
 </div>
 <p>Ma cosa sono questi registri della CPU?
@@ -550,24 +550,24 @@ Eseguire le operazioni direttamente sulla memoria è scomodo, sarebbe come rompe
 </div>
 </div>
 <h2 id="registri-generici"><a class="header" href="#registri-generici">Registri Generici</a></h2>
-<p>CPU registers can be placed into two categories: <em>general-purpose</em> and <em>special-purpose</em>.
-A “general-purpose” register (<abbr title="General-Purpose Register">GPR</abbr> for short) can be used for storing arbitrary integer numbers.
-Some GPRs are special nonetheless, as we will see later; but the distinction is “can I store arbitrary integers in it?”.</p>
+<p>A grandi linee ci sono due tipi di registri: <em>registri generici</em> e <em>registri speciali</em>.
+Un registro generico (abbreviato <abbr title="inglese: General-Purpose Register">GPR</abbr>) può essere usato per dati di qualunque tipo.
+Qualche GPR ha anche delle funzioni più specifiche, come vedremo più in là; in generale per distinguerli da quelli speciali chiediti “posso inserirci dati arbitrari?”.</p>
 <p>Parleremo poi dei registri speciali;
 hanno funzioni particolari che non abbiamo ancora spiegato e perciò li spiegheremo quando parleremo della funzione specifica, visto che fino ad allora non ne capiremmo lo scopo.</p>
 <p>La CPU del Game Boy ha sette GPR a 8 bit: <code>a</code>, <code>b</code>, <code>c</code>, <code>d</code>, <code>e</code>, <code>h</code> e <code>l</code>.
 “8 bit” significa che memorizzano 8 bit.
 Pertanto, possono memorizzare numeri interi da 0 a 255 (%1111_1111 alias $FF).</p>
-<p><code>a</code> is the <em>accumulator</em>, and we will see later that it can be used in special ways.</p>
-<p>A special feature is that these registers, besides <code>a</code>, are <em>paired up</em>, and the pairs can be treated as the 16-bit registers <code>bc</code>, <code>de</code>, and <code>hl</code>.
-The pairs are <em>not</em> separate from the individual registers; for example, if <code>d</code> contains 192 ($C0) and <code>e</code> contains 222 ($DE), then <code>de</code> contains 49374 ($C0DE) = 192 × 256 + 222.
-The other pairs work similarly.</p>
+<p>`a’ è l’<em>accumulatore</em>, e come vedremo più avanti può essere usato in modi particolari.</p>
+<p>Questi registri hanno un’altra caratteristica interessante; sono tutti (tranne <code>a</code>) <em>accoppiati</em> ad un altro registro, e queste coppie possono funzionare da registri a 16 bit: <code>BC</code>, <code>DE</code>, e <code>HL</code>.
+Ma tieni sempre a mente che le coppie <em>non</em> sono indipendenti dai registri che li formano; se, ad esempio, <code>D</code> contiene 192 ($C0) ed <code>E</code> 222 ($DE) allora <code>DE</code> conterrà 49374 ($C0DE) = <code>D × 0x100 + E</code>.
+Tutte le altre coppie funzionano allo stesso modo.</p>
 <p>Quindi, cambiare il valore di <code>DE</code> modifica sia quello di <code>D</code> che di <code>E</code> allo stesso tempo e modificare <code>D</code> o <code>E</code> cambierà il valore della coppia <code>DE</code>.
 Ok, ma come facciamo a usare questi registri?
 È il momento di dare un’occhiata all’Assembly!</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="primi-passi-in-assembly"><a class="header" href="#primi-passi-in-assembly">Primi passi in Assembly</a></h1>
-<p>Alright, now that we know what the tools <em>do</em>, let’s see what language RGBASM speaks.
-I will take a short slice of the beginning of <code>hello-world.asm</code>, so that we agree on the line numbers, and you can get some syntax highlighting even if your editor doesn’t support it.</p>
+<p>Bene, ora che sappiamo cosa <em>fanno</em> gli strumenti, vediamo che lingua parla RGBASM.
+Prenderò una breve porzione dell’inizio di <code>hello-world.asm</code>, in modo da essere d’accordo sui numeri di riga e da avere un’evidenziazione della sintassi anche se il vostro editor non la supporta.</p>
 <pre><code class="language-rgbasm linenos start=1">INCLUDE &quot;hardware.inc&quot;
 
 SECTION &quot;Header&quot;, ROM0[$100]
@@ -581,35 +581,35 @@ EntryPoint:
 	ld a, 0
 	ld [rNR52], a
 </code></pre>
-<p>Let’s analyze it.
-Note that I will be ignoring a <em>lot</em> of RGBASM’s functionality; if you’re curious to know more, you should wait until parts II and III, or <a href="https://rgbds.gbdev.io/docs">read the docs</a>.</p>
+<p>Analizziamolo insieme.
+Sappi che per il momento salteremo <em>molte</em> delle funzionalità di RGBASM; se fossi curioso di saperne di più, dovrai aspettare fino alla seconda o terza parte oppure leggere la <a href="https://rgbds.gbdev.io/docs">documentazione</a>.</p>
 <h2 id="commenti"><a class="header" href="#commenti">Commenti</a></h2>
-<p>We’ll start with line 10, which should appear gray above.
-Semicolons <code>;</code> denote <em>comments</em>.
-Everything from a semicolon to the end of the line is <em>ignored</em> by RGBASM.
-As you can see on line 7, comments need not be on an otherwise empty line.</p>
+<p>Iniziamo dalla riga 10, che dovrebbe essere grigia nel riquadro qui sopra.
+I punti e virgola <code>;</code> indicano un <em>commento</em>.
+I commenti (che finiscono alla fine della riga) sono <em>ignorati</em> dall’assembler, indipendentemente dal contenuto.
+Come vedi alla riga 7, puoi anche inserire commenti dopo aver scritto altro.</p>
 <p>I commenti sono molto importanti in tutti i linguaggi di programmazione: ti aiutano a descrivere la funzione del tuo codice.
 È più o meno la differenza tra “scalda il forno fino a 180°C” e “scalda il forno a 180°C, se lo scaldassi di più la torta brucerebbe”.
 I commenti sono utilissimi in ogni linguaggio di programmazione, ma in Assembly sono ancora più importanti: infatti, il codice Assembly è molto più astratto.</p>
 <h2 id="istruzioni"><a class="header" href="#istruzioni">Istruzioni</a></h2>
-<p>Assembly is a very line-based language.
-Each line can contain one of two things:</p>
+<p>L’assembly è un linguaggio “line-based”, ovvero incentrato sulle righe.
+Ogni riga di codice può contenere una di queste due cose:</p>
 <ul>
-<li>a <em>directive</em>, which instructs RGBASM to do something, or</li>
-<li>an <em>instruction</em><sup class="footnote-reference"><a href="#instr_directive">1</a></sup>, which is written directly into the ROM.</li>
+<li>una <em>direttiva</em>, che istruisce RGBASM a fare qualcosa, oppure</li>
+<li>una <em>istruzione</em><sup class="footnote-reference"><a href="#instr_direttiva">1</a></sup>, che viene scritta direttamente nella ROM.</li>
 </ul>
 <p>Parleremo delle direttive più avanti, per ora concentriamoci sulle istruzioni: per esempio, nello snippet qui sopra, ignoreremo le righe 1 (<code>INCLUDE</code>), 7 (<code>ds</code>) e 3 (<code>SECTION</code>).</p>
 <p>Per continuare l’analogia con la preparazione di una torta, le istruzioni sono come i passi di una ricetta.
 Il processore (<abbr title="Central Processing Unit">CPU</abbr>) esegue un’istruzione alla volta. Istruzione dopo istruzione… dopo un po’ si arriva al risultato!
 Come cuocere una torta, disegnare “Hello World”, oppure mostrarti un tutorial sull’Assembly del GameBoy!</p>
-<p>Instructions have a <em>mnemonic</em>, which is a name they are given, and <em>operands</em>, which indicate what they should act upon.
-For example, in “melt the chocolate and butter in a saucepan”, <em>the whole sentence</em> would be the instruction, <em>the verb</em> “melt” would be the mnemonic, and “chocolate”, “butter”, and “saucepan” the operands, i.e. some kind of parameters to the operation.</p>
+<p>Le istruzioni sono composte da una <em>mnemonica</em>, un nome con cui le puoi invocare, e dei <em>parametri</em>, ovvero su cosa va eseguita l’operazione.
+Ad esempio: in “sciogli il cioccolato ed il burro in una padella” l’istruzione è <em>tutta la frase</em>; la mnemonica sarebbe l’<em>azione</em>, ovvero sciogli, mentre i parametri sono gli <em>oggetti</em> della frase (cioccolato, burro, padella).</p>
 <p>Cominciamo dall’istruzione più importante: <strong><code>ld</code></strong>.
 <code>ld</code> sta per “<abbr title="LoaD in inglese">carica</abbr>”, e semplicemente copia i dati contenuti nel secondo parametro (“<a href="https://en.wikipedia.org/wiki/Sides_of_an_equation"><abbr title="Right-Hand Side">RHS</abbr></a>”) nel primo (“<a href="https://en.wikipedia.org/wiki/Sides_of_an_equation"><abbr title="Left-Hand Side">LHS</abbr></a>”).
 Per esempio, guardiamo la riga 11 del nostro programma, <code>ld a, 0</code>: copia (“carica”) il numero zero nel registro <code>a</code><sup class="footnote-reference"><a href="#ld_imm_from">2</a></sup>.
 Per fare un altro esempio, a riga 33 troviamo <code>ld a, b</code>: significa semplicemente “copia il valore di <code>b</code> in <code>a</code>.</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Mnemonic</th><th>Effect</th></tr></thead><tbody>
-<tr><td>Load</td><td><code>ld</code></td><td>Copies values around</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Istruzione</th><th>Mnemonica</th><th>Effetto</th></tr></thead><tbody>
+<tr><td>Carica</td><td><code>ld</code></td><td>Copia dei valori</td></tr>
 </tbody></table>
 </div>
 <div class="box tip decorated">
@@ -626,14 +626,14 @@ Le descrizioni che trovate in quella pagina sono più concise: sono intese come 
 </div>
 </div>
 <h2 id="direttive"><a class="header" href="#direttive">Direttive</a></h2>
-<p>In a way, instructions are destined to the console’s CPU, and comments are destined to the programmer.
-But some lines are neither, and are instead sort of metadata destined to RGBDS itself.
-Those are called <em>directives</em>, and our Hello World actually contains three of those.</p>
+<p>Quindi, in un certo senso, le istruzioni sono destinate al processore del GameBoy mentre i commenti sono destinati al programmatore.
+Ma alcune righe non sono né l’una né l’altra cosa, e sono invece dei metadati destinati a RGBDS stesso.
+Queste sono chiamate <em>direttive</em> e il nostro “Hello World” ne contiene tre.</p>
 <h3 id="includere-un-altro-file"><a class="header" href="#includere-un-altro-file">Includere un altro file</a></h3>
 <pre><code class="language-rgbasm linenos">INCLUDE &quot;hardware.inc&quot;
 </code></pre>
-<p>Line 1 <em>includes</em> <code>hardware.inc</code><sup class="footnote-reference"><a href="#hw_inc_directives">3</a></sup>.
-Including a file has the same effect as if you copy-pasted it, but without having to actually do that.</p>
+<p>La riga 1 <em>include</em> <code>hardware.inc</code><sup class="footnote-reference"><a href="#hw_inc_directives">3</a></sup>.
+<code>Include</code>ndo un file è come se copiassimo il suo contenuto alla riga dove inseriamo la direttiva.</p>
 <p>Così facendo, si può riciclare facilmente il codice in diversi file: se, ad esempio, due file <code>a.asm</code> e <code>b.asm</code> includono <code>hardware.inc</code> basta modificare il file perché le modifiche si applichino ad <code>a.asm</code> e <code>b.asm</code>.
 Se invece copiassi a mano il contenuto di <code>hardware.inc</code> in <code>a.asm</code> e <code>b.asm</code> dovresti modificare il contenuto di entrambi ogni volta che vuoi apportare un cambiamento, che non è solo uno spreco di tempo ma aumenta la possibilità di commettere errori.</p>
 <p><code>hardware.inc</code> definisce alcune costanti molto utili per interfacciarsi con l’hardware del GameBoy.
@@ -642,8 +642,8 @@ Questo torna molto utile: è molto più semplice ricordare il registro “<stron
 <p>Parleremo delle costanti in modo più approfondito nella Parte Ⅱ.</p>
 <h3 id="sezioni"><a class="header" href="#sezioni">Sezioni</a></h3>
 <p>Spieghiamo innanzitutto che cos’è una “sezione”, poi vedremo che cosa fa la riga 3.</p>
-<p>A section represents a contiguous range of memory, and by default, ends up <em>somewhere</em> not known in advance.
-If you want to see where all the sections end up, you can ask RGBLINK to generate a “map file” with the <code>-m</code> flag:</p>
+<p>Una sezione rappresenta un intervallo contiguo di memoria che, di base, finisce da <em>qualche</em> parte non nota in anticipo.
+Se si vuole vedere dove finisce ogni sezione si può chiedere a RGBLINK di generare un “file mappa” con l’opzione <code>-m</code>:</p>
 <pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgblink hello-world.o -m hello-world.map</span>
 </code></pre>
 <p>…e possiamo vedere, per esempio, dove è finita la sezione <code>&quot;Tilemap&quot;</code>:</p>
@@ -665,14 +665,14 @@ Ne parleremo nella Parte Ⅱ.</p>
 <p>Dove dice <code>[100$]</code> invece è più interessante, perché è un’indicazione speciale per questa sezione.
 Se ricordi, prima abbiamo detto che:</p>
 <blockquote>
-<p>a section […] by default, ends up <em>somewhere</em> not known in advance.</p>
+<p>Una sezione […], di base, finisce da <em>qualche</em> parte non nota in anticipo.</p>
 </blockquote>
-<p>However, some memory locations are special, and so sometimes we need a specific section to span a specific range of memory.
-To enable this, RGBASM provides the <code>[addr]</code> syntax, which <em>forces</em> the section’s starting address to be <code>addr</code>.</p>
-<p>In this case, the memory range $100–$14F is special, as it is the <em>ROM’s header</em>.
-We will discuss the header in a couple lessons, but for now, just know that we need not to put any of our code or data in that space.
-How do we do that?
-Well, first, we begin a section at address $100, and then we need to reserve some space.</p>
+<p>Però alcune parti della memoria sono speciali, e quindi a volte è necessario che una sezione specifica copra un intervallo di memoria specifico.
+Per permetterlo, RGBASM ha la sintassi <code>[addr]</code> che <em>forza</em> l’indirizzo iniziale della sezione a essere <code>addr</code>.</p>
+<p>In questo caso, l’intervallo di memoria $100-$14F è speciale perché è l’header della ROM.
+Parleremo dell’header tra un paio di lezioni, ma per il momento basta sapere che <strong>non</strong> dobbiamo inserire né codice né dati in quello spazio.
+E come facciamo?
+Innanzitutto, iniziamo una sezione all’indirizzo $100, dopodiché riserviamo un po’ di spazio.</p>
 <h3 id="lasciare-spazio"><a class="header" href="#lasciare-spazio">Lasciare spazio</a></h3>
 <pre><code class="language-rgbasm linenos start=5">	jp EntryPoint
 
@@ -680,14 +680,14 @@ Well, first, we begin a section at address $100, and then we need to reserve som
 </code></pre>
 <p>La riga 7 afferma di “fare spazio per l’header”, di cui ho parlato brevemente poco sopra.
 Per ora, concentriamoci su ciò che <code>ds</code> fa effettivamente.</p>
-<p><code>ds</code> is used for <em>statically</em> allocating memory.
-It simply reserves some amount of bytes, which are set to a given value.
-The first argument to <code>ds</code>, here <code>$150 - @</code>, is <em>how many bytes to reserve</em>.
-The second (optional) argument, here <code>0</code>, is <em>what value to set each reserved byte to</em><sup class="footnote-reference"><a href="#ds_pattern">5</a></sup>.</p>
+<p><code>ds</code> è usato per allocare <em>staticamente</em> della memoria.
+Riserva un certo numero di byte, che sono impostati ad un certo valore dato.
+Il primo argomento di <code>ds</code>, in questo caso <code>$150 - @</code>, è <em>quanti byte riservare</em>.
+Il secondo argomento (che è opzionale), in questo caso <code>0</code>, è <em>il valore a cui impostare ogni byte riservato</em><sup class="footnote-reference"><a href="#ds_pattern">5</a></sup>.</p>
 <p>Vedremo perché questi byte devono essere riservati in un paio di lezioni.</p>
-<p>It is worth mentioning that this first argument here is an <em>expression</em>.
-RGBDS (thankfully!) supports arbitrary expressions essentially anywhere.
-This expression is a simple subtraction: $150 minus <code>@</code>, which is a special symbol that stands for “the current memory address”.</p>
+<p>È importante notare che il primo argomento è un’<em>espressione</em>.
+RGBDS (fortunatamente!) supporta l’inserimento di espressioni arbitrarie pressoché ovunque.
+Quest’espressione è una semplice sottrazione: $150 meno <code>@</code>, che è un simbolo speciale che sta per “l’indirizzo in memoria attuale”.</p>
 <div class="box tip">
 <p>Un simbolo è essenzialmente “un nome associato a un valore”, di solito un numero.
 Nel corso dell’esercitazione esploreremo i diversi tipi di simboli, a partire dalle etichette nella prossima sezione.</p>
@@ -696,20 +696,25 @@ Nel corso dell’esercitazione esploreremo i diversi tipi di simboli, a partire 
 <p>Ora vi starete chiedendo cosa siano questi “indirizzi di memoria” di cui continuo a parlare.
 Andiamo subito a scoprirlo!</p>
 <hr />
-<div class="footnote-definition" id="instr_directive"><sup class="footnote-definition-label">1</sup></div>
-<p>Technically, instructions in RGBASM are implemented as directives, basically writing their encoded form to the ROM; but the distinction between the instructions in the source code and those in the final ROM is not worth bringing up right now.</p>
-<div class="footnote-definition" id="ld_imm_from"><sup class="footnote-definition-label">2</sup></div>
-<p>The curious reader may ask where the value is copied <em>from</em>. The answer is simply that the &quot;immediate&quot; byte ($00 in this example) is stored in ROM just after the instruction’s opcode byte, and it’s what gets copied to <code>a</code>.
-We will come back to this when we talk about how instructions are encoded later on.</p>
-<div class="footnote-definition" id="hw_inc_directives"><sup class="footnote-definition-label">3</sup></div>
-<p><code>hardware.inc</code> itself contains more directives, in particular to define a lot of symbols.
-They will be touched upon much later, so we won’t look into <code>hardware.inc</code> yet.</p>
-<div class="footnote-definition" id="sect_name"><sup class="footnote-definition-label">6</sup></div>
-<p>Section names actually only need to be unique for “plain” sections, and function differently with “unionized” and “fragment” sections, which we will discuss much later.</p>
-<div class="footnote-definition" id="ds_pattern"><sup class="footnote-definition-label">5</sup></div>
-<p>Actually, since RGBASM 0.5.0, <code>ds</code> can accept a <em>list</em> of bytes, and will repeat the pattern for as many bytes as specified.
-It just complicates the explanation slightly, so I omitted it for now.
-Also, if the argument is omitted, it defaults to what is specified using the <code>-p</code> option <strong>to RGBASM</strong>.</p>
+<div class="footnote-definition" id="instr_directive"><sup class="footnote-definition-label">6</sup>
+<p>Tecnicamente le istruzioni in RGBASM sono implementate come direttive, che in pratica scrivono la loro forma codificata nella ROM; ma in questo momento non vale la pena di tirare fuori la distinzione tra le istruzioni nel codice sorgente e quelle nella ROM finale.</p>
+</div>
+<div class="footnote-definition" id="ld_imm_from"><sup class="footnote-definition-label">2</sup>
+<p>Il lettore curioso potrebbe chiedersi da <em>dove</em> venga copiato il valore. La risposta è semplicemente che il byte cosiddetto &quot;immediato&quot; ($00 in questo esempio) è memorizzato nella ROM <em>immediat</em>amente dopo il byte del codice dell’istruzione, ed è questo valore che viene copiato in <code>a</code>.
+Torneremo su questo punto più avanti, quando parleremo di come vengono codificate le istruzioni.</p>
+</div>
+<div class="footnote-definition" id="hw_inc_directives"><sup class="footnote-definition-label">3</sup>
+<p>Lo stesso <code>hardware.inc</code> contiene altre direttive, in particolare per definire molti simboli.
+Saranno trattate molto più avanti, quindi non esamineremo ancora <code>hardware.inc</code>.</p>
+</div>
+<div class="footnote-definition" id="nome_sezione"><sup class="footnote-definition-label">4</sup>
+<p>I nomi delle sezioni devono essere univoci solo per le sezioni “semplici” e funzionano in modo diverso con le sezioni “unificate” e “a frammenti”, di cui parleremo più avanti.</p>
+</div>
+<div class="footnote-definition" id="ds_pattern"><sup class="footnote-definition-label">5</sup>
+<p>In realtà, da RGBASM 0.5.0, <code>ds</code> si può usare con un <em>elenco</em> di byte e la pattern sarà ripetuta per il numero di byte necessario.
+Questo complica un po’ la spiegazione, quindi per ora l’ho omesso.
+Inoltre, se il parametro di <code>ds</code> viene omesso, il suo valore assume quello predefinito specificato con l’opzione <code>-p</code> <strong>di RGBASM</strong>.</p>
+</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="memoria"><a class="header" href="#memoria">Memoria</a></h1>
 <div class="box tip decorated">
 <div><p>🎉</p></div>
@@ -718,40 +723,40 @@ Also, if the argument is omitted, it defaults to what is specified using the <co
 Dal momento che avete le basi, d’ora in poi vedremo codice sempre più concreto.</p>
 </div>
 </div>
-<p>If we look at line 29, we see <code>ld a, [de]</code>.
-Given what we just learned, this copies a value into register <code>a</code>… but where from?
-What do these brackets mean?
-To answer that, we need to talk about <em>memory</em>.</p>
+<p>Se guardiamo alla riga 29 leggiamo <code>ld a, [de]</code>.
+Stando a quanto abbiamo appena appreso, questo copia un valore nel registro <code>a</code>… ma da dove?
+Cosa significano queste parentesi?
+Per rispondere dobbiamo parlare della <em>memoria</em>.</p>
 <h2 id="cosè-una-memoria"><a class="header" href="#cosè-una-memoria">Cos’è una memoria?</a></h2>
-<p>The purpose of memory is to store information.
-On a piece of paper or a whiteboard, you can write letters to store the grocery list, for example.
-But what can you store in a computer memory?
-The answer to that question is <em>current</em><sup class="footnote-reference"><a href="#memory_magnetic">1</a></sup>.
-Computer memory is made of little cells that can store current.
-But, as we saw in the lesson about binary, the presence or absence of current can be used to encode binary numbers!</p>
-<p>tl;dr: memory <strong>stores numbers</strong>.
-In fact, memory is a <em>long</em> array of numbers, stored in cells.
-To uniquely identify each cell, it’s given a number (what else!) called its <em>address</em>.
-Like street numbers!
-The first cell has address 0, then address 1, 2, and so on.
-On the Game Boy, each cell contains <em>8 bits</em>, i.e. a <em>byte</em>.</p>
+<p>Lo scopo della memoria è quello di immagazzinare informazioni.
+Su un foglio di carta o su una lavagna si possono scrivere lettere per memorizzare, ad esempio, la lista della spesa.
+Ma cosa si può memorizzare nella memoria di un computer?
+La risposta a questa domanda è <em>corrente</em><sup class="footnote-reference"><a href="#memoria_magnetica">1</a></sup>.
+La memoria del computer è costituita da piccole celle in grado di immagazzinare corrente.
+Ma, come abbiamo visto nella lezione sul binario, la presenza o l’assenza di corrente può essere utilizzata per codificare i numeri binari!</p>
+<p>Per farla breve: la memoria <strong>immagazzina numeri</strong>.
+Difatti la memoria è una <em>lunga</em> lista di numeri, memorizzati in celle.
+Per identificare in modo univoco ogni cella, le viene assegnato un numero (e che altro!) chiamato <em>indirizzo</em>.
+Come i numeri civici!
+La prima cella ha l’indirizzo 0, poi l’indirizzo 1, 2 e così via.
+Sul Game Boy ogni cella contiene <em>8 bit</em>, cioè un <em>byte</em>.</p>
 <p>Quante cellule ci sono?
 In realtà questa è una domanda trabocchetto…</p>
 <h2 id="i-tanti-tipi-di-memoria"><a class="header" href="#i-tanti-tipi-di-memoria">I tanti tipi di memoria</a></h2>
 <p>Nel Game Boy sono presenti diversi circuiti di memoria, ma possiamo suddividerli in due categorie: <abbr title="Read-Only Memory">ROM</abbr> e <abbr title="Random Access Memory">RAM</abbr><sup class="footnote-reference"><a href="#rom_ram_and">2</a></sup>.
 ROM indica semplicemente la memoria su cui non è possibile scrivere<sup class="footnote-reference"><a href="#rom_ro">3</a></sup>, e RAM la memoria su cui è possibile scrivere.</p>
-<p>Due to how they work, the CPU, as well as the memory chips, can only use a single number for addresses.
-Let’s go back to the “street numbers” analogy: each memory chip is a street, with its own set of numbers, but the CPU has no idea what a street is, it only deals with street numbers.
-To allow the CPU to talk to multiple chips, a sort of “postal service”, the <em>chip selector</em>, is tasked with translating the CPU’s street numbers into a street &amp; street number.</p>
-<p>For example, let’s say a convention is established where addresses 0 through 1999 go to chip A’s addresses 0–1999, 2000–2999 to chip B’s 0–999, and 3000–3999 to chip C’s 0–999.
-Then, if the CPU asks for the byte at address 2791, the chip selector will ask chip B for the byte at its <em>own</em> address 791, and forward the reply to the CPU.</p>
-<p>Since addresses dealt with by the CPU do not directly correspond to the chips’ addresses, we talk about <em>logical</em> addresses (here, the CPU’s) versus <em>physical</em> addresses (here, the chips’), and the correspondence is called a <em>memory map</em>.
-Since we are programming the CPU, we will only be dealing with <strong>logical</strong> addresses, but it’s crucial to keep in mind that different addresses may be backed by different memory chips, since each chip has unique characteristics.</p>
-<p>This may sound complicated, so here is a summary:</p>
+<p>Per via del loro funzionamento il processore ed i circuiti di memoria possono utilizzare un solo numero per gli indirizzi.
+Torniamo all’analogia dei “numeri civici”: ogni circuito di memoria è una strada, con la sua serie di numeri, ma il processore non ha idea di cosa sia una strada, si occupa solo di numeri civici.
+Per consentire al processore di parlare con più circuiti serve una sorta di “servizio postale”, il <em>selezionatore di circuito</em> (“chip selector” in inglese), che ha il compito di tradurre i numeri civici del processore in una via ed un numero civico effettivi.</p>
+<p>Ad esempio, supponiamo che sia stata stabilita una convenzione per cui gli indirizzi da 0 a 1999 vanno agli indirizzi 0–1999 del circuito A, 2000–2999 allo 0–999 del circuito B e 3000–3999 allo 0–999 del circuito C.
+Quindi, se il processore chiede il byte all’indirizzo 2791, il selettore di chip chiederà al circuito B il byte al <em>suo</em> indirizzo 791 ed inoltrerà la risposta al processore.</p>
+<p>Poiché gli indirizzi trattati dal processore non corrispondono direttamente a quelli dei circuiti si parla di indirizzi <em>logici</em> (qui, quelli del processore) e di indirizzi <em>fisici</em> (qui, quelli dei circuiti), e la corrispondenza è chiamata <em>mappa di memoria</em> (“memory map” in inglese).
+Poiché stiamo programmando il processore ci occuperemo solo di indirizzi <strong>logici</strong>, ma è fondamentale tenere presente che indirizzi diversi possono essere supportati da circuiti di memoria diversi, poiché ogni circuito ha caratteristiche uniche.</p>
+<p>Può sembrare complicato, quindi ecco un riassunto:</p>
 <ul>
-<li>Memory stores numbers, each 8-bit on the Game Boy.</li>
-<li>Memory is accessed byte by byte, and the cell being accessed is determined by an <em>address</em>, which is just a number.</li>
-<li>The CPU deals with all memory uniformly, but there are several memory chips each with their own characteristics.</li>
+<li>La memoria contiene numeri, ognuno dei quali sul Game Boy è ad 8 bit.</li>
+<li>Si accede alla memoria byte per byte e la cella a cui si accede è determinata da un <em>indirizzo</em>, che è semplicemente un numero.</li>
+<li>Il processore tratta tutta la memoria come se fosse uniforme, ma esistono diversi circuiti di memoria ognuno con le proprie caratteristiche.</li>
 </ul>
 <h3 id="mappa-di-memoria-del-game-boy"><a class="header" href="#mappa-di-memoria-del-game-boy">Mappa di memoria del Game Boy</a></h3>
 <p>Adesso rispondiamo alla domanda che ci aveva portato a questa sezione: quante celle di memoria ci sono sul Game Boy?
@@ -760,19 +765,19 @@ Ora possiamo riformulare meglio questa domanda come “quanti indirizzi logici c
 Pertanto, ci sono 2^16 = 65536 indirizzi logici, da $0000 a $FFFF.
 Ma quanti sono gli indirizzi fisici?
 Ecco una mappa della memoria <a href="https://gbdev.io/pandocs/Memory_Map.html">per gentile concessione di Pan Docs</a> (anche se la semplificherò un po’):</p>
-<div class="table-wrapper"><table><thead><tr><th>Start</th><th>End</th><th>Name</th><th>Description</th></tr></thead><tbody>
-<tr><td>$0000</td><td>$7FFF</td><td>ROM</td><td>The game ROM, supplied by the cartridge.</td></tr>
-<tr><td>$8000</td><td>$9FFF</td><td>VRAM</td><td>Video RAM, where graphics are stored and arranged.</td></tr>
-<tr><td>$A000</td><td>$BFFF</td><td>SRAM</td><td>Save RAM, optionally supplied by the cartridge to save data to.</td></tr>
-<tr><td>$C000</td><td>$DFFF</td><td>WRAM</td><td>Work RAM, general-purpose RAM for the game to store things in.</td></tr>
-<tr><td>$FE00</td><td>$FE9F</td><td>OAM</td><td>Object Attribute Memory, where “objects” are stored.</td></tr>
-<tr><td>$FF00</td><td>$FF7F</td><td>I/O</td><td>Neither ROM nor RAM, but this is where you control the console.</td></tr>
-<tr><td>$FF80</td><td>$FFFE</td><td>HRAM</td><td>High RAM, a tiny bit of general-purpose RAM which can be accessed faster.</td></tr>
-<tr><td>$FFFF</td><td>$FFFF</td><td>IE</td><td>A lone I/O byte that’s separated from the rest for some reason.</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Inizio</th><th>Fine</th><th>Nome</th><th>Descrizione</th></tr></thead><tbody>
+<tr><td>$0000</td><td>$7FFF</td><td>ROM</td><td>La ROM del gioco, fornita dalla cartuccia.</td></tr>
+<tr><td>$8000</td><td>$9FFF</td><td>VRAM</td><td>RAM video, dove viene memorizzata e organizzata la grafica.</td></tr>
+<tr><td>$A000</td><td>$BFFF</td><td>SRAM</td><td>RAM di salvataggio, fornita opzionalmente da certe cartucce per salvare i dati.</td></tr>
+<tr><td>$C000</td><td>$DFFF</td><td>WRAM</td><td>RAM di lavoro, RAM a uso generico in cui il gioco può memorizzare i dati.</td></tr>
+<tr><td>$FE00</td><td>$FE9F</td><td>OAM</td><td>Object Attribute Memory, dove vengono memorizzati gli “oggetti”.</td></tr>
+<tr><td>$FF00</td><td>$FF7F</td><td>I/O</td><td>Né ROM né RAM, ma è qui che si controlla la console.</td></tr>
+<tr><td>$FF80</td><td>$FFFE</td><td>HRAM</td><td>High RAM, una piccola porzione di RAM generica a cui si accede più velocemente.</td></tr>
+<tr><td>$FFFF</td><td>$FFFF</td><td>IE</td><td>Un solo byte di I/O separato dal resto per qualche motivo.</td></tr>
 </tbody></table>
 </div>
-<p>$8000 + $2000 + $2000 + $2000 + $A0 + $80 + $7F + 1 adds up to $E1A0, or 57760 bytes of memory that can be <em>actually</em> accessed.
-The curious reader will naturally ask, “What about the remaining 7776 bytes? What happens when accessing them?”; the answer is: “It depends, it’s complicated; avoid accessing them”.</p>
+<p>$8000 + $2000 + $2000 + $2000 + $A0 + $80 + $7F + 1 fanno in totale $E1A0, ovvero 57760 byte di memoria che si possono <em>effettivamente</em> usare.
+E a questo punto potreste chiedervi: “E i restanti 7776 byte? Cosa succede quando provo ad usarli?”; la risposta è: “Dipende, è complicato; evitate di accedervi”.</p>
 <h2 id="etichette"><a class="header" href="#etichette">Etichette</a></h2>
 <p>Ok, tutto questo è molto bello, ma non vi aspetterete certo che io tenga in mente tutti questi indirizzi per conto mio, giusto??
 Beh, non temere, perché abbiamo le etichette!</p>
@@ -780,8 +785,8 @@ Beh, non temere, perché abbiamo le etichette!</p>
 Un’etichetta viene dichiarata come alla riga 9 (<code>EntryPoint:</code>): all’inizio della riga si scrive il nome dell’etichetta, seguito da due punti, ed essa si riferirà al byte immediatamente successivo.
 Quindi, per esempio, <code>EntryPoint</code> si riferisce al <code>ld a, 0</code> subito dopo (più precisamente, al primo byte di quell’istruzione, ma ci arriveremo quando ci arriveremo).</p>
 <div class="box tip">
-<p>If you peek inside <code>hardware.inc</code>, you will see that for example <code>rNR52</code> is not defined as a label.
-That’s because they are <em>constants</em>, which we will touch on later; since they can be used mostly like labels, we will conflate the two for now.</p>
+<p>Sbirciando all’interno di <code>hardware.inc</code> si vedrà che, per esempio, <code>rNR52</code> non è definito come un’etichetta.
+Il motivo è che queste sono <em>costanti</em>, di cui parleremo più in là; visto che si usano in modo quasi identico alle etichette, per il momento le considereremo uguali.</p>
 </div>
 <p>Scrivere il nome di un’etichetta equivale a scrivere l’indirizzo del byte a cui fa riferimento (con alcune eccezioni che vedremo nella Parte Ⅱ).
 Per esempio, si consideri la <code>ld de, Tiles</code> alla riga 25.
@@ -796,42 +801,45 @@ Beh, se <code>de</code> contiene il valore $5414, allora <code>ld a, [de]</code>
 <p>Se avete familiarità con il C, queste parentesi sono sostanzialmente il modo in cui viene implementato l’operatore di dereferenziazione.</p>
 </div>
 <h3 id="hli"><a class="header" href="#hli"><code>hli</code></a></h3>
-<p>An astute reader will have noticed the <code>ld [hli], a</code> just below the <code>ld a, [de]</code> we have just studied.
-<code>[de]</code> makes sense because it’s one of the register pairs we saw a couple lessons ago, but <code>[hli]</code>?
-It’s actually a special notation, which can also be written as <code>[hl+]</code>.
-It functions as <code>[hl]</code>, but <code>hl</code> is <em>incremented</em> just after memory is accessed.
-<code>[hld]</code>/<code>[hl-]</code> is the mirror of this one, <em>decrementing</em> <code>hl</code> instead of incrementing it.</p>
+<p>I lettori attenti avranno notato il <code>ld [hli], a</code> appena sotto il <code>ld a, [de]</code> che abbiamo appena studiato.
+<code>[de]</code> ha senso perché è una delle coppie di registri che abbiamo visto un paio di lezioni fa, ma <code>[hli]</code>?
+In realtà, è una notazione speciale, che può essere scritta anche come <code>[hl+]</code>.
+Funziona come <code>[hl]</code>, ma <code>hl</code> viene <em>incrementato</em> subito dopo l’accesso alla memoria.
+<code>[hld]</code>/<code>[hl-]</code> è lo specchio di questa, <em>decrementando</em> <code>hl</code> invece di incrementarlo.</p>
 <h2 id="un-esempio"><a class="header" href="#un-esempio">Un esempio</a></h2>
 <p>Quindi, se osserviamo le prime due istruzioni di <code>CopyTiles</code>:</p>
 <pre><code class="language-rgbasm linenos start=29">	ld a, [de]
 	ld [hli], a
 </code></pre>
-<p>…we can see that we’re copying the byte in memory <em>pointed to</em> by <code>de</code> (that is, whose address is contained in <code>de</code>) into the byte pointed to by <code>hl</code>.
-Here, <code>a</code> serves as temporary storage, since the CPU is unable to perform <code>ld [hl], [de]</code> directly.</p>
+<p>…possiamo vedere che stiamo copiando il byte in memoria <em>puntato</em> da <code>de</code> (cioè il cui indirizzo è contenuto in <code>de</code>) nel byte puntato da <code>hl</code>.
+Qui, <code>a</code> serve come memoria temporanea, poiché la CPU non è in grado di eseguire direttamente <code>ld [hl], [de]</code>.</p>
 <p>Già che ci siamo, esaminiamo il resto di <code>.copyTiles</code> nelle lezioni successive!</p>
 <hr />
-<div class="footnote-definition" id="memory_magnetic"><sup class="footnote-definition-label">1</sup></div>
-<p>Actually, this depends a lot on the type of memory.
-A lot of memory nowadays uses magnetic storage, but to keep the explanation simple, and to parallel the explanation of binary given earlier, let’s assume that current is being used.</p>
-<div class="footnote-definition" id="rom_ram_and"><sup class="footnote-definition-label">2</sup></div>
-<p>There are other types of memory, such as flash memory or EEPROM, but only Flash has been used on the Game Boy, and for only a handful of games; so we can mostly forget about them.</p>
-<div class="footnote-definition" id="rom_ro"><sup class="footnote-definition-label">3</sup></div>
-<p>No, really!
-Mask ROM is created by literally punching holes into a layer of silicon using acid, and e.g. the console’s boot ROM is made of hard-wired transitors within the CPU die.
-Good luck writing to that!
+<div class="footnote-definition" id="memory_magnetic"><sup class="footnote-definition-label">4</sup>
+<p>In realtà, questo dipende molto dal tipo di memoria.
+Molte memorie oggi utilizzano un’archiviazione magnetica, ma per mantenere il discordo più semplice e per fare un parallelo con la spiegazione del binario data in precedenza, supponiamo che venga utilizzata un’archiviazione a corrente elettrica.</p>
+</div>
+<div class="footnote-definition" id="rom_ram_e"><sup class="footnote-definition-label">5</sup>
+<p>Esistono altri tipi di memoria, come la memoria flash o l’EEPROM, ma solo la flash è stata utilizzata sul Game Boy, e solo per una manciata di giochi; quindi possiamo dimenticarci di loro.</p>
+</div>
+<div class="footnote-definition" id="rom_ro"><sup class="footnote-definition-label">3</sup>
+<p>No, davvero!
+La ROM a maschera viene creata letteralmente bucando uno strato di silicio con l’acido e, ad esempio, la ROM di avvio della console è fatta di transistor cablati all’interno del die della CPU.
+Buona fortuna a scriverci!
 <br>
-“ROM” is sometimes (mis)used to refer to “persistent memory” chips, such as flash memory, whose write functionality was disabled.
-Most bootleg / “repro” Game Boy cartridges you can find nowadays actually contain flash; this is why you can reflash them using specialized hardware, but original cartridges cannot be.</p>
+Il termine “ROM” viene a volte (erroneamente) utilizzato per indicare i chip di “memoria persistente”, come la memoria flash, la cui funzionalità di scrittura è stata disabilitata.
+La maggior parte delle cartucce Game Boy bootleg / “repro” che si possono trovare al giorno d’oggi contengono effettivamente la memoria flash; questo è il motivo per cui è possibile riflasharle utilizzando hardware specializzato, mentre non è possibile farlo con le cartucce originali.</p>
+</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="header"><a class="header" href="#header">Header</a></h1>
 <p>Torniamo a una certa riga all’inizio di <code>hello-world.asm</code>.</p>
 <pre><code class="language-rgbasm linenos start=7">	ds $150 - @, 0 ; Make room for the header
 </code></pre>
 <p>Che cos’è questo misterioso header, detto anche intestazione? Perché dobbiamo allocargli uno spazio specifico? Queste e tante altre domande troveranno una risposta in questa lezione!</p>
 <h2 id="cosè-lheader"><a class="header" href="#cosè-lheader">Cos’è l’header?</a></h2>
-<p>First order of business is explaining what the header <em>is</em>.
-It’s the region of memory from $0104 to $014F (inclusive).
-It contains metadata about the ROM, such as its title, Game Boy Color compatibility, size,
-two checksums, and interestingly, the Nintendo logo that is displayed during the power-on animation.</p>
+<p>La prima cosa da fare è spiegare <em>cosa è</em> l’header.
+È la regione di memoria da $0104 a $014F (inclusa).
+Contiene metadati sulla ROM, come il titolo, la compatibilità con il Game Boy Color, le dimensioni,
+due checksum e, cosa interessante, il logo Nintendo che viene visualizzato durante l’animazione di accensione.</p>
 <div class="box tip">
 <p>Queste e altre informazioni sono disponibili <a href="https://gbdev.io/pandocs/The_Cartridge_Header">nei documenti Pan</a>.</p>
 </div>
@@ -845,9 +853,9 @@ Gli emulatori (compresi gli emulatori hardware, come le flashcard) devono emular
 <p>L’intestazione è profondamente collegata alla cosiddetta <strong>boot ROM</strong> (ROM di “avvio”).</p>
 <p>The most observant and/or nostalgic of you may have noticed the lack of the boot-up animation and the Game Boy’s signature “ba-ding!” in Emulicious.
 When the console powers up, the CPU does not begin executing instructions at address $0100 (where our ROM’s entry point is), but at $0000.</p>
-<p>However, at that time, a small program called the <em>boot ROM</em>, burned within the CPU’s silicon, is “overlaid” on top of our ROM!
-The boot ROM is responsible for the startup animation, but it also checks the ROM’s header!
-Specifically, it verifies that the Nintendo logo and header checksums are correct; if either check fails, the boot ROM intentionally <em>locks up</em>, and our game never gets to run :(</p>
+<p>Tuttavia, in quel momento, un piccolo programma chiamato <em>boot ROM</em>, masterizzato all’interno del silicio della CPU, viene “sovrapposto” alla nostra ROM!
+La ROM di avvio è responsabile dell’animazione di avvio, ma controlla anche l’intestazione della ROM!
+In particolare, verifica che i checksum del logo Nintendo e della intestazione siano corretti; se uno dei due controlli fallisce, la ROM di avvio si <em>blocca</em> intenzionalmente e il nostro gioco non verrà mai eseguito :(</p>
 <div class="box tip">
 <p class="box-title">Per i curiosi</p><p>È possibile trovare una descrizione più dettagliata di ciò che fa la ROM di avvio <a href="https://gbdev.io/pandocs/Power_Up_Sequence">nei Pan Docs</a>, nonché una spiegazione del controllo del logo.
 Attenzione, però, perché si tratta di un argomento piuttosto avanzato.</p>
@@ -881,8 +889,8 @@ warning: Overwrote a non-zero byte in the Nintendo logo
 warning: Overwrote a non-zero byte in the header checksum
 warning: Overwrote a non-zero byte in the global checksum
 </code></pre>
-<p><em>I’m sure these warnings are nothing to be worried about…</em>
-(Depending on your version of RGBDS, you may have gotten different warnings, or none at all.)</p>
+<p><em>Sono sicuro che questi avvisi non sono nulla di cui preoccuparsi…</em>
+(A seconda della versione di RGBDS in uso, è possibile che siano stati visualizzati avvisi diversi, o addirittura nessuno).</p>
 <p>Let’s run the ROM, click on Console on the debugger’s bottom window, press <kbd><kbd>F5</kbd></kbd> a few times, and…</p>
 <figure>
   <img src="part1/../assets/img/invalid_opcode.png" alt="Screenshot of Emulicious' debugger, PC won't advance past $0105">
@@ -896,9 +904,9 @@ warning: Overwrote a non-zero byte in the global checksum
 Cosa sta facendo lì?</p>
 <p>…Oh, <code>EntryPoint</code> è a $0103.
 Quindi il <code>jp</code> a $0100 è andato lì e ha iniziato a eseguire le istruzioni (<code>3E CE</code> è la forma grezza di <code>ld a, $CE</code>), ma poi $ED non codifica alcuna istruzione valida, quindi la CPU si blocca.</p>
-<p>But why is <code>EntryPoint</code> there?
-Well, as you may have figured out from the warnings RGBFIX printed, it <em>overwrites</em> the header area in the ROM.
-However, RGBLINK is <strong>not</strong> aware of the header (because RGBLINK is not only used to generate ROMs!), so you must explicitly reserve space for the header area.</p>
+<p>Ma perché <code>EntryPoint</code> è lì?
+Come avrete capito dagli avvisi stampati da RGBFIX, esso <em>sovrascrive</em> l’area dell’header nella ROM.
+Tuttavia, RGBLINK <strong>non</strong> è a conoscenza dell’header (perché RGBLINK non è usato solo per generare ROM!), quindi è necessario riservare esplicitamente spazio per l’area dell’header.</p>
 <div class="box danger decorated">
 <div><p>🥴</p></div>
 <div>
@@ -931,36 +939,36 @@ Quando RGBASM elabora la direttiva <code>ds</code>, <code>@</code> (che è un si
 (Per verificare: rimuovete o commentate queste due righe, compilate nuovamente la <a href="part1/hello_world.html">ROM</a> e vedete cosa succede)</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="operazioni-e-flag"><a class="header" href="#operazioni-e-flag">Operazioni e flag</a></h1>
 <p>Va bene, sappiamo come passare i valori, ma copiare semplicemente i numeri non è divertente; vogliamo modificarli!</p>
-<p>The GB CPU does not provide every operation under the sun (for example, there is no multiplication instruction), but we can just program those ourselves with what we have.
-Let’s talk about some of the operations that it <em>does</em> have; I will be omitting some not used in the Hello World for now.</p>
+<p>La CPU GB non fornisce tutte le operazioni sotto il sole (per esempio, non esiste un’istruzione di moltiplicazione), ma possiamo programmarle da soli con ciò che abbiamo.
+Parliamo di alcune delle operazioni di cui dispone; per ora ne ometterò alcune non utilizzate in Hello World.</p>
 <h2 id="aritmetica"><a class="header" href="#aritmetica">Aritmetica</a></h2>
 <p>Le istruzioni aritmetiche più semplici supportate dalla CPU sono <code>inc</code> e <code>dec</code>, che rispettivamente INCrementano e DECrementano il loro operando.
 (Se non siete sicuri, “incrementare” significa “aggiungere 1” e “decrementare” significa “sottrarre 1”).
 Quindi, per esempio, il <code>dec bc</code> alla riga 32 di <code>hello-world.asm</code> sottrae semplicemente 1 da <code>bc</code>.</p>
-<p>Okay, cool!
-Can we go a bit faster, though?
-Sure we can, with <code>add</code> and <code>sub</code>!
-These respectively ADD and SUBtract arbitrary values (either a constant, or a register).
-Neither is used in the tutorial, but a sibling of <code>sub</code>’s is: have you noticed little <code>cp</code> over at line 17?
-<code>cp</code> allows ComParing values.
-It works the same as <code>sub</code>, but it discards the result instead of writing it back.
-“Wait, so it does nothing?” you may ask; well, it <em>does</em> update the <strong>flags</strong>.</p>
+<p>Ok, bene!
+Possiamo però andare un po’ più veloci?
+Certo che sì, con <code>add</code> e <code>sub</code>!
+Questi rispettivamente aggiungono e sottraggono valori arbitrari (una costante o un registro).
+Nessuno dei due viene usato nel tutorial, ma c’è un parente di <code>sub</code>: avete notato il piccolo <code>cp</code> alla riga 17?
+<code>cp</code> permette di confrontare i valori.
+Funziona come <code>sub</code>, ma scarta il risultato invece di riscriverlo.
+“Aspettate, quindi non fa nulla?”, vi chiederete; beh, aggiorna le <strong>flag</strong>.</p>
 <h2 id="flag"><a class="header" href="#flag">Flag</a></h2>
-<p>The time has come to talk about the special-purpose register (remember those?) <code>f</code>, for, well, <em>flags</em>.
-The <code>f</code> register contains 4 bits, called “flags”, which are updated depending on an operation’s results.
-These 4 flags are:</p>
-<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
-<tr><td>Z</td><td>Zero flag</td></tr>
-<tr><td>N</td><td>Addition/subtraction</td></tr>
+<p>È arrivato il momento di parlare del registro speciale (ve lo ricordate?) <code>f</code>, per, beh, <em>flag</em>.
+Il registro <code>f</code> contiene 4 bit, chiamati “flag”, che vengono aggiornati a seconda dei risultati di un’operazione.
+Questi 4 flag sono:</p>
+<div class="table-wrapper"><table><thead><tr><th>Nome</th><th>Descrizione</th></tr></thead><tbody>
+<tr><td>Z</td><td>Flag di zero</td></tr>
+<tr><td>N</td><td>Addizione/sottrazione</td></tr>
 <tr><td>H</td><td>Half-carry</td></tr>
 <tr><td>C</td><td>Carry</td></tr>
 </tbody></table>
 </div>
 <p>Sì, esistono sia un flag chiamato “C” che un registro chiamato “c” e <strong>sono cose diverse e non correlate</strong>.
 Questo rende la sintassi un po’ confusa all’inizio, ma vengono sempre usati in contesti diversi, quindi basta farci caso.</p>
-<p>We will forget about N and H for now; let’s focus on Z and C.
-Z is the simplest flag: it gets set when an operation’s result is 0, and gets reset otherwise.
-C is set when an operation <em>overflows</em> or <em>underflows</em>.</p>
+<p>Per ora dimentichiamo N e H; concentriamoci su Z e C.
+Z è il flag più semplice: viene impostato quando il risultato di un’operazione è 0 e viene azzerato altrimenti.
+C viene impostato quando un’operazione va in <em>overflow</em> o in <em>underflow</em>.</p>
 <p>Che cos’è un overflow?
 Prendiamo la semplice istruzione <code>add a, 42</code>.
 Questa istruzione aggiunge semplicemente 42 al contenuto del registro <code>a</code> e scrive il risultato in <code>a</code>.</p>
@@ -975,14 +983,14 @@ Ma se invece scrivessi questo?
     ld a, 220
     add a, 42
 </code></pre>
-<p>Well, one could think that <code>a</code> would be equal to 220 + 42 = 262, but that would be incorrect.
-Remember, <code>a</code> is an 8-bit register, <em>it can only store eight bits of information</em>!
-And if we were to write 262 in binary, we would get %100000110, which requires at least 9 bits…
-So what happens?
-Simply, that ninth bit is <em>lost</em>, and the value that we end up with is %00000110 = 6.
-This is called an <em>overflow</em>: after <strong>adding</strong>, we get a value <strong>smaller</strong> than what we started with.</p>
-<p>We can also do the opposite with <code>sub</code>, and—for example—subtract 42 from 6; as we know, for all <code>X</code> and <code>Y</code>, <code>X + Y - Y = X</code>, and we just saw that 220 + 42 = 6 (this is called <em>modulo 256 arithmetic</em>, by the way); so, 6 - 42 = (220 + 42) - 42 = 220.
-This is called an <em>underflow</em>: after <strong>subtracting</strong>, we get a value <strong>greater</strong> than what we started with.</p>
+<p>Si potrebbe pensare che <code>a</code> sia uguale a 220 + 42 = 262, ma non sarebbe corretto.
+Ricordate che <code>a</code> è un registro a 8 bit, <em>può memorizzare solo otto bit di informazione</em>!
+E se dovessimo scrivere 262 in binario, otterremmo %100000110, che richiede almeno 9 bit…
+Quindi cosa succede?
+Semplicemente, il nono bit viene <em>perduto</em> e il valore che otteniamo è %00000110 = 6. Questo si chiama <em>overflow</em>.
+Questo si chiama <em>overflow</em>: dopo l’<strong>aggiunta</strong>, otteniamo un valore <strong>più piccolo</strong> di quello con cui abbiamo iniziato.</p>
+<p>Possiamo anche fare l’opposto con <code>sub</code>, e —per esempio— sottrarre 42 da 6; come sappiamo, per tutti gli <code>X</code> e <code>Y</code>, <code>X + Y - Y = X</code>, e abbiamo appena visto che 220 + 42 = 6 (questo è chiamato <em>modulo 256 aritmetico</em>, a proposito); quindi, 6 - 42 = (220 + 42) - 42 = 220.
+Questo si chiama <em>underflow</em>: dopo la <strong>sottrazione</strong>, otteniamo un valore <strong>superiore</strong> a quello di partenza.</p>
 <p>Quando viene eseguita un’operazione, imposta il flag di riporto se si è verificato un overflow o un underflow, altrimenti lo azzera.
 (Vedremo più avanti che non tutte le operazioni aggiornano il flag di riporto)</p>
 <div class="box tip">
@@ -1001,17 +1009,17 @@ Possiamo usare i flag per controllare le proprietà dei valori confrontati e ved
 <p>L’interazione più semplice è quella con il flag Z.
 Se è impostato, sappiamo che la sottrazione ha prodotto 0, cioè <code>a - operando == 0</code>; quindi, <code>a == operando</code>!
 Se non è impostato, allora sappiamo che <code>a != operando</code>.</p>
-<p>Okay, checking for equality is nice, but we may also want to perform <em>comparisons</em>.
-Fret not, for the carry flag is here to do just that!
-See, when performing a subtraction, the carry flag gets set when the result goes below 0—but that’s just a fancy way of saying “becomes negative”!</p>
-<p>So, when the carry flag gets set, we know that <code>a - operand &lt; 0</code>, therefore that <code>a &lt; operand</code>..!
-And, conversely, we know that if it’s <em>not</em> set, <code>a &gt;= operand</code>.
-Great!</p>
+<p>Ok, controllare l’uguaglianza è bello, ma potremmo anche voler eseguire dei <em>confronti</em>.
+Non preoccupatevi, perché il flag di riporto serve proprio a questo!
+Quando si esegue una sottrazione, il flag di riporto viene impostato quando il risultato scende sotto lo 0, ma è solo un modo elegante per dire “diventa negativo”!</p>
+<p>Quindi, quando il flag di riporto viene impostato, sappiamo che <code>a - operando &lt; 0</code> e di conseguenza che <code>a &lt; operando</code>…!
+E, al contrario, sappiamo che se non è impostato, <code>a &gt;= operando</code>.
+Ottimo!</p>
 <h2 id="riassunto-dellistruzione"><a class="header" href="#riassunto-dellistruzione">Riassunto dell’istruzione</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Mnemonic</th><th>Effect</th></tr></thead><tbody>
-<tr><td>Add</td><td><code>add</code></td><td>Adds values to <code>a</code></td></tr>
-<tr><td>Subtract</td><td><code>sub</code></td><td>Subtracts values from <code>a</code></td></tr>
-<tr><td>Compare</td><td><code>cp</code></td><td>Compares values with what’s contained in <code>a</code></td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Istruzione</th><th>Mnemonico</th><th>Effetto</th></tr></thead><tbody>
+<tr><td>Add</td><td><code>add</code></td><td>Aggiunge valori ad <code>a</code></td></tr>
+<tr><td>Subtract</td><td><code>sub</code></td><td>Sottrae valori da <code>a</code></td></tr>
+<tr><td>Compare</td><td><code>cp</code></td><td>Confronta valori con quelli contenuti in <code>a</code></td></tr>
 </tbody></table>
 </div><div style="break-before: page; page-break-before: always;"></div><h1 id="jumps"><a class="header" href="#jumps">Jumps</a></h1>
 <div class="box tip">
@@ -1019,19 +1027,19 @@ Great!</p>
 </div>
 <p>Finora tutto il codice che abbiamo visto era lineare: veniva eseguito dall’alto verso il basso.
 Ma questo non è sufficiente: a volte è necessario eseguire alcune azioni in base al risultato di altre (“se le crêpes iniziano ad attaccarsi, ungi di nuovo la padella”), e a volte è necessario eseguire azioni ripetutamente (“se è rimasta della pastella, ripeti dal passo 5”).</p>
-<p>Both of these imply reading the recipe non-linearly.
-In assembly, this is achieved using <em>jumps</em>.</p>
-<p>The CPU has a special-purpose register called “PC”, for Program Counter.
-It contains the address of the instruction currently being executed<sup class="footnote-reference"><a href="#pc_updates">1</a></sup>, like how you’d keep in mind the number of the recipe step you’re currently doing.
-PC increases automatically as the CPU reads instructions, so “by default” they are read sequentially; however, jump instructions allow writing a different value to PC, effectively <em>jumping</em> to another piece of the program.
-Hence the name.</p>
+<p>Entrambe le cose implicano una lettura non lineare della ricetta.
+In assembly, questo si ottiene con i <em>salti</em>.</p>
+<p>La CPU dispone di un registro speciale chiamato “PC”, che sta per Program Counter.
+Esso contiene l’indirizzo dell’istruzione in corso di esecuzione<sup class="footnote-reference"><a href="#pc_updates">1</a></sup>, come se si tenesse a mente il numero del passo della ricetta che si sta eseguendo.
+Il PC aumenta automaticamente quando la CPU legge le istruzioni, quindi “per impostazione predefinita” vengono lette in sequenza; tuttavia, le istruzioni di salto consentono di scrivere un valore diverso nel PC, saltando di fatto a un’altra parte del programma.
+Da qui il nome.</p>
 <p>Ok, allora parliamo di queste istruzioni di salto, che ne dite?
 Ce ne sono quattro:</p>
-<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Mnemonic</th><th>Effect</th></tr></thead><tbody>
-<tr><td>Jump</td><td><code>jp</code></td><td>Jump execution to a location</td></tr>
-<tr><td>Jump Relative</td><td><code>jr</code></td><td>Jump to a location close by</td></tr>
-<tr><td>Call</td><td><code>call</code></td><td>Call a subroutine</td></tr>
-<tr><td>Return</td><td><code>ret</code></td><td>Return from a subroutine</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Istruzione</th><th>Mnemonico</th><th>Effetto</th></tr></thead><tbody>
+<tr><td>Jump</td><td><code>jp</code></td><td>Salta l’esecuzione a una locazione</td></tr>
+<tr><td>Jump Relativo</td><td><code>jr</code></td><td>Salta a una locazione vicina</td></tr>
+<tr><td>Call</td><td><code>call</code></td><td>Chiama una subroutine</td></tr>
+<tr><td>Return</td><td><code>ret</code></td><td>Ritorna da una subroutine</td></tr>
 </tbody></table>
 </div>
 <p>Per ora ci concentreremo su <code>jp</code>.
@@ -1045,8 +1053,8 @@ Non preoccupatevi, vedremo più avanti perché è necessario.</p>
 </div>
 </div>
 <h2 id="salti-condizionati"><a class="header" href="#salti-condizionati">Salti condizionati</a></h2>
-<p>Now to the <em>really</em> interesting part.
-Let’s examine the loop responsible for copying tiles:</p>
+<p>Passiamo ora alla parte <em>davvero</em> interessante.
+Esaminiamo il ciclo responsabile della copia delle tile:</p>
 <pre><code class="language-rgbasm linenos start=24">	; Copy the tile data
 	ld de, Tiles
 	ld hl, $9000
@@ -1064,9 +1072,9 @@ CopyTiles:
 <p>Non preoccupatevi se non capite bene quanto segue, perché lo vedremo in azione nella prossima lezione.
 Se avete problemi, provate ad andare alla prossima lezione e guardate il codice eseguito passo per passo; poi, tornando a questo punto, dovrebbe avere tutto più senso.</p>
 </div>
-<p>First, we copy <code>Tiles</code>, the address of the first byte of tile data, into <code>de</code>.
-Then, we set <code>hl</code> to $9000, which is the address where we will start copying the tile data to.
-<code>ld bc, TilesEnd - Tiles</code> sets <code>bc</code> to the length of the tile data: <code>TilesEnd</code> is the address of the first byte <em>after</em> the tile data, so subtracting <code>Tiles</code> to that yields the length.</p>
+<p>Per prima cosa, copiamo <code>Tiles</code>, l’indirizzo del primo byte dei dati delle tile, in <code>de</code>.
+Poi, impostiamo <code>hl</code> a $9000, che è l’indirizzo in cui inizieremo a copiare i dati delle tile.
+<code>ld bc, TilesEnd - Tiles</code> imposta <code>bc</code> sulla lunghezza dei dati delle tile: <code>TilesEnd</code> è l’indirizzo del primo byte <em>dopo</em> i dati delle tile, quindi sottraendogli <code>Tiles</code> si ottiene la lunghezza.</p>
 <p>Quindi, in pratica:</p>
 <ul>
 <li><code>de</code> contiene l’indirizzo da cui verranno copiati i dati;</li>
@@ -1091,22 +1099,23 @@ Quindi, dopo la riga 34, il flag Z è impostato se e solo se <code>bc</code> == 
 <p>Ed è qui che entrano in gioco i salti condizionati!
 È possibile “prendere” <strong>condizionatamente</strong> un salto a seconda dello stato dei flag.</p>
 <p>Le “condizioni” sono quattro:</p>
-<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Mnemonic</th><th>Description</th></tr></thead><tbody>
-<tr><td>Zero</td><td><code>z</code></td><td>Z is set (last operation had a result of 0)</td></tr>
-<tr><td>Non-zero</td><td><code>nz</code></td><td>Z is not set (last operation had a non-zero result)</td></tr>
-<tr><td>Carry</td><td><code>c</code></td><td>C is set (last operation overflowed)</td></tr>
-<tr><td>No carry</td><td><code>nc</code></td><td>C is not set (last operation did not overflow)</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Nome</th><th>Mnemonico</th><th>Descrizione</th></tr></thead><tbody>
+<tr><td>Zero</td><td><code>z</code></td><td>Z è impostato (l’ultima operazione ha avuto un risultato pari a 0)</td></tr>
+<tr><td>Non zero</td><td><code>nz</code></td><td>Z non è impostato (l’ultima operazione ha avuto un risultato diverso da 0)</td></tr>
+<tr><td>Carry</td><td><code>c</code></td><td>C è impostato (l’ultima operazione è andata in overflow)</td></tr>
+<tr><td>No carry</td><td><code>nc</code></td><td>C non è impostato (l’ultima operazione non è andata in overflow)</td></tr>
 </tbody></table>
 </div>
-<p>Thus, <code>jp nz, CopyTiles</code> can be read as “if the Z flag is not set, then jump to <code>CopyTiles</code>”.
-Since we’re jumping <em>backwards</em>, we will repeat the instructions again: we have just created a <strong>loop</strong>!</p>
-<p>Okay, we’ve been talking about the code a lot, and we have seen it run, but we haven’t really seen <em>how</em> it runs.
-Let’s watch the magic unfold in slow-motion in the next lesson!</p>
+<p>Quindi, <code>jp nz, CopyTiles</code> può essere letto come “se il flag Z non è impostato, allora salta a <code>CopyTiles</code>”.
+Poiché stiamo saltando <em>all’indietro</em>, ripeteremo di nuovo le istruzioni: abbiamo appena creato un <strong>ciclo</strong>!</p>
+<p>Ok, abbiamo parlato molto del codice e lo abbiamo visto girare, ma non abbiamo visto <em>come</em> gira.
+Guardiamo la magia che si svolge al rallentatore nella prossima lezione!</p>
 <hr />
-<div class="footnote-definition" id="pc_updates"><sup class="footnote-definition-label">1</sup></div>
-<p>Not exactly; instructions may be several bytes long, and PC increments after reading each byte.
-Notably, this means that when an instruction finishes executing, PC is pointing to the following instruction.
-Still, it’s pretty much “where the CPU is currently reading from”, but it’s better to keep it simple and avoid mentioning instruction encoding for now.</p>
+<div class="footnote-definition" id="pc_updates"><sup class="footnote-definition-label">1</sup>
+<p>Non esattamente; le istruzioni possono essere lunghe diversi byte e PC si incrementa dopo aver letto ogni byte.
+In particolare, ciò significa che quando un’istruzione finisce di essere eseguita, PC punta all’istruzione successiva.
+Comunque, è più o meno “da dove la CPU sta leggendo”, ma è meglio mantenere le cose semplici ed evitare di parlare della codifica delle istruzioni per ora.</p>
+</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tracciamento"><a class="header" href="#tracciamento">Tracciamento</a></h1>
 <p>Avete mai sognato di essere dei maghi?
 Beh, questo non vi darà poteri magici, ma vediamo come gli emulatori possono essere usati per controllare il tempo!</p>
@@ -1223,17 +1232,17 @@ Non è una coincidenza: le tile sono molto utili.
 Invece di memorizzare ogni pixel sullo schermo (144 × 160 pixel × 2 bit/pixel = 46080 bit = 5760 byte, rispetto agli 8192 byte di VRAM della console), i pixel vengono raggruppati in tile, che vengono poi assemblate in vari modi per produrre l’immagine finale.</p>
 <p>In particolare, le tile possono essere riutilizzate molto facilmente e praticamente a costo zero, risparmiando molta memoria!
 Inoltre, la manipolazione di intere tile in una sola volta è molto più economica rispetto alla manipolazione dei singoli pixel e questo fa risparmiare tempo di elaborazione.</p>
-<p>The concept of a “tile” is very general, but on the Game Boy, tiles are <em>always</em> 8 by 8 pixels.
-Often, hardware tiles are grouped to manipulate them as larger tiles (often 16×16); to avoid the confusion, those are referred to as <strong>meta-tiles</strong>.</p>
+<p>Il concetto di “tile” è molto generico, ma sul Game Boy le tile sono <em>sempre</em> di 8 per 8 pixel.
+Spesso le tile hardware vengono raggruppate per essere manipolate come tile più grandi (spesso 16×16); per evitare la confusione, queste vengono chiamate <strong>meta-tile</strong>.</p>
 <h3 id="bpp"><a class="header" href="#bpp">“bpp”?</a></h3>
 <p>Vi starete chiedendo da dove provenga la cifra di “2 bit/pixel” di cui sopra…
 Si tratta della cosiddetta “profondità di bit”.</p>
-<p>See, colors are <em>not</em> stored in the tiles themselves!
-Instead, it works like a coloring book: the tile itself contains 8 by 8 <em>indices</em>, not colors; you give the hardware a tile and a set of colors—a <strong>palette</strong>—and it colorizes them!
-(This is also why color swaps were very common back then: you could create enemy variations by storing tiny palettes instead of large different graphics.)</p>
-<p>Anyway, as it is, Game Boy palettes are 4 colors large.<sup class="footnote-reference"><a href="#pal_size">1</a></sup>
-This means that the indices into those palettes, stored in the tiles, can be represented in only <em>two bits</em>!
-This is called “2 bits per pixel”, noted “2bpp”.</p>
+<p>I colori non sono memorizzati nelle tile stesse!
+Invece, funziona come un libro da colorare: la tile in sé contiene <em>indici</em> di 8 x 8, non colori; si dà all’hardware una tile e un insieme di colori - una <strong>tavolozza</strong> - e lui li colora!
+(Questo è anche il motivo per cui le varianti di colore erano molto comuni all’epoca: si potevano creare diverse versioni di un nemico memorizzando piccole tavolozze invece di grandi grafiche diverse.)</p>
+<p>In ogni caso, le tavolozze del Game Boy sono grandi 4 colori.<sup class="footnote-reference"><a href="#pal_size">1</a></sup>
+Ciò significa che gli indici di tali tavolozze, memorizzati nelle tile, possono essere rappresentati con solo <em>due bit</em>!
+Questo si definisce “2 bit per pixel”, noto come “2bpp”.</p>
 <p>Con queste premesse, siamo pronti a spiegare come questi byte si trasformano in pixel!</p>
 <h2 id="codifica"><a class="header" href="#codifica">Codifica</a></h2>
 <p>Come ho spiegato, ogni pixel occupa 2 bit.
@@ -1251,8 +1260,9 @@ Rende possibili anche alcuni trucchi interessanti, come vedremo (molto) più ava
 <p>Si possono trovare ulteriori informazioni sulla codifica <a href="https://gbdev.io/pandocs/Tile_Data.html">nei Pan Docs</a> e <a href="https://www.huderlem.com/demos/gameboy2bpp.html">nel sito di ShantyTown</a>.</p>
 <p>Nella prossima lezione vedremo come si applicano i colori!</p>
 <hr />
-<div class="footnote-definition" id="pal_size"><sup class="footnote-definition-label">1</sup></div>
-<p>Other consoles can have varying bit depths; for example, the SNES has 2bpp, 4bpp, and 8bpp depending on the graphics mode and a few other parameters.</p>
+<div class="footnote-definition" id="pal_size"><sup class="footnote-definition-label">1</sup>
+<p>Altre console possono avere profondità di bit diverse; ad esempio, lo SNES ha 2bpp, 4bpp e 8bpp a seconda della modalità grafica e di alcuni altri parametri.</p>
+</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="tavolozze"><a class="header" href="#tavolozze">Tavolozze</a></h1>
 <p>In the previous lesson, I briefly mentioned that colors are applied to tiles via <em>palettes</em>, but we haven’t talked much about those yet.</p>
 <p>Il Game Boy in bianco e nero ha tre tavolozze, una per lo sfondo chiamata <a href="https://gbdev.io/pandocs/Palettes.html#ff47---bgp-bg-palette-data-rw---non-cgb-mode-only"><code>BGP</code></a> (“BackGround Palette”) e due per gli oggetti chiamate <a href="https://gbdev.io/pandocs/Palettes.html#ff48---obp0-object-palette-0-data-rw---non-cgb-mode-only"><code>OBP0</code></a> e <a href="https://gbdev.io/pandocs/Palettes.html#ff48---obp1-object-palette-1-data-rw---non-cgb-mode-only"><code>OBP1</code></a> (“OBject Palette 0/1”).
@@ -1334,8 +1344,8 @@ We will understand why later, but for now, please bear with it!</p>
 Io userò quest’ultimo di preferenza, ma lo userò anche nel codice (<code>Tilemap</code> e non <code>TileMap</code>), così come più avanti quando parleremo di mappe di attributi (“attrmap” e <code>Attrmap</code> invece di <code>AttrMap</code>).</p>
 </div>
 </div>
-<p>We are <em>almost</em> there.
-We have seen how graphics on the Game Boy are composed of 8×8 “tiles”, and we have seen how color is added into the mix.</p>
+<p>Ci siamo quasi.
+Abbiamo visto come la grafica del Game Boy sia composta da “tessere” 8×8 e come il colore venga aggiunto al mix.</p>
 <p>Ma non abbiamo ancora visto come queste tessere vengono disposte in un’immagine finale!</p>
 <p>Tiles are basically a grid of pixels; well, the tilemaps are basically a grid of tiles!
 To allow for cheap reuse, tiles aren’t stored in the tilemap directly; instead, tiles are referred to by an <em>ID</em>, which you can see in Emulicious’ Tile Viewer.</p>
@@ -1375,14 +1385,15 @@ Anche la R, la L e la D condividono la loro tessera in alto a sinistra ($2D, lin
 </figure>
 <p>Tutto sommato, possiamo dedurre che la visualizzazione della grafica sul Game Boy consiste nel caricare i “modelli” (le tessere) e nel dire alla console quale tessera visualizzare per ciascuna posizione.</p>
 <hr />
-<div class="footnote-definition" id="tile_blocks"><sup class="footnote-definition-label">2</sup></div>
+<div class="footnote-definition" id="tile_blocks"><sup class="footnote-definition-label">2</sup>
 <p>The even more astute (astuter?) reader will have noticed that 384 = 3 × 128.
 Thus, tiles are often conceptually grouped into three “blocks” of 128 tiles each, which Emulicious shows as separated by thicker horizontal lines.</p>
+</div>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="in-conclusione"><a class="header" href="#in-conclusione">In conclusione</a></h1>
-<p>Congrats!
-You have made it through the first part of this tutorial.
-By this point, you have a basic enough understanding of the console that you know how to display a picture.
-And hey, that doesn’t sound like much, but consider everything you have seen so far—there <em>is</em> a lot that goes into it!</p>
+<p>Congratulazioni!
+Avete superato la prima parte di questa guida.
+A questo punto, avete una conoscenza di base della console tale da sapere come visualizzare un’immagine.
+Non sembra molto, ma considerate tutto ciò che avete visto finora: c’è stato molto da fare!</p>
 <div class="box tip decorated">
 <div><p>🥳</p></div>
 <div>
@@ -1399,20 +1410,20 @@ Tuttavia, i dettagli trapelano sempre alla fine, quindi conoscerli è utile, anc
 <p>Inoltre, capire cosa succede davvero sotto il cofano vi renderà programmatori migliori, anche se alla fine non userete ASM.
 È divertente notare che anche i sistemi moderni funzionano in modo simile a quelli più vecchi in punti inaspettati, quindi alcune cose che avete appena imparato si ripeteranno!
 Fidatevi, tutto ciò che avete imparato e imparerete ne vale la pena! ✊</p>
-<p>That said, right now, you may have a lot of questions.</p>
+<p>Detto questo, in questo momento potreste avere molte domande.</p>
 <ul>
-<li>Why do we turn off the LCD?</li>
-<li>We know how to make a static picture, but how to we add motion into the mix?</li>
-<li>Also, how do I get input from the player?</li>
-<li>The code mentions shutting down audio, but how do I play some of those famed beeps and bloops?</li>
-<li>Writing graphics in that way sound tedious, is there no other way?</li>
-<li>Actually, wait, how do we make a game out of all this??</li>
+<li>Perché spegnere l’LCD?</li>
+<li>Sappiamo come creare un’immagine statica, ma come aggiungere il movimento al mix?</li>
+<li>Inoltre, come si ottiene l’input dal lettore?</li>
+<li>Il codice menziona l’interruzione dell’audio, ma come faccio a riprodurre alcuni di quei famosi bip e bloop?</li>
+<li>Scrivere la grafica in questo modo sembra noioso, non c’è altro modo?</li>
+<li>Anzi, aspettate, come facciamo a fare un gioco con tutto questo?</li>
 </ul>
 <p>… Tutte queste risposte, e altre ancora, nella Parte Ⅱ! 👀</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="come-iniziare"><a class="header" href="#come-iniziare">Come iniziare</a></h1>
-<p>In this lesson, we will start a new project from scratch.
-We will make a <a href="https://en.wikipedia.org/wiki/Breakout_%28video_game%29">Breakout</a> / <a href="https://en.wikipedia.org/wiki/Arkanoid">Arkanoid</a> clone, which we’ll call “Unbricked”!
-(Though you are free to give it any other name you like, as it will be <em>your</em> project.)</p>
+<p>In questa lezione inizieremo un nuovo progetto da zero.
+Creeremo un clone di <a href="https://en.wikipedia.org/wiki/Breakout_%28video_game%29">Breakout</a> / <a href="https://en.wikipedia.org/wiki/Arkanoid">Arkanoid</a>, che chiameremo “Unbricked”!
+(Anche se siete liberi di dargli qualsiasi altro nome, perché sarà il <em>vostro</em> progetto).</p>
 <p>Aprire un terminale e creare una nuova directory (<code>mkdir unbricked</code>), quindi entrarvi (<code>cd unbricked</code>), proprio come si è fatto per <a href="part2/../part1/hello_world.html">“Hello, world!”</a>.</p>
 <p>Si inizia creando un file chiamato <code>main.asm</code> e si include <code>hardware.inc</code> nel codice.</p>
 <pre><code class="language-rgbasm linenos start=1">INCLUDE &quot;hardware.inc&quot;
@@ -1420,11 +1431,11 @@ We will make a <a href="https://en.wikipedia.org/wiki/Breakout_%28video_game%29"
 <p>You may be wondering what purpose <code>hardware.inc</code> serves.
 Well, the code we write only really affects the CPU, but does not do anything with the rest of the console (not directly, anyway).
 To interact with other components (like the graphics system, say), <a href="https://en.wikipedia.org/wiki/Memory-mapped_I/O">Memory-Mapped <abbr title="Input/Output">I/O</abbr></a> (MMIO) is used: basically, <a href="part2/../part1/memory.html">memory</a> in a certain range (addresses $FF00–FF7F) does special things when accessed.</p>
-<p>These bytes of memory being interfaces to the hardware, they are called <em>hardware registers</em> (not to be mistaken with <a href="part2/../part1/registers.html">the CPU registers</a>).
-For example, the “PPU status” register is located at address $FF41.
-Reading from that address reports various bits of info regarding the graphics system, and writing to it allows changing some parameters.
-But, having to remember all the numbers (<a href="https://gbdev.io/pandocs/Power_Up_Sequence.html#hardware-registers">non-exhaustive list</a>) would be very tedious—and this is where <code>hardware.inc</code> comes into play!
-<code>hardware.inc</code> defines one constant for each of these registers (for example, <code>rSTAT</code> for the aforementioned “PPU status” register), plus some additional constants for values read from or written to these registers.</p>
+<p>Essendo questi byte di memoria interfacce per l’hardware, sono chiamati <em>registri hardware</em> (da non confondere con <a href="part2/../part1/registers.html">i registri della CPU</a>).
+Ad esempio, il registro “stato PPU” si trova all’indirizzo $FF41.
+La lettura di questo indirizzo riporta varie informazioni sul sistema grafico e la scrittura consente di modificare alcuni parametri.
+Ma dover ricordare tutti i numeri (<a href="https://gbdev.io/pandocs/Power_Up_Sequence.html#hardware-registers">elenco non esaustivo</a>) sarebbe molto noioso, ed è qui che entra in gioco <code>hardware.inc</code>!
+<code>hardware.inc</code> definisce una costante per ciascuno di questi registri (per esempio, <code>rSTAT</code> per il già citato registro “stato della PPU”), più alcune costanti aggiuntive per i valori letti o scritti in questi registri.</p>
 <div class="box tip">
 <p>Non preoccupatevi se tutto questo vi è sfuggito di mano: di seguito vedremo un esempio con <code>rLCDC</code> e <code>LCDCF_ON</code>.</p>
 <p>A proposito, la <code>r</code> sta per “registro” e la <code>F</code> in <code>LCDCF</code> sta per “flag”.</p>
@@ -1489,14 +1500,14 @@ CopyTilemap:
 <p>Si noti che, mentre il corpo di questo ciclo è esattamente lo stesso di <code>CopyTiles</code>, i 3 valori caricati in <code>de</code>, <code>hl</code> e <code>bc</code> sono diversi.
 Questi determinano rispettivamente l’origine, la destinazione e la dimensione della copia.</p>
 <div class="box tip">
-<p class="box-title">“<a href="https://en.wikipedia.org/wiki/Don&#x27;t_Repeat_Yourself"><abbr title="Don't Repeat Yourself">DRY</abbr></a>”.</p><p>If you think that this is super redundant, you are not wrong, and we will see later how to write actual, reusable <em>functions</em>.
-But there is more to them than meets the eye, so we will start tackling them much later.</p>
+<p class="box-title">“<a href="https://en.wikipedia.org/wiki/Don&#x27;t_Repeat_Yourself"><abbr title="Don't Repeat Yourself">DRY</abbr></a>”.</p><p>Se pensate che tutto ciò sia superfluo, non avete torto: vedremo più avanti come scrivere delle vere e proprie <em>funzioni</em> riutilizzabili.
+Ma c’è molto di più di quello che sembra, quindi inizieremo ad affrontarle molto più avanti.</p>
 </div>
-<p>Finally, let’s turn the screen back on, and set a <a href="part2/../part1/palettes.html">background palette</a>.
-Rather than writing the non-descript number <code>%10000001</code> (or $81 or 129, to taste), we make use of two constants graciously provided by <code>hardware.inc</code>: <code>LCDCF_ON</code> and <code>LCDCF_BGON</code>.
-When written to <a href="https://gbdev.io/pandocs/LCDC"><code>rLCDC</code></a>, the former causes the PPU and screen to turn back on, and the latter enables the background to be drawn.
-(There are other elements that could be drawn, but we are not enabling them yet.)
-Combining these constants must be done using <code>|</code>, the <em>binary “or”</em> operator; we’ll see why later.</p>
+<p>Infine, riaccendiamo lo schermo e impostiamo una <a href="part2/../part1/palettes.html">palette di sfondo</a>.
+Invece di scrivere il numero non descritto <code>%10000001</code> (o $81 o 129, a seconda dei gusti), usiamo due costanti gentilmente fornite da <code>hardware.inc</code>: <code>LCDCF_ON</code> e <code>LCDCF_BGON</code>.
+Quando vengono scritte su <a href="https://gbdev.io/pandocs/LCDC"><code>rLCDC</code></a>, la prima fa sì che la PPU e lo schermo si riaccendano, mentre la seconda permette di disegnare lo sfondo.
+(Ci sono altri elementi che potrebbero essere disegnati, ma non li abilitiamo ancora).
+La combinazione di queste costanti deve essere fatta usando <code>|</code>, l’operatore <em>binario “o “</em>; vedremo perché più avanti.</p>
 <pre><code class="language-rgbasm linenos start=46">	; Turn the LCD on
 	ld a, LCDCF_ON | LCDCF_BGON
 	ld [rLCDC], a
@@ -1511,10 +1522,8 @@ Done:
 <p>C’è un’ultima cosa di cui abbiamo bisogno prima di costruire la ROM: la grafica.
 Disegneremo la seguente schermata:</p>
 <p><img src="part2/../assets/part2/img/tilemap.png" alt="Layout di unbricked" /></p>
-<p>In <code>hello-world.asm</code>, tile data had been written out by hand in hexadecimal; this was to let you see how the sausage is made at the lowest level, but <em>boy</em> is it impractical to write!
-This time, we will employ a more friendly way, which will let us write each row of pixels more easily.
-For each row of pixels, instead of writing <a href="part2/../part1/tiles.html#encoding">the bitplanes</a> directly, we will use a backtick (<code>`</code>) followed by 8 characters.
-Each character defines a single pixel, intuitively from left to right; it must be one of 0, 1, 2, and 3, representing the corresponding color index in <a href="part2/../part1/palettes.html">the palette</a>.</p>
+<p>In <code>hello-world.asm', i dati delle mattonelle erano stati scritti a mano in esadecimale; questo per farvi vedere come viene fatta la salsiccia al livello più basso, ma *ragazzo* è poco pratico da scrivere! Questa volta utilizzeremo un metodo più semplice, che ci permetterà di scrivere più facilmente ogni riga di pixel. Per ogni riga di pixel, invece di scrivere direttamente [i bitplanes](../part1/tiles.md#encoding), useremo un backtick (`` </code> ``) seguito da 8 caratteri.
+Ogni carattere definisce un singolo pixel, intuitivamente da sinistra a destra; deve essere uno tra 0, 1, 2 e 3, che rappresenta l’indice di colore corrispondente nella <a href="part2/../part1/palettes.html">tavolozza</a>.</p>
 <div class="box tip">
 <p>Se la selezione dei caratteri non è di vostro gradimento, potete usare <a href="https://rgbds.gbdev.io/docs/v0.5.2/rgbasm.1#g">l’opzione <code>-g</code> di RGBASM</a> o <a href="https://rgbds.gbdev.io/docs/v0.5.2/rgbasm.5/#Changing_options_while_assembling"><code>OPT g</code></a> per sceglierne altri.
 Per esempio, <code>rgbasm -g '.xXO' (...)</code> o <code>OPT g.xXO</code> scambiano i quattro caratteri rispettivamente con <code>.</code>, <code>x</code>, <code>X</code> e <code>O</code>.</p>
@@ -1567,30 +1576,30 @@ Potete utilizzare uno dei seguenti loghi già pronti, oppure provare a crearne u
 </ul>
 <p>Aggiungete i dati del logo scelto (cliccate su uno dei link “Source” qui sopra) dopo il commento, create di nuovo il gioco e dovreste vedere il logo scelto in basso a destra!</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="oggetti"><a class="header" href="#oggetti">Oggetti</a></h1>
-<p>The background is very useful when the whole screen should move at once, but this is not ideal for everything.
-For example, a cursor in a menu, NPCs and the player in a RPG, bullets in a shmup, or balls in an <em>Arkanoid</em> clone… all need to move independently of the background.
-Thankfully, the Game Boy has a feature that’s perfect for these!
-In this lesson, we will talk about <em>objects</em> (sometimes called “OBJ”).</p>
+<p>Lo sfondo è molto utile quando l’intero schermo deve muoversi contemporaneamente, ma non è l’ideale per tutto.
+Ad esempio, il cursore in un menu, i PNG e il giocatore in un RPG, i proiettili in uno shmup o le palline in un clone di <em>Arkanoid</em>… devono tutti muoversi indipendentemente dallo sfondo.
+Fortunatamente, il Game Boy ha una funzione perfetta per queste situazioni!
+In questa lezione parleremo di <em>oggetti</em> (talvolta chiamati “OBJ”).</p>
 <div class="box tip">
-<p>The above description may have made you think of the term “sprite” instead of “object”.
-The term “sprite” has a <em>lot</em> of meanings depending on context, so, to avoid confusion, this tutorial tries to use specific alternatives instead, such as <em>object</em>, <em>metasprite</em>, <em>actor</em>, etc.</p>
+<p>La descrizione precedente potrebbe avervi fatto pensare al termine “sprite” invece che a “oggetto”.
+Il termine “sprite” ha <em>molti</em> significati a seconda del contesto, quindi, per evitare confusione, questo tutorial cerca di usare alternative specifiche, come <em>oggetto</em>, <em>metasprite</em>, <em>attore</em>, ecc.</p>
 </div>
 <p>Ogni oggetto permette di disegnare una o due piastrelle (rispettivamente 8×8 o 8×16 pixel) in qualsiasi posizione sullo schermo, a differenza dello sfondo, dove tutte le piastrelle sono disegnate in una griglia.
 Pertanto, un oggetto è composto dalla sua posizione sullo schermo, da un ID tile (come <a href="part2/../part1/tilemap.html">con la tilemap</a>) e da alcune proprietà extra chiamate “attributi”.
 Queste proprietà extra consentono, ad esempio, di visualizzare la piastrella capovolta.
 Ne parleremo più avanti.</p>
-<p>Just like how the tilemap is stored in VRAM, objects live in a region of memory called OAM, meaning <strong>Object Attribute Memory</strong>.
-Recall from above that an object consists of:</p>
+<p>Proprio come la tilemap è memorizzata nella VRAM, gli oggetti vivono in una regione di memoria chiamata OAM, ovvero <strong>Object Attribute Memory</strong>.
+Ricordiamo che un oggetto è composto da:</p>
 <ul>
-<li>Its on-screen position</li>
-<li>A tile ID</li>
-<li>The “attributes”</li>
+<li>La sua posizione sullo schermo</li>
+<li>Un ID tile</li>
+<li>Gli “attributi”</li>
 </ul>
 <p>Questi sono memorizzati in 4 byte: uno per la coordinata Y, uno per la coordinata X, uno per l’ID della piastrella e uno per gli attributi.
 L’OAM è lungo 160 byte e poiché 160 ∕ 4 = 40, il Game Boy memorizza un totale di <strong>40</strong> oggetti in qualsiasi momento.</p>
-<p>There is a catch, though: an object’s Y and X coordinate bytes in OAM do <em>not</em> store its on-screen position!
-Instead, the <em>on-screen</em> X position is the <em>stored</em> X position <strong>minus 8</strong>, and the <em>on-screen</em> Y position is the <em>stored</em> Y position <strong>minus 16</strong>.
-To stop displaying an object, we can simply put it off-screen, e.g. by setting its Y position to 0.</p>
+<p>C’è però un problema: i byte delle coordinate Y e X di un oggetto in OAM non memorizzano la sua posizione sullo schermo!
+Invece, la posizione X <em>sullo schermo</em> è la posizione X <em>memorizzata</em> <strong>meno 8</strong>, e la posizione Y <em>sullo schermo</em> è la posizione Y <em>memorizzata</em> <strong>meno 16</strong>.
+Per interrompere la visualizzazione di un oggetto, è sufficiente metterlo fuori dallo schermo, ad esempio impostando la sua posizione Y a 0.</p>
 <div class="box tip">
 <p>Questi offset non sono arbitrari!
 Si consideri la dimensione massima di un oggetto: 8 x 16 pixel.
@@ -1700,7 +1709,7 @@ Per spiegarne il motivo è necessaria una spiegazione più approfondita del rend
 
 Now you should see the paddle moving... very quickly.
 Because it moves by a pixel every frame, it's going at a speed of 60 pixels per second!
-To slow this down, we'll use a _variable_.
+To slow this down, we'll use a *variable*.
 
 Finora abbiamo lavorato solo con i registri della CPU, ma è possibile creare anche variabili globali!
 Per farlo, creiamo un'altra sezione, ma mettiamola in `WRAM0` invece che in `ROM0`.
@@ -1769,11 +1778,8 @@ Memcopy:
 	jp nz, Memcopy
 	ret
 </code></pre>
-<p>The new <code>ret</code> instruction should immediately catch our eye.
-It is, unsurprisingly, what makes execution <em>return</em> to where the function was <em>called</em> from.
-Importantly, many languages have a definite “end” to a function: in C or Rust, that’s the closing brace <code>}</code>; in Pascal or Lua, the keyword <code>end</code>, and so on; the function implicitly returns when execution reaches its end.
-However, <strong>this is not the case in assembly</strong>, so you must remember to add a <code>ret</code> instruction at the end of the function to return from it!
-Otherwise, the results are unpredictable.</p>
+<p>La nuova istruzione <code>ret' dovrebbe catturare immediatamente l'attenzione. È, senza sorpresa, quella che fa sì che l'esecuzione *ritorni* al punto in cui la funzione è stata *chiamata*. È importante notare che molti linguaggi prevedono una &quot;fine&quot; precisa per una funzione: in C o Rust, è la parentesi graffa di chiusura </code>}<code>; in Pascal o Lua, la parola chiave </code>end<code>, e così via; la funzione ritorna implicitamente quando l'esecuzione raggiunge la sua fine. Tuttavia, **non è così in assembly**, quindi bisogna ricordarsi di aggiungere un'istruzione </code>ret` alla fine della funzione per ritornare da essa!
+Altrimenti, i risultati sono imprevedibili.</p>
 <p>Notate il commento sopra la funzione, che spiega quali registri prende in ingresso.
 Questo commento è importante per sapere come interfacciarsi con la funzione; l’assembly non ha parametri formali, quindi i commenti che li spiegano sono ancora più importanti che in altri linguaggi.
 Ne vedremo altri man mano che procediamo.</p>
@@ -1886,9 +1892,9 @@ Come <code>Memcpy</code>, questa è una funzione che può essere riutilizzata da
 .knownret
   ret
 </code></pre>
-<p>Unfortunately, reading input on the Game Boy is fairly involved (as you can see!), and it would be quite difficult to explain what this function does right now.
-So, I ask that you make an exception, and trust me that this function <em>does</em> read input.
-Alright? Good!</p>
+<p>Sfortunatamente, la lettura degli input sul Game Boy è piuttosto complessa (come potete vedere!) e sarebbe piuttosto difficile spiegare cosa fa questa funzione in questo momento.
+Vi chiedo quindi di fare un’eccezione e di fidarvi del fatto che questa funzione legge l’input.
+Va bene? Bene!</p>
 <p>Ora che sappiamo come usare le funzioni, chiamiamo la funzione <code>UpdateKeys</code> nel nostro ciclo principale per leggere l’input dell’utente.
 La funzione <code>UpdateKeys</code> scrive i pulsanti tenuti in una posizione in memoria che abbiamo chiamato <code>wCurKeys</code>, da cui possiamo leggere dopo il ritorno della funzione.
 Per questo motivo, è sufficiente chiamare <code>UpdateKeys</code> una sola volta per ogni fotogramma.</p>
@@ -2108,11 +2114,11 @@ IsWallTile:
 	cp a, $07
 	ret
 </code></pre>
-<p>This function might look a bit strange at first.
-Instead of returning its result in a <em>register</em>, like <code>a</code>, it returns it in <a href="part2/../part1/operations.html#flags">a <em>flag</em></a>: <code>Z</code>!
-If at any point a tile matches, the function has found a wall and exits with <code>Z</code> set.
-If the target tile ID (in <code>a</code>) matches one of the wall tile IDs, the corresponding <code>cp</code> will leave <code>Z</code> set; if so, we return immediately (via <code>ret z</code>), with <code>Z</code> set.
-But if we reach the last comparison and it still doesn’t set <code>Z</code>, then we will know that we haven’t hit a wall and don’t need to bounce.</p>
+<p>Questa funzione può sembrare un po’ strana all’inizio.
+Invece di restituire il risultato in un <em>registro</em>, come <code>a</code>, lo restituisce in <a href="part2/../part1/operations.html#flags">un <em>flag</em></a>: <code>Z</code>!
+Se in qualsiasi punto una piastrella corrisponde, la funzione ha trovato un muro ed esce con <code>Z</code> impostato.
+Se l’ID della piastrella di destinazione (in <code>a</code>) corrisponde a uno degli ID delle piastrelle del muro, il corrispondente <code>cp</code> lascerà <code>Z</code> impostato; in tal caso, si ritorna immediatamente (tramite <code>ret z</code>), con <code>Z</code> impostato.
+Ma se, dopo aver effettuato l’ultimo confronto, <code>Z</code> non viene ancora impostato, sapremo che non abbiamo colpito un muro e non abbiamo bisogno di rimbalzare.</p>
 <h2 id="unificare-il-tutto"><a class="header" href="#unificare-il-tutto">Unificare il tutto</a></h2>
 <p>Time to use these new functions to add collision detection!
 Add the following after the code that updates the ball’s position:</p>
@@ -2135,9 +2141,9 @@ Add the following after the code that updates the ball’s position:</p>
 <p>Vedrete che quando carichiamo le posizioni dello sprite, le sottraiamo prima di chiamare <code>GetTileByPixel</code>.
 Forse ricorderete dall’ultimo capitolo che le posizioni OAM sono leggermente sfalsate; cioè, (0, 0) in OAM è in realtà completamente fuori dallo schermo.
 Queste istruzioni <code>sub</code> annullano questo offset.</p>
-<p>However, there’s a bit more to this: you might have noticed that we subtracted an extra pixel from the Y position.
-That’s because (as the label suggests), this code is checking for a tile above the ball.
-We actually need to check <em>all four</em> sides of the ball so we know how to change the momentum according to which side collided, so… let’s add the rest!</p>
+<p>Tuttavia, c’è dell’altro: avrete notato che abbiamo sottratto un pixel in più dalla posizione Y. Questo perché (come suggerisce l’etichetta) questo codice controlla la presenza di una piastrella sopra la palla.
+Questo perché (come suggerisce l’etichetta), il codice controlla la presenza di una piastrella sopra la palla.
+In realtà abbiamo bisogno di controllare <em>tutti e quattro</em> i lati della palla, in modo da sapere come cambiare la quantità di moto a seconda del lato che si è scontrato, quindi… aggiungiamo il resto!</p>
 <pre><code class="language-rgbasm linenos start=128">BounceOnRight:
 	ld a, [_OAMRAM + 4]
 	sub a, 16
@@ -2184,9 +2190,9 @@ BounceDone:
 <p>Era molto, ma ora la palla rimbalza sullo schermo!
 C’è solo un’ultima cosa da fare prima della fine di questo capitolo: la collisione tra palla e paddle.</p>
 <h2 id="rimbalzo-della-pagaia"><a class="header" href="#rimbalzo-della-pagaia">Rimbalzo della pagaia</a></h2>
-<p>Unlike with the tilemap, there’s no position conversions to do here, just straight comparisons.
-However, for these, we will need <a href="part2/../part1/operations.html#flags">the <em>carry</em> flag</a>.
-The carry flag is notated as <code>C</code>, like how the zero flag is notated as <code>Z</code>, but don’t confuse it with the <code>c</code> register!</p>
+<p>A differenza di quanto accade con la tilemap, qui non è necessario effettuare conversioni di posizione, ma solo confronti diretti.
+Tuttavia, per questi ultimi, avremo bisogno <a href="part2/../part1/operations.html#flags">del flag <em>carry</em></a>.
+Il flag di riporto è indicato con <code>C</code>, come il flag zero è indicato con <code>Z</code>, ma non bisogna confonderlo con il registro <code>c</code>!</p>
 <div class="box tip">
 <p class="box-title">Un ripasso sui confronti</p><p>Proprio come <code>Z</code>, è possibile utilizzare il flag di riporto per fare salti condizionati.
 Tuttavia, mentre <code>Z</code> viene utilizzato per verificare se due numeri sono uguali, <code>C</code> può essere utilizzato per verificare se un numero è maggiore o minore di un altro.
@@ -2309,9 +2315,9 @@ Poi annulliamo questa operazione sottraendo 16 e, già che ci siamo, sottraiamo 
 	<text x="432" y="470">+ 8 + 16</text>
 </svg>
 <div class="box tip">
-<p class="box-title">Larghezza della paletta</p><p>You might be wondering why we checked 16 pixels to the right but only 8 pixels to the left.
-Remember that OAM positions represent the upper-<em>left</em> corner of a sprite, so the center of our paddle is actually 4 pixels to the right of the position in OAM.
-When you consider this, we’re actually checking 12 pixels out on either side from the center of the paddle.</p>
+<p class="box-title">Larghezza della paletta</p><p>Ci si potrebbe chiedere perché abbiamo controllato 16 pixel a destra ma solo 8 pixel a sinistra.
+Ricordate che le posizioni OAM rappresentano l’angolo superiore <em>sinistro</em> di uno sprite, quindi il centro della nostra paletta è in realtà 4 pixel a destra della posizione in OAM.
+Se si considera questo, in realtà stiamo controllando 12 pixel su entrambi i lati dal centro della paletta.</p>
 <p>12 pixel possono sembrare molti, ma danno un po’ di tolleranza al giocatore nel caso in cui il suo posizionamento sia sbagliato.
 Se si preferisce rendere il tutto più facile o più difficile, è possibile regolare i valori!</p>
 </div>
@@ -2436,9 +2442,9 @@ BounceDone:
 Piuttosto semplice, no?</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="lavori-in-corso"><a class="header" href="#lavori-in-corso">Lavori in corso</a></h1>
 <div class="box warning">
-<p class="box-title">🚧 🚧 🚧 🚧 🚧 🚧 🚧</p><p>As explained in the initial tutorial presentation, Part Ⅱ consists of us building an <em>Arkanoid</em> game.
-However, this is not finished yet; lessons are uploaded as they are made, so the tutorial just abruptly stops at some point.
-Sorry!</p>
+<p class="box-title">🚧 🚧 🚧 🚧 🚧 🚧 🚧</p><p>Come spiegato nella presentazione iniziale del tutorial, la Parte Ⅱ consiste nella costruzione di un gioco <em>Arkanoid</em>.
+Tuttavia, questo non è ancora finito; le lezioni vengono caricate man mano che vengono realizzate, quindi il tutorial si interrompe bruscamente a un certo punto.
+Mi dispiace!</p>
 <p>Tenete duro mentre ci lavoriamo, <a href="https://twitter.com/gbdev0">seguiteci su Twitter</a> per gli aggiornamenti e andate alla pagina successiva per scoprire cosa potete fare nel frattempo!</p>
 <p>Grazie per la vostra pazienza 😊 e ci vediamo su GBDev!</p>
 </div>

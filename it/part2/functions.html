@@ -212,11 +212,8 @@ Memcopy:
 	jp nz, Memcopy
 	ret
 </code></pre>
-<p>The new <code>ret</code> instruction should immediately catch our eye.
-It is, unsurprisingly, what makes execution <em>return</em> to where the function was <em>called</em> from.
-Importantly, many languages have a definite “end” to a function: in C or Rust, that’s the closing brace <code>}</code>; in Pascal or Lua, the keyword <code>end</code>, and so on; the function implicitly returns when execution reaches its end.
-However, <strong>this is not the case in assembly</strong>, so you must remember to add a <code>ret</code> instruction at the end of the function to return from it!
-Otherwise, the results are unpredictable.</p>
+<p>La nuova istruzione <code>ret' dovrebbe catturare immediatamente l'attenzione. È, senza sorpresa, quella che fa sì che l'esecuzione *ritorni* al punto in cui la funzione è stata *chiamata*. È importante notare che molti linguaggi prevedono una &quot;fine&quot; precisa per una funzione: in C o Rust, è la parentesi graffa di chiusura </code>}<code>; in Pascal o Lua, la parola chiave </code>end<code>, e così via; la funzione ritorna implicitamente quando l'esecuzione raggiunge la sua fine. Tuttavia, **non è così in assembly**, quindi bisogna ricordarsi di aggiungere un'istruzione </code>ret` alla fine della funzione per ritornare da essa!
+Altrimenti, i risultati sono imprevedibili.</p>
 <p>Notate il commento sopra la funzione, che spiega quali registri prende in ingresso.
 Questo commento è importante per sapere come interfacciarsi con la funzione; l’assembly non ha parametri formali, quindi i commenti che li spiegano sono ancora più importanti che in altri linguaggi.
 Ne vedremo altri man mano che procediamo.</p>

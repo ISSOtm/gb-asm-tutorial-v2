@@ -194,9 +194,9 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="come-iniziare"><a class="header" href="#come-iniziare">Come iniziare</a></h1>
-<p>In this lesson, we will start a new project from scratch.
-We will make a <a href="https://en.wikipedia.org/wiki/Breakout_%28video_game%29">Breakout</a> / <a href="https://en.wikipedia.org/wiki/Arkanoid">Arkanoid</a> clone, which we’ll call “Unbricked”!
-(Though you are free to give it any other name you like, as it will be <em>your</em> project.)</p>
+<p>In questa lezione inizieremo un nuovo progetto da zero.
+Creeremo un clone di <a href="https://en.wikipedia.org/wiki/Breakout_%28video_game%29">Breakout</a> / <a href="https://en.wikipedia.org/wiki/Arkanoid">Arkanoid</a>, che chiameremo “Unbricked”!
+(Anche se siete liberi di dargli qualsiasi altro nome, perché sarà il <em>vostro</em> progetto).</p>
 <p>Aprire un terminale e creare una nuova directory (<code>mkdir unbricked</code>), quindi entrarvi (<code>cd unbricked</code>), proprio come si è fatto per <a href="../part1/hello_world.html">“Hello, world!”</a>.</p>
 <p>Si inizia creando un file chiamato <code>main.asm</code> e si include <code>hardware.inc</code> nel codice.</p>
 <pre><code class="language-rgbasm linenos start=1">INCLUDE &quot;hardware.inc&quot;
@@ -204,11 +204,11 @@ We will make a <a href="https://en.wikipedia.org/wiki/Breakout_%28video_game%29"
 <p>You may be wondering what purpose <code>hardware.inc</code> serves.
 Well, the code we write only really affects the CPU, but does not do anything with the rest of the console (not directly, anyway).
 To interact with other components (like the graphics system, say), <a href="https://en.wikipedia.org/wiki/Memory-mapped_I/O">Memory-Mapped <abbr title="Input/Output">I/O</abbr></a> (MMIO) is used: basically, <a href="../part1/memory.html">memory</a> in a certain range (addresses $FF00–FF7F) does special things when accessed.</p>
-<p>These bytes of memory being interfaces to the hardware, they are called <em>hardware registers</em> (not to be mistaken with <a href="../part1/registers.html">the CPU registers</a>).
-For example, the “PPU status” register is located at address $FF41.
-Reading from that address reports various bits of info regarding the graphics system, and writing to it allows changing some parameters.
-But, having to remember all the numbers (<a href="https://gbdev.io/pandocs/Power_Up_Sequence.html#hardware-registers">non-exhaustive list</a>) would be very tedious—and this is where <code>hardware.inc</code> comes into play!
-<code>hardware.inc</code> defines one constant for each of these registers (for example, <code>rSTAT</code> for the aforementioned “PPU status” register), plus some additional constants for values read from or written to these registers.</p>
+<p>Essendo questi byte di memoria interfacce per l’hardware, sono chiamati <em>registri hardware</em> (da non confondere con <a href="../part1/registers.html">i registri della CPU</a>).
+Ad esempio, il registro “stato PPU” si trova all’indirizzo $FF41.
+La lettura di questo indirizzo riporta varie informazioni sul sistema grafico e la scrittura consente di modificare alcuni parametri.
+Ma dover ricordare tutti i numeri (<a href="https://gbdev.io/pandocs/Power_Up_Sequence.html#hardware-registers">elenco non esaustivo</a>) sarebbe molto noioso, ed è qui che entra in gioco <code>hardware.inc</code>!
+<code>hardware.inc</code> definisce una costante per ciascuno di questi registri (per esempio, <code>rSTAT</code> per il già citato registro “stato della PPU”), più alcune costanti aggiuntive per i valori letti o scritti in questi registri.</p>
 <div class="box tip">
 <p>Non preoccupatevi se tutto questo vi è sfuggito di mano: di seguito vedremo un esempio con <code>rLCDC</code> e <code>LCDCF_ON</code>.</p>
 <p>A proposito, la <code>r</code> sta per “registro” e la <code>F</code> in <code>LCDCF</code> sta per “flag”.</p>
@@ -273,14 +273,14 @@ CopyTilemap:
 <p>Si noti che, mentre il corpo di questo ciclo è esattamente lo stesso di <code>CopyTiles</code>, i 3 valori caricati in <code>de</code>, <code>hl</code> e <code>bc</code> sono diversi.
 Questi determinano rispettivamente l’origine, la destinazione e la dimensione della copia.</p>
 <div class="box tip">
-<p class="box-title">“<a href="https://en.wikipedia.org/wiki/Don&#x27;t_Repeat_Yourself"><abbr title="Don't Repeat Yourself">DRY</abbr></a>”.</p><p>If you think that this is super redundant, you are not wrong, and we will see later how to write actual, reusable <em>functions</em>.
-But there is more to them than meets the eye, so we will start tackling them much later.</p>
+<p class="box-title">“<a href="https://en.wikipedia.org/wiki/Don&#x27;t_Repeat_Yourself"><abbr title="Don't Repeat Yourself">DRY</abbr></a>”.</p><p>Se pensate che tutto ciò sia superfluo, non avete torto: vedremo più avanti come scrivere delle vere e proprie <em>funzioni</em> riutilizzabili.
+Ma c’è molto di più di quello che sembra, quindi inizieremo ad affrontarle molto più avanti.</p>
 </div>
-<p>Finally, let’s turn the screen back on, and set a <a href="../part1/palettes.html">background palette</a>.
-Rather than writing the non-descript number <code>%10000001</code> (or $81 or 129, to taste), we make use of two constants graciously provided by <code>hardware.inc</code>: <code>LCDCF_ON</code> and <code>LCDCF_BGON</code>.
-When written to <a href="https://gbdev.io/pandocs/LCDC"><code>rLCDC</code></a>, the former causes the PPU and screen to turn back on, and the latter enables the background to be drawn.
-(There are other elements that could be drawn, but we are not enabling them yet.)
-Combining these constants must be done using <code>|</code>, the <em>binary “or”</em> operator; we’ll see why later.</p>
+<p>Infine, riaccendiamo lo schermo e impostiamo una <a href="../part1/palettes.html">palette di sfondo</a>.
+Invece di scrivere il numero non descritto <code>%10000001</code> (o $81 o 129, a seconda dei gusti), usiamo due costanti gentilmente fornite da <code>hardware.inc</code>: <code>LCDCF_ON</code> e <code>LCDCF_BGON</code>.
+Quando vengono scritte su <a href="https://gbdev.io/pandocs/LCDC"><code>rLCDC</code></a>, la prima fa sì che la PPU e lo schermo si riaccendano, mentre la seconda permette di disegnare lo sfondo.
+(Ci sono altri elementi che potrebbero essere disegnati, ma non li abilitiamo ancora).
+La combinazione di queste costanti deve essere fatta usando <code>|</code>, l’operatore <em>binario “o “</em>; vedremo perché più avanti.</p>
 <pre><code class="language-rgbasm linenos start=46">	; Turn the LCD on
 	ld a, LCDCF_ON | LCDCF_BGON
 	ld [rLCDC], a
@@ -295,10 +295,8 @@ Done:
 <p>C’è un’ultima cosa di cui abbiamo bisogno prima di costruire la ROM: la grafica.
 Disegneremo la seguente schermata:</p>
 <p><img src="../assets/part2/img/tilemap.png" alt="Layout di unbricked" /></p>
-<p>In <code>hello-world.asm</code>, tile data had been written out by hand in hexadecimal; this was to let you see how the sausage is made at the lowest level, but <em>boy</em> is it impractical to write!
-This time, we will employ a more friendly way, which will let us write each row of pixels more easily.
-For each row of pixels, instead of writing <a href="../part1/tiles.html#encoding">the bitplanes</a> directly, we will use a backtick (<code>`</code>) followed by 8 characters.
-Each character defines a single pixel, intuitively from left to right; it must be one of 0, 1, 2, and 3, representing the corresponding color index in <a href="../part1/palettes.html">the palette</a>.</p>
+<p>In <code>hello-world.asm', i dati delle mattonelle erano stati scritti a mano in esadecimale; questo per farvi vedere come viene fatta la salsiccia al livello più basso, ma *ragazzo* è poco pratico da scrivere! Questa volta utilizzeremo un metodo più semplice, che ci permetterà di scrivere più facilmente ogni riga di pixel. Per ogni riga di pixel, invece di scrivere direttamente [i bitplanes](../part1/tiles.md#encoding), useremo un backtick (`` </code> ``) seguito da 8 caratteri.
+Ogni carattere definisce un singolo pixel, intuitivamente da sinistra a destra; deve essere uno tra 0, 1, 2 e 3, che rappresenta l’indice di colore corrispondente nella <a href="../part1/palettes.html">tavolozza</a>.</p>
 <div class="box tip">
 <p>Se la selezione dei caratteri non è di vostro gradimento, potete usare <a href="https://rgbds.gbdev.io/docs/v0.5.2/rgbasm.1#g">l’opzione <code>-g</code> di RGBASM</a> o <a href="https://rgbds.gbdev.io/docs/v0.5.2/rgbasm.5/#Changing_options_while_assembling"><code>OPT g</code></a> per sceglierne altri.
 Per esempio, <code>rgbasm -g '.xXO' (...)</code> o <code>OPT g.xXO</code> scambiano i quattro caratteri rispettivamente con <code>.</code>, <code>x</code>, <code>X</code> e <code>O</code>.</p>

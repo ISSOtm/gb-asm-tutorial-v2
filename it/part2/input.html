@@ -234,9 +234,9 @@ Come <code>Memcpy</code>, questa è una funzione che può essere riutilizzata da
 .knownret
   ret
 </code></pre>
-<p>Unfortunately, reading input on the Game Boy is fairly involved (as you can see!), and it would be quite difficult to explain what this function does right now.
-So, I ask that you make an exception, and trust me that this function <em>does</em> read input.
-Alright? Good!</p>
+<p>Sfortunatamente, la lettura degli input sul Game Boy è piuttosto complessa (come potete vedere!) e sarebbe piuttosto difficile spiegare cosa fa questa funzione in questo momento.
+Vi chiedo quindi di fare un’eccezione e di fidarvi del fatto che questa funzione legge l’input.
+Va bene? Bene!</p>
 <p>Ora che sappiamo come usare le funzioni, chiamiamo la funzione <code>UpdateKeys</code> nel nostro ciclo principale per leggere l’input dell’utente.
 La funzione <code>UpdateKeys</code> scrive i pulsanti tenuti in una posizione in memoria che abbiamo chiamato <code>wCurKeys</code>, da cui possiamo leggere dopo il ritorno della funzione.
 Per questo motivo, è sufficiente chiamare <code>UpdateKeys</code> una sola volta per ogni fotogramma.</p>
