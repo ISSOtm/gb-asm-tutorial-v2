@@ -198,17 +198,14 @@
 Il resto del capitolo sarà dedicato a spiegare come e perché funziona.</p>
 <p>Tenete presente che da ora dovremo lanciare molti comandi, quindi è il momento di aprire una finestra del terminale.
 È buon norma creare una nuova directory (<code>mkdir gb_hello_world</code>, per esempio, poi <code>cd gb_hello_world</code> per entrare nella nuova directory).</p>
-<p>Scaricate i seguenti file (cliccate con il tasto destro del mouse su ogni link, “Salva link con nome…”) e metteteli tutti in questa nuova directory:</p>
+<p>Grab the following files (right-click each link, “Save Link As…”), and place them all in this new directory:</p>
 <ul>
 <li><a href="../assets/hello-world.asm"><code>hello-world.asm</code></a></li>
 <li><a href="https://raw.githubusercontent.com/gbdev/hardware.inc/v4.0/hardware.inc"><code>hardware.inc</code></a></li>
 </ul>
 <p>Quindi, sempre dal terminale, all’interno di quella directory, lanciate i tre comandi seguenti.</p>
-<div class="box warning decorated">
-<div><p>⚠️</p></div>
-<div>
+<div class="box warning decorated"><p>⚠️</p>
 <p>Per chiarezza espositiva, all’inizio di ogni comando, ho aggiunto un <code>$</code>, ma voi non digitatelo!</p>
-</div>
 </div>
 <pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgbasm -L -o hello-world.o hello-world.asm</span>
 <span class="console-line hljs-meta"></span><span class="language-bash">rgblink -o hello-world.gb hello-world.o</span>
@@ -219,23 +216,20 @@ Il resto del capitolo sarà dedicato a spiegare come e perché funziona.</p>
 		list-style-type: symbols(fixed "👎" "👍" "👍");
 	}
 </style>
-<div class="box danger decorated">
-<div><p>‼️</p></div>
-<div>
+<div class="box danger decorated"><p>‼️</p>
 <p>Fate attenzione agli argomenti! Alcune opzioni, come <code>-o</code>, usano l’argomento dopo di esse come parametro:</p>
 <ol>
-<li><code>rgbasm -L -o hello-world.asm hello-world.o</code> non funzionerà (e potrebbe corrompere <code>hello-world.asm</code>!)</li>
-<li><code>rgbasm -L hello-world.asm -o hello-world.o</code> funzionerà</li>
-<li><code>rgbasm hello-world.asm -o hello-world.o -L</code> funzionerà anche</li>
+<li><code>rgbasm -L -o hello-world.asm hello-world.o</code> won’t work (and may corrupt <code>hello-world.asm</code>!)</li>
+<li><code>rgbasm -L hello-world.asm -o hello-world.o</code> will work</li>
+<li><code>rgbasm hello-world.asm -o hello-world.o -L</code> will also work</li>
 </ol>
 <p>In caso di spazi all’interno di un argomento, è necessario metterlo tra virgolette:</p>
 <ol>
-<li><code>rgbasm -L -o hello world.o hello world.asm</code> non funzionerà</li>
-<li><code>rgbasm -L -o &quot;hello world.o&quot; &quot;hello world.asm&quot;</code> funzionerà</li>
+<li><code>rgbasm -L -o hello world.o hello world.asm</code> won’t work</li>
+<li><code>rgbasm -L -o &quot;hello world.o&quot; &quot;hello world.asm&quot;</code> will work</li>
 </ol>
 </div>
-</div>
-<p>E dunque il processo sarà il seguente:</p>
+<p>It should look like this:</p>
 <script id="asciicast-weljUlcp1KC5GqS9jqV62dy5m" src="https://asciinema.celforyon.fr/a/weljUlcp1KC5GqS9jqV62dy5m.js" async></script>
 <p>(Se riscontrate un errore che non riuscite a risolvere da soli, non abbiate paura di <a href="../index.html#feedback">chiedere</a>! Lo risolveremo insieme)</p>
 <p>Congrats!

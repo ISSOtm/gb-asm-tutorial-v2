@@ -219,8 +219,8 @@ When the console powers up, the CPU does not begin executing instructions at add
 <p>Tuttavia, in quel momento, un piccolo programma chiamato <em>boot ROM</em>, masterizzato all’interno del silicio della CPU, viene “sovrapposto” alla nostra ROM!
 La ROM di avvio è responsabile dell’animazione di avvio, ma controlla anche l’intestazione della ROM!
 In particolare, verifica che i checksum del logo Nintendo e della intestazione siano corretti; se uno dei due controlli fallisce, la ROM di avvio si <em>blocca</em> intenzionalmente e il nostro gioco non verrà mai eseguito :(</p>
-<div class="box tip">
-<p class="box-title">Per i curiosi</p><p>È possibile trovare una descrizione più dettagliata di ciò che fa la ROM di avvio <a href="https://gbdev.io/pandocs/Power_Up_Sequence">nei Pan Docs</a>, nonché una spiegazione del controllo del logo.
+<div class="box tip"><p class="box-title">For the curious</p>
+<p>È possibile trovare una descrizione più dettagliata di ciò che fa la ROM di avvio <a href="https://gbdev.io/pandocs/Power_Up_Sequence">nei Pan Docs</a>, nonché una spiegazione del controllo del logo.
 Attenzione, però, perché si tratta di un argomento piuttosto avanzato.</p>
 <p>If you want to enable the boot ROMs in Emulicious, you must obtain a copy of the boot ROM(s), whose SHA256 checksums can be found <a href="https://github.com/ISSOtm/gb-bootroms/blob/master/sha256sums.txt">in their disassembly</a> for verification.
 If you wish, you can also compile <a href="https://github.com/LIJI32/SameBoy#compilation">SameBoy’s boot ROMs</a> and use those instead, as a free-software substitute.</p>
@@ -233,7 +233,7 @@ Now, just reset the emulator, and voilà!</p>
 <p>RGBFIX è il terzo componente di RGBDS, il cui scopo è scrivere l’header di una ROM.
 È separato da RGBLINK in modo da poter essere usato come strumento indipendente.
 Il suo nome deriva dal fatto che RGBLINK di solito non produce una ROM con un header valido, quindi la ROM deve essere “aggiustata” prima di essere pronta per la produzione.</p>
-<p>RGBFIX ha <a href="https://rgbds.gbdev.io/docs/rgbfix.1">molte opzioni</a> per impostare varie parti dell’header; ma le uniche due che usiamo qui sono <code>-v</code>, che produce un header <strong>v</strong>alido (quindi, <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0104-0133---nintendo-logo">logo Nintendo</a> e <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#014d---header-checksum">checksum</a> corretti) e <code>-p 0xFF</code>, che <strong>p</strong>osiziona la ROM alla prossima dimensione valida (usando $FF come byte di riempimento) e scrive il valore appropriato nel <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0148---rom-size">byte di dimensione della ROM</a>.</p>
+<p>RGBFIX has <a href="https://rgbds.gbdev.io/docs/rgbfix.1">a bunch of options</a> to set various parts of the header; but the only two that we are using here are <code>-v</code>, which produces a <strong>v</strong>alid header (so, correct <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0104-0133---nintendo-logo">Nintendo logo</a> and <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#014d---header-checksum">checksums</a>), and <code>-p 0xFF</code>, which <strong>p</strong>ads the ROM to the next valid size (using $FF as the filler byte), and writes the appropriate value to the <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0148---rom-size">ROM size byte</a>.</p>
 <p>Guardando altri progetti, si possono trovare invocazioni di RGBFIX con più opzioni, ma queste due dovrebbero essere quasi sempre presenti.</p>
 <h2 id="allora-qual-è-il-problema-con-questa-linea"><a class="header" href="#allora-qual-è-il-problema-con-questa-linea">Allora, qual è il problema con questa linea?</a></h2>
 <p>Si!
@@ -270,12 +270,9 @@ Quindi il <code>jp</code> a $0100 è andato lì e ha iniziato a eseguire le istr
 <p>Ma perché <code>EntryPoint</code> è lì?
 Come avrete capito dagli avvisi stampati da RGBFIX, esso <em>sovrascrive</em> l’area dell’header nella ROM.
 Tuttavia, RGBLINK <strong>non</strong> è a conoscenza dell’header (perché RGBLINK non è usato solo per generare ROM!), quindi è necessario riservare esplicitamente spazio per l’area dell’header.</p>
-<div class="box danger decorated">
-<div><p>🥴</p></div>
-<div>
+<div class="box danger decorated"><p>🥴</p>
 <p>Dimenticare di riservare questo spazio può far sì che un pezzo di codice o di dati finisca lì e poi venga sovrascritto. Questo è un errore comune di chi è alle prime armi che può lasciare perplessi.
 Fortunatamente, dalla versione 0.5.1 RGBFIX avverte quando rileva questo errore, come mostrato sopra.</p>
-</div>
 </div>
 <p>Così, preveniamo disastri come questo:</p>
 <pre><code class="language-rgbasm linenos start=3">SECTION &quot;Header&quot;, ROM0[$100]

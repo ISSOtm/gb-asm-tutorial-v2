@@ -272,10 +272,10 @@ CopyTilemap:
 </code></pre>
 <p>Si noti che, mentre il corpo di questo ciclo è esattamente lo stesso di <code>CopyTiles</code>, i 3 valori caricati in <code>de</code>, <code>hl</code> e <code>bc</code> sono diversi.
 Questi determinano rispettivamente l’origine, la destinazione e la dimensione della copia.</p>
-<div class="box tip">
-<p class="box-title">“<a href="https://en.wikipedia.org/wiki/Don&#x27;t_Repeat_Yourself"><abbr title="Don't Repeat Yourself">DRY</abbr></a>”.</p><p>Se pensate che tutto ciò sia superfluo, non avete torto: vedremo più avanti come scrivere delle vere e proprie <em>funzioni</em> riutilizzabili.
+<p>:::tip “<a href="https://en.wikipedia.org/wiki/Don&#x27;t_Repeat_Yourself"><abbr title="Don't Repeat Yourself">DRY</abbr></a>”</p>
+<p>Se pensate che tutto ciò sia superfluo, non avete torto: vedremo più avanti come scrivere delle vere e proprie <em>funzioni</em> riutilizzabili.
 Ma c’è molto di più di quello che sembra, quindi inizieremo ad affrontarle molto più avanti.</p>
-</div>
+<p>:::</p>
 <p>Infine, riaccendiamo lo schermo e impostiamo una <a href="../part1/palettes.html">palette di sfondo</a>.
 Invece di scrivere il numero non descritto <code>%10000001</code> (o $81 o 129, a seconda dei gusti), usiamo due costanti gentilmente fornite da <code>hardware.inc</code>: <code>LCDCF_ON</code> e <code>LCDCF_BGON</code>.
 Quando vengono scritte su <a href="https://gbdev.io/pandocs/LCDC"><code>rLCDC</code></a>, la prima fa sì che la PPU e lo schermo si riaccendano, mentre la seconda permette di disegnare lo sfondo.
@@ -295,27 +295,24 @@ Done:
 <p>C’è un’ultima cosa di cui abbiamo bisogno prima di costruire la ROM: la grafica.
 Disegneremo la seguente schermata:</p>
 <p><img src="../assets/part2/img/tilemap.png" alt="Layout di unbricked" /></p>
-<p>In <code>hello-world.asm', i dati delle mattonelle erano stati scritti a mano in esadecimale; questo per farvi vedere come viene fatta la salsiccia al livello più basso, ma *ragazzo* è poco pratico da scrivere! Questa volta utilizzeremo un metodo più semplice, che ci permetterà di scrivere più facilmente ogni riga di pixel. Per ogni riga di pixel, invece di scrivere direttamente [i bitplanes](../part1/tiles.md#encoding), useremo un backtick (`` </code> ``) seguito da 8 caratteri.
-Ogni carattere definisce un singolo pixel, intuitivamente da sinistra a destra; deve essere uno tra 0, 1, 2 e 3, che rappresenta l’indice di colore corrispondente nella <a href="../part1/palettes.html">tavolozza</a>.</p>
+<p>In <code>hello-world.asm</code>, tile data had been written out by hand in hexadecimal; this was to let you see how the sausage is made at the lowest level, but <em>boy</em> is it impractical to write!
+This time, we will employ a more friendly way, which will let us write each row of pixels more easily.
+For each row of pixels, instead of writing <a href="../part1/tiles.html#encoding">the bitplanes</a> directly, we will use a backtick (```) followed by 8 characters.
+Each character defines a single pixel, intuitively from left to right; it must be one of 0, 1, 2, and 3, representing the corresponding color index in <a href="../part1/palettes.html">the palette</a>.</p>
 <div class="box tip">
 <p>Se la selezione dei caratteri non è di vostro gradimento, potete usare <a href="https://rgbds.gbdev.io/docs/v0.5.2/rgbasm.1#g">l’opzione <code>-g</code> di RGBASM</a> o <a href="https://rgbds.gbdev.io/docs/v0.5.2/rgbasm.5/#Changing_options_while_assembling"><code>OPT g</code></a> per sceglierne altri.
 Per esempio, <code>rgbasm -g '.xXO' (...)</code> o <code>OPT g.xXO</code> scambiano i quattro caratteri rispettivamente con <code>.</code>, <code>x</code>, <code>X</code> e <code>O</code>.</p>
 </div>
 <p>Ad esempio:</p>
-<p>``rgbasm
-dw <code>01230123 ; Questo è equivalente a </code>db $55,$33`</p>
-<pre><code>
-Avrete notato che stiamo usando `dw` invece di `db`; la differenza tra questi due elementi sarà spiegata più avanti.
-Abbiamo già delle piastrelle per questo progetto, quindi potete copiare [questo file premade](https://github.com/gbdev/gb-asm-tutorial/raw/master/unbricked/getting-started/tileset.asm) e incollarlo alla fine del vostro codice.
-
-Quindi copiare la mappa delle piastrelle da [questo file] (https://github.com/gbdev/gb-asm-tutorial/raw/master/unbricked/getting-started/tilemap.asm) e incollarla dopo l'etichetta `TilesEnd`.
-
-È possibile creare la ROM ora, eseguendo i seguenti comandi nel terminale:
-
-``console
-$ rgbasm -L -o main.o main.asm
-$ rgblink -o unbricked.gb main.o
-$ rgbfix -v -p 0xFF unbricked.gb
+<pre><code class="language-rgbasm">	dw `01230123 ; This is equivalent to `db $55,$33`
+</code></pre>
+<p>Avrete notato che stiamo usando <code>dw</code> invece di <code>db</code>; la differenza tra questi due elementi sarà spiegata più avanti.
+Abbiamo già delle piastrelle per questo progetto, quindi potete copiare <a href="https://github.com/gbdev/gb-asm-tutorial/raw/master/unbricked/getting-started/tileset.asm">questo file premade</a> e incollarlo alla fine del vostro codice.</p>
+<p>Quindi copiare la mappa delle piastrelle da [questo file] (https://github.com/gbdev/gb-asm-tutorial/raw/master/unbricked/getting-started/tilemap.asm) e incollarla dopo l’etichetta <code>TilesEnd</code>.</p>
+<p>È possibile creare la ROM ora, eseguendo i seguenti comandi nel terminale:</p>
+<pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgbasm -L -o main.o main.asm</span>
+<span class="console-line hljs-meta"></span><span class="language-bash">rgblink -o unbricked.gb main.o</span>
+<span class="console-line hljs-meta"></span><span class="language-bash">rgbfix -v -p 0xFF unbricked.gb</span>
 </code></pre>
 <p>Se si esegue questa operazione nell’emulatore, si dovrebbe vedere quanto segue:</p>
 <p><img src="../assets/part2/img/screenshot.png" alt="Schermata del nostro gioco" /></p>
@@ -332,18 +329,18 @@ TilesEnd:
 Potete utilizzare uno dei seguenti loghi già pronti, oppure provare a crearne uno vostro!</p>
 <ul>
 <li>
-<p>Logo RGBDS**</p>
-<p><img src="../assets/part2/img/rgbds.png" alt="Il logo di RGBDS" /></p>
+<p><strong>RGBDS Logo</strong></p>
+<p><img src="../assets/part2/img/rgbds.png" alt="The RGBDS Logo" /></p>
 <p><a href="https://github.com/gbdev/gb-asm-tutorial/raw/master/unbricked/getting-started/rgbds.asm">Source</a></p>
 </li>
 <li>
-<p><strong>Anatra</strong></p>
-<p><img src="../assets/part2/img/duck.png" alt="Un’anatra in pixel-art" /></p>
+<p><strong>Duck</strong></p>
+<p><img src="../assets/part2/img/duck.png" alt="A pixel-art duck" /></p>
 <p><a href="https://github.com/gbdev/gb-asm-tutorial/raw/master/unbricked/getting-started/duck.asm">Source</a></p>
 </li>
 <li>
-<p><strong>Coda</strong></p>
-<p><img src="../assets/part2/img/tail.png" alt="Sagoma di una coda" /></p>
+<p><strong>Tail</strong></p>
+<p><img src="../assets/part2/img/tail.png" alt="A silhouette of a tail" /></p>
 <p><a href="https://github.com/gbdev/gb-asm-tutorial/raw/master/unbricked/getting-started/tail.asm">Source</a></p>
 </li>
 </ul>

@@ -193,12 +193,9 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="memory"><a class="header" href="#memory">Memory</a></h1>
-<div class="box tip decorated">
-<div><p>🎉</p></div>
-<div>
+<div class="box tip decorated"><p>🎉</p>
 <p>Congrats, you have just finished the hardest lessons of the tutorial!
 Since you have the basics, from now on, we’ll be looking at more and more concrete code.</p>
-</div>
 </div>
 <p>If we look at line 29, we see <code>ld a, [de]</code>.
 Given what we just learned, this copies a value into register <code>a</code>… but where from?
@@ -220,7 +217,8 @@ On the Game Boy, each cell contains <em>8 bits</em>, i.e. a <em>byte</em>.</p>
 <p>How many cells are there?
 Well, this is actually a trick question…</p>
 <h2 id="the-many-types-of-memory"><a class="header" href="#the-many-types-of-memory">The many types of memory</a></h2>
-<p>There are several memory chips in the Game Boy, but we can put them into two categories: <abbr title="Read-Only Memory">ROM</abbr> and <abbr title="Random Access Memory">RAM</abbr><sup class="footnote-reference"><a href="#rom_ram_and">2</a></sup>.
+<p>There are several memory chips in the Game Boy, but we can put them into two categories: <abbr title="Read-Only Memory">ROM</abbr> and <abbr title="Random Access Memory">RAM</abbr>
+<sup class="footnote-reference"><a href="#rom_ram_and">2</a></sup>.
 ROM simply designates memory that cannot be written to<sup class="footnote-reference"><a href="#rom_ro">3</a></sup>, and RAM memory that can be written to.</p>
 <p>Due to how they work, the CPU, as well as the memory chips, can only use a single number for addresses.
 Let’s go back to the “street numbers” analogy: each memory chip is a street, with its own set of numbers, but the CPU has no idea what a street is, it only deals with street numbers.

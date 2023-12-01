@@ -213,9 +213,9 @@ Funziona come <code>sub</code>, ma scarta il risultato invece di riscriverlo.
 <p>È arrivato il momento di parlare del registro speciale (ve lo ricordate?) <code>f</code>, per, beh, <em>flag</em>.
 Il registro <code>f</code> contiene 4 bit, chiamati “flag”, che vengono aggiornati a seconda dei risultati di un’operazione.
 Questi 4 flag sono:</p>
-<div class="table-wrapper"><table><thead><tr><th>Nome</th><th>Descrizione</th></tr></thead><tbody>
-<tr><td>Z</td><td>Flag di zero</td></tr>
-<tr><td>N</td><td>Addizione/sottrazione</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Description</th></tr></thead><tbody>
+<tr><td>Z</td><td>Zero flag</td></tr>
+<tr><td>N</td><td>Addition/subtraction</td></tr>
 <tr><td>H</td><td>Half-carry</td></tr>
 <tr><td>C</td><td>Carry</td></tr>
 </tbody></table>
@@ -228,15 +228,12 @@ C viene impostato quando un’operazione va in <em>overflow</em> o in <em>underf
 <p>Che cos’è un overflow?
 Prendiamo la semplice istruzione <code>add a, 42</code>.
 Questa istruzione aggiunge semplicemente 42 al contenuto del registro <code>a</code> e scrive il risultato in <code>a</code>.</p>
-<p>``rgbasm
-ld a, 200
-add a, 42</p>
-<pre><code>
-Alla fine di questo snippet, `a` è uguale a 200 + 42 = 242, fantastico!
-Ma se invece scrivessi questo?
-
-``rgbasm
-    ld a, 220
+<pre><code class="language-rgbasm">    ld a, 200
+    add a, 42
+</code></pre>
+<p>Alla fine di questo snippet, <code>a</code> è uguale a 200 + 42 = 242, fantastico!
+Ma se invece scrivessi questo?</p>
+<pre><code class="language-rgbasm">    ld a, 220
     add a, 42
 </code></pre>
 <p>Si potrebbe pensare che <code>a</code> sia uguale a 220 + 42 = 262, ma non sarebbe corretto.
@@ -245,17 +242,17 @@ E se dovessimo scrivere 262 in binario, otterremmo %100000110, che richiede alme
 Quindi cosa succede?
 Semplicemente, il nono bit viene <em>perduto</em> e il valore che otteniamo è %00000110 = 6. Questo si chiama <em>overflow</em>.
 Questo si chiama <em>overflow</em>: dopo l’<strong>aggiunta</strong>, otteniamo un valore <strong>più piccolo</strong> di quello con cui abbiamo iniziato.</p>
-<p>Possiamo anche fare l’opposto con <code>sub</code>, e —per esempio— sottrarre 42 da 6; come sappiamo, per tutti gli <code>X</code> e <code>Y</code>, <code>X + Y - Y = X</code>, e abbiamo appena visto che 220 + 42 = 6 (questo è chiamato <em>modulo 256 aritmetico</em>, a proposito); quindi, 6 - 42 = (220 + 42) - 42 = 220.
-Questo si chiama <em>underflow</em>: dopo la <strong>sottrazione</strong>, otteniamo un valore <strong>superiore</strong> a quello di partenza.</p>
+<p>We can also do the opposite with <code>sub</code>, and—for example—subtract 42 from 6; as we know, for all <code>X</code> and <code>Y</code>, <code>X + Y - Y = X</code>, and we just saw that 220 + 42 = 6 (this is called <em>modulo 256 arithmetic</em>, by the way); so, 6 - 42 = (220 + 42) - 42 = 220.
+This is called an <em>underflow</em>: after <strong>subtracting</strong>, we get a value <strong>greater</strong> than what we started with.</p>
 <p>Quando viene eseguita un’operazione, imposta il flag di riporto se si è verificato un overflow o un underflow, altrimenti lo azzera.
 (Vedremo più avanti che non tutte le operazioni aggiornano il flag di riporto)</p>
-<div class="box tip">
-<p class="box-title">Riassunto</p><ul>
-<li>Possiamo sommare e sottrarre numeri.</li>
-<li>Il flag Z ci permette di sapere se il risultato è 0.</li>
-<li>Tuttavia, i registri possono memorizzare solo un intervallo limitato di numeri interi.</li>
-<li>L’uscita da questo intervallo è chiamata <strong>overflow</strong> o <strong>underflow</strong>, rispettivamente per l’addizione e la sottrazione.</li>
-<li>Il flag C ci permette di sapere se si è verificato uno dei due casi.</li>
+<div class="box tip"><p class="box-title">Summary</p>
+<ul>
+<li>We can add and subtract numbers.</li>
+<li>The Z flag lets us know if the result was 0.</li>
+<li>However, registers can only store a limited range of integers.</li>
+<li>Going outside this range is called an <strong>overflow</strong> or <strong>underflow</strong>, for addition and subtraction respectively.</li>
+<li>The C flag lets us know if either occurred.</li>
 </ul>
 </div>
 <h2 id="confronto"><a class="header" href="#confronto">Confronto</a></h2>
@@ -272,10 +269,10 @@ Quando si esegue una sottrazione, il flag di riporto viene impostato quando il r
 E, al contrario, sappiamo che se non è impostato, <code>a &gt;= operando</code>.
 Ottimo!</p>
 <h2 id="riassunto-dellistruzione"><a class="header" href="#riassunto-dellistruzione">Riassunto dell’istruzione</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>Istruzione</th><th>Mnemonico</th><th>Effetto</th></tr></thead><tbody>
-<tr><td>Add</td><td><code>add</code></td><td>Aggiunge valori ad <code>a</code></td></tr>
-<tr><td>Subtract</td><td><code>sub</code></td><td>Sottrae valori da <code>a</code></td></tr>
-<tr><td>Compare</td><td><code>cp</code></td><td>Confronta valori con quelli contenuti in <code>a</code></td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Mnemonic</th><th>Effect</th></tr></thead><tbody>
+<tr><td>Add</td><td><code>add</code></td><td>Adds values to <code>a</code></td></tr>
+<tr><td>Subtract</td><td><code>sub</code></td><td>Subtracts values from <code>a</code></td></tr>
+<tr><td>Compare</td><td><code>cp</code></td><td>Compares values with what’s contained in <code>a</code></td></tr>
 </tbody></table>
 </div>
                     </main>

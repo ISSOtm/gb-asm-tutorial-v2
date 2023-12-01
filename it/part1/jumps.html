@@ -207,22 +207,19 @@ Il PC aumenta automaticamente quando la CPU legge le istruzioni, quindi “per i
 Da qui il nome.</p>
 <p>Ok, allora parliamo di queste istruzioni di salto, che ne dite?
 Ce ne sono quattro:</p>
-<div class="table-wrapper"><table><thead><tr><th>Istruzione</th><th>Mnemonico</th><th>Effetto</th></tr></thead><tbody>
-<tr><td>Jump</td><td><code>jp</code></td><td>Salta l’esecuzione a una locazione</td></tr>
-<tr><td>Jump Relativo</td><td><code>jr</code></td><td>Salta a una locazione vicina</td></tr>
-<tr><td>Call</td><td><code>call</code></td><td>Chiama una subroutine</td></tr>
-<tr><td>Return</td><td><code>ret</code></td><td>Ritorna da una subroutine</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Mnemonic</th><th>Effect</th></tr></thead><tbody>
+<tr><td>Jump</td><td><code>jp</code></td><td>Jump execution to a location</td></tr>
+<tr><td>Jump Relative</td><td><code>jr</code></td><td>Jump to a location close by</td></tr>
+<tr><td>Call</td><td><code>call</code></td><td>Call a subroutine</td></tr>
+<tr><td>Return</td><td><code>ret</code></td><td>Return from a subroutine</td></tr>
 </tbody></table>
 </div>
 <p>Per ora ci concentreremo su <code>jp</code>.
 <code>jp</code>, come quello della riga 5, imposta semplicemente PC al suo argomento, saltando l’esecuzione a quel punto.
 In altre parole, dopo l’esecuzione di <code>jp EntryPoint</code> (riga 5), l’istruzione successiva eseguita è quella sotto <code>EntryPoint</code> (riga <!-- should be 9 + 1 --> 16).</p>
-<div class="box tip decorated">
-<div><p>🤔</p></div>
-<div>
+<div class="box tip decorated"><p>🤔</p>
 <p>Ci si potrebbe chiedere a cosa serva questo specifico <code>jp</code>.
 Non preoccupatevi, vedremo più avanti perché è necessario.</p>
-</div>
 </div>
 <h2 id="salti-condizionati"><a class="header" href="#salti-condizionati">Salti condizionati</a></h2>
 <p>Passiamo ora alla parte <em>davvero</em> interessante.
@@ -249,9 +246,9 @@ Poi, impostiamo <code>hl</code> a $9000, che è l’indirizzo in cui inizieremo 
 <code>ld bc, TilesEnd - Tiles</code> imposta <code>bc</code> sulla lunghezza dei dati delle tile: <code>TilesEnd</code> è l’indirizzo del primo byte <em>dopo</em> i dati delle tile, quindi sottraendogli <code>Tiles</code> si ottiene la lunghezza.</p>
 <p>Quindi, in pratica:</p>
 <ul>
-<li><code>de</code> contiene l’indirizzo da cui verranno copiati i dati;</li>
-<li><code>hl</code> contiene l’indirizzo in cui verranno copiati i dati;</li>
-<li><code>bc</code> contiene il numero di byte da copiare.</li>
+<li><code>de</code> contains the address where data will be copied from;</li>
+<li><code>hl</code> contains the address where data will be copied to;</li>
+<li><code>bc</code> contains how many bytes we have to copy.</li>
 </ul>
 <p>Arriviamo quindi al ciclo principale.
 Leggiamo un byte dalla sorgente (riga 29) e lo scriviamo nella destinazione (riga 30).
@@ -259,11 +256,8 @@ Incrementiamo i puntatori alla destinazione (tramite l’implicito <code>inc hl<
 <p>Ecco la parte interessante: poiché abbiamo appena copiato un byte, significa che ne abbiamo uno in meno, quindi dobbiamo fare <code>dec bc</code>.
 (Abbiamo già visto <code>dec</code> due lezioni fa; per rinfrescare la memoria, si tratta semplicemente di diminuire di uno il valore memorizzato in <code>bc</code>).
 Poiché <code>bc</code> contiene la quantità di byte che devono ancora essere copiati, è facile capire che dobbiamo semplicemente ripetere l’operazione se <code>bc</code> != 0.</p>
-<div class="box danger decorated">
-<div><p>😓</p></div>
-<div>
+<div class="box danger decorated"><p>😓</p>
 <p><code>dec</code> di solito aggiorna i flag, ma sfortunatamente <code>dec bc</code> non lo fa, quindi dobbiamo controllare manualmente se <code>bc</code> ha raggiunto 0.</p>
-</div>
 </div>
 <p><code>ld a, b</code> e <code>or a, c</code> applicano “bitwise OR” a <code>b</code> e <code>c</code> insieme; per ora è sufficiente sapere che lascia 0 in <code>a</code> se e solo se <code>bc</code> == 0.
 E <code>or</code> aggiorna il flag Z!
@@ -271,11 +265,11 @@ Quindi, dopo la riga 34, il flag Z è impostato se e solo se <code>bc</code> == 
 <p>Ed è qui che entrano in gioco i salti condizionati!
 È possibile “prendere” <strong>condizionatamente</strong> un salto a seconda dello stato dei flag.</p>
 <p>Le “condizioni” sono quattro:</p>
-<div class="table-wrapper"><table><thead><tr><th>Nome</th><th>Mnemonico</th><th>Descrizione</th></tr></thead><tbody>
-<tr><td>Zero</td><td><code>z</code></td><td>Z è impostato (l’ultima operazione ha avuto un risultato pari a 0)</td></tr>
-<tr><td>Non zero</td><td><code>nz</code></td><td>Z non è impostato (l’ultima operazione ha avuto un risultato diverso da 0)</td></tr>
-<tr><td>Carry</td><td><code>c</code></td><td>C è impostato (l’ultima operazione è andata in overflow)</td></tr>
-<tr><td>No carry</td><td><code>nc</code></td><td>C non è impostato (l’ultima operazione non è andata in overflow)</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Name</th><th>Mnemonic</th><th>Description</th></tr></thead><tbody>
+<tr><td>Zero</td><td><code>z</code></td><td>Z is set (last operation had a result of 0)</td></tr>
+<tr><td>Non-zero</td><td><code>nz</code></td><td>Z is not set (last operation had a non-zero result)</td></tr>
+<tr><td>Carry</td><td><code>c</code></td><td>C is set (last operation overflowed)</td></tr>
+<tr><td>No carry</td><td><code>nc</code></td><td>C is not set (last operation did not overflow)</td></tr>
 </tbody></table>
 </div>
 <p>Quindi, <code>jp nz, CopyTiles</code> può essere letto come “se il flag Z non è impostato, allora salta a <code>CopyTiles</code>”.
@@ -284,9 +278,9 @@ Poiché stiamo saltando <em>all’indietro</em>, ripeteremo di nuovo le istruzio
 Guardiamo la magia che si svolge al rallentatore nella prossima lezione!</p>
 <hr />
 <div class="footnote-definition" id="pc_updates"><sup class="footnote-definition-label">1</sup>
-<p>Non esattamente; le istruzioni possono essere lunghe diversi byte e PC si incrementa dopo aver letto ogni byte.
-In particolare, ciò significa che quando un’istruzione finisce di essere eseguita, PC punta all’istruzione successiva.
-Comunque, è più o meno “da dove la CPU sta leggendo”, ma è meglio mantenere le cose semplici ed evitare di parlare della codifica delle istruzioni per ora.</p>
+<p>Not exactly; instructions may be several bytes long, and PC increments after reading each byte.
+Notably, this means that when an instruction finishes executing, PC is pointing to the following instruction.
+Still, it’s pretty much “where the CPU is currently reading from”, but it’s better to keep it simple and avoid mentioning instruction encoding for now.</p>
 </div>
 
                     </main>

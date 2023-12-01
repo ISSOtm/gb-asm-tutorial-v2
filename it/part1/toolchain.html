@@ -211,11 +211,11 @@ Beh, non esattamente.</p>
 Nelle ROM deve sempre essere presente qualcosa chiamato <em>header</em>:
 questa sezione contiene <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html">informazioni sulla ROM</a>, come il nome del gioco, il nome dell’autore, se sia compatibile con il GameBoy Color ed altro.
 Per il momento abbiamo impostato tutti i valori a zero nel programma per semplicità, ma ne riparleremo nella seconda parte del tutorial.</p>
-<p>Ma nell’header ci sono anche delle componenti importantissime:</p>
+<p>However, the header contains three crucial fields:</p>
 <ul>
-<li>il <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0104-0133--nintendo-logo">logo Nintendo</a>,</li>
-<li>la <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0148--rom-size">dimensione della ROM</a>,</li>
-<li>e <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#014d--header-checksum">due valori di controllo</a> (<a href="https://it.wikipedia.org/wiki/Checksum">checksum</a>).</li>
+<li>The <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0104-0133--nintendo-logo">Nintendo logo</a>,</li>
+<li>the <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0148--rom-size">ROM’s size</a>,</li>
+<li>and <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#014d--header-checksum">two checksums</a>.</li>
 </ul>
 <p>Quando la console viene accesa viene eseguito <a href="https://github.com/ISSOtm/gb-bootroms">un programma</a> chiamato <em>ROM di avvio</em> (boot ROM) responsabile, tra l’altro, dell’animazione di avvio leggendo il logo di Nintendo dalla ROM.
 Alla fine dell’animazione, però, la ROM di avvio controlla che il logo di Nintendo sia corretto, e interrompe l’esecuzione se non lo è:

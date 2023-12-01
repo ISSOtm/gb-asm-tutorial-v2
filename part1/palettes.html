@@ -196,12 +196,9 @@
 <p>In the previous lesson, I briefly mentioned that colors are applied to tiles via <em>palettes</em>, but we haven’t talked much about those yet.</p>
 <p>The black &amp; white Game Boy has three palettes, one for the background called <a href="https://gbdev.io/pandocs/Palettes.html#ff47---bgp-bg-palette-data-rw---non-cgb-mode-only"><code>BGP</code></a> (“BackGround Palette”), and two for the objects called <a href="https://gbdev.io/pandocs/Palettes.html#ff48---obp0-object-palette-0-data-rw---non-cgb-mode-only"><code>OBP0</code></a> and <a href="https://gbdev.io/pandocs/Palettes.html#ff48---obp1-object-palette-1-data-rw---non-cgb-mode-only"><code>OBP1</code></a> (“OBject Palette 0/1”).
 If you are wondering what “objects” are, you will have to wait until Part Ⅱ to find out; for now, let’s focus on the background.</p>
-<div class="box tip decorated">
-<div><p>🌈</p></div>
-<div>
+<div class="box tip decorated"><p>🌈</p>
 <p>The Game Boy Color introduced, obviously, colors, and this was mainly done by reworking the way palettes are handled.
 We will not talk about Game Boy Color features in Part Ⅰ for the sake of simplicity, but we will do so in later parts.</p>
-</div>
 </div>
 <p>If you chose to combine the video viewers in the previous chapter, the palette viewer should show up on the bottom right of the video viewer.
 Otherwise, please select Emulicious’ “Tools” tab, then select <code>Palette Viewer</code>.</p>
@@ -260,11 +257,13 @@ This is an advantage of using palettes: fading the screen in and out is very che
 <p>Got all that?
 Then let’s take a look at the last missing puzzle piece in the Hello World’s rendering process, the <strong>tilemap</strong>!</p>
 <hr />
-<div class="footnote-definition" id="numbering_zero"><sup class="footnote-definition-label">1</sup></div>
+<div class="footnote-definition" id="numbering_zero"><sup class="footnote-definition-label">1</sup>
 <p>Numbering often starts at 0 when working with computers.
 We will understand why later, but for now, please bear with it!</p>
-<div class="footnote-definition" id="console_detection"><sup class="footnote-definition-label">2</sup></div>
+</div>
+<div class="footnote-definition" id="console_detection"><sup class="footnote-definition-label">2</sup>
 <p>Well, it is possible to detect these different models and account for them, but this would require taking plenty of corner cases into consideration, so it’s probably not worth the effort.</p>
+</div>
 
                     </main>
 

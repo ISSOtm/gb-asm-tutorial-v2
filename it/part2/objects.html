@@ -206,12 +206,12 @@ Il termine “sprite” ha <em>molti</em> significati a seconda del contesto, qu
 Pertanto, un oggetto è composto dalla sua posizione sullo schermo, da un ID tile (come <a href="../part1/tilemap.html">con la tilemap</a>) e da alcune proprietà extra chiamate “attributi”.
 Queste proprietà extra consentono, ad esempio, di visualizzare la piastrella capovolta.
 Ne parleremo più avanti.</p>
-<p>Proprio come la tilemap è memorizzata nella VRAM, gli oggetti vivono in una regione di memoria chiamata OAM, ovvero <strong>Object Attribute Memory</strong>.
-Ricordiamo che un oggetto è composto da:</p>
+<p>Just like how the tilemap is stored in VRAM, objects live in a region of memory called OAM, meaning <strong>Object Attribute Memory</strong>.
+Recall from above that an object consists of:</p>
 <ul>
-<li>La sua posizione sullo schermo</li>
-<li>Un ID tile</li>
-<li>Gli “attributi”</li>
+<li>Its on-screen position</li>
+<li>A tile ID</li>
+<li>The “attributes”</li>
 </ul>
 <p>Questi sono memorizzati in 4 byte: uno per la coordinata Y, uno per la coordinata X, uno per l’ID della piastrella e uno per gli attributi.
 L’OAM è lungo 160 byte e poiché 160 ∕ 4 = 40, il Game Boy memorizza un totale di <strong>40</strong> oggetti in qualsiasi momento.</p>
@@ -301,51 +301,40 @@ In realtà ci sono due tavolozze di oggetti, ma ne useremo solo una.</p>
 <p>Ora che abbiamo un oggetto sullo schermo, spostiamolo.
 In precedenza, il ciclo <code>Done</code> non faceva nulla; rinominiamolo in <code>Main</code> e usiamolo per spostare il nostro oggetto.
 Aspetteremo il VBlank prima di cambiare OAM, proprio come abbiamo fatto prima di spegnere lo schermo.</p>
-<p>``rgbasm,linenos,start=89
-Main:
-; Attendere finché non è <em>non</em> VBlank
-ld a, [rLY]
-cp 144
-jp nc, Main
+<pre><code class="language-rgbasm linenos start=89">Main:
+    ; Wait until it's *not* VBlank
+    ld a, [rLY]
+    cp 144
+    jp nc, Main
 WaitVBlank2:
-ld a, [rLY]
-cp 144
-jp c, WaitVBlank2</p>
-<pre><code>; Sposta la paletta di un pixel a destra.
-ld a, [_OAMRAM + 1]
-inc a
-ld [_OAMRAM + 1], a
-jp Main
+	ld a, [rLY]
+	cp 144
+	jp c, WaitVBlank2
+
+	; Move the paddle one pixel to the right.
+	ld a, [_OAMRAM + 1]
+	inc a
+	ld [_OAMRAM + 1], a
+	jp Main
 </code></pre>
-<pre><code>
-::: tip:🤨
-
-In questo caso, si accede all'OAM senza spegnere lo schermo LCD, ma è comunque sicuro.
-Per spiegarne il motivo è necessaria una spiegazione più approfondita del rendering del Game Boy, quindi per ora ignoriamolo.
-
-:::
-
-Now you should see the paddle moving... very quickly.
-Because it moves by a pixel every frame, it's going at a speed of 60 pixels per second!
-To slow this down, we'll use a *variable*.
-
-Finora abbiamo lavorato solo con i registri della CPU, ma è possibile creare anche variabili globali!
-Per farlo, creiamo un'altra sezione, ma mettiamola in `WRAM0` invece che in `ROM0`.
-A differenza della ROM (&quot;Read-Only Memory&quot;, memoria di sola lettura), la RAM (&quot;Random-Access Memory&quot;, memoria ad accesso casuale) può essere scritta; quindi, la WRAM, o Work RAM, è il luogo in cui possiamo memorizzare le variabili del nostro gioco.
-
-Aggiungete questo in fondo al vostro file:
-
-```rgbasm,linenos,start=358
-SECTION &quot;Counter&quot;, WRAM0
+<div class="box tip decorated"><p>🤨</p>
+<p>In questo caso, si accede all’OAM senza spegnere lo schermo LCD, ma è comunque sicuro.
+Per spiegarne il motivo è necessaria una spiegazione più approfondita del rendering del Game Boy, quindi per ora ignoriamolo.</p>
+</div>
+<p>Now you should see the paddle moving… very quickly.
+Because it moves by a pixel every frame, it’s going at a speed of 60 pixels per second!
+To slow this down, we’ll use a <em>variable</em>.</p>
+<p>Finora abbiamo lavorato solo con i registri della CPU, ma è possibile creare anche variabili globali!
+Per farlo, creiamo un’altra sezione, ma mettiamola in <code>WRAM0</code> invece che in <code>ROM0</code>.
+A differenza della ROM (“Read-Only Memory”, memoria di sola lettura), la RAM (“Random-Access Memory”, memoria ad accesso casuale) può essere scritta; quindi, la WRAM, o Work RAM, è il luogo in cui possiamo memorizzare le variabili del nostro gioco.</p>
+<p>Aggiungete questo in fondo al vostro file:</p>
+<pre><code class="language-rgbasm linenos start=358">SECTION &quot;Counter&quot;, WRAM0
 wFrameCounter: db
-```
-
-Now we'll use the `wFrameCounter` variable to count how many frames have passed since we last moved the paddle.
-Every 15th frame, we'll move the paddle by one pixel, slowing it down to 4 pixels per second.
-Don't forget that RAM is filled with garbage values when the Game Boy starts, so we need to initialize our variables before first using them.
-
-```rgbasm,linenos,start=86
-	ld a, 0
+</code></pre>
+<p>Now we’ll use the <code>wFrameCounter</code> variable to count how many frames have passed since we last moved the paddle.
+Every 15th frame, we’ll move the paddle by one pixel, slowing it down to 4 pixels per second.
+Don’t forget that RAM is filled with garbage values when the Game Boy starts, so we need to initialize our variables before first using them.</p>
+<pre><code class="language-rgbasm linenos start=86">	ld a, 0
 	ld [wFrameCounter], a
 
 Main:
@@ -372,11 +361,9 @@ WaitVBlank2:
 	inc a
 	ld [_OAMRAM + 1], a
 	jp Main
-```
-
-Bene!
-Il prossimo passo è prendere il controllo della tessera.
 </code></pre>
+<p>Bene!
+Il prossimo passo è prendere il controllo della tessera.</p>
 
                     </main>
 

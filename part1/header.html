@@ -219,8 +219,8 @@ When the console powers up, the CPU does not begin executing instructions at add
 <p>However, at that time, a small program called the <em>boot ROM</em>, burned within the CPU’s silicon, is “overlaid” on top of our ROM!
 The boot ROM is responsible for the startup animation, but it also checks the ROM’s header!
 Specifically, it verifies that the Nintendo logo and header checksums are correct; if either check fails, the boot ROM intentionally <em>locks up</em>, and our game never gets to run :(</p>
-<div class="box tip">
-<p class="box-title">For the curious</p><p>You can find a more detailed description of what the boot ROM does <a href="https://gbdev.io/pandocs/Power_Up_Sequence">in the Pan Docs</a>, as well as an explanation of the logo check.
+<div class="box tip"><p class="box-title">For the curious</p>
+<p>You can find a more detailed description of what the boot ROM does <a href="https://gbdev.io/pandocs/Power_Up_Sequence">in the Pan Docs</a>, as well as an explanation of the logo check.
 Beware that it is quite advanced, though.</p>
 <p>If you want to enable the boot ROMs in Emulicious, you must obtain a copy of the boot ROM(s), whose SHA256 checksums can be found <a href="https://github.com/ISSOtm/gb-bootroms/blob/master/sha256sums.txt">in their disassembly</a> for verification.
 If you wish, you can also compile <a href="https://github.com/LIJI32/SameBoy#compilation">SameBoy’s boot ROMs</a> and use those instead, as a free-software substitute.</p>
@@ -270,12 +270,9 @@ So the <code>jp</code> at $0100 went there, and started executing instructions (
 <p>But why is <code>EntryPoint</code> there?
 Well, as you may have figured out from the warnings RGBFIX printed, it <em>overwrites</em> the header area in the ROM.
 However, RGBLINK is <strong>not</strong> aware of the header (because RGBLINK is not only used to generate ROMs!), so you must explicitly reserve space for the header area.</p>
-<div class="box danger decorated">
-<div><p>🥴</p></div>
-<div>
+<div class="box danger decorated"><p>🥴</p>
 <p>Forgetting to reserve this space, and having a piece of code or data ending up there then overwritten, is a common beginner mistake that can be quite puzzling.
 Fortunately, RGBFIX since version 0.5.1 warns when it detects this mistake, as shown above.</p>
-</div>
 </div>
 <p>So, we prevent disaster like this:</p>
 <pre><code class="language-rgbasm linenos start=3">SECTION &quot;Header&quot;, ROM0[$100]

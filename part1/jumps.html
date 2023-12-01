@@ -216,12 +216,9 @@ There are four of them:</p>
 <p>We will focus on <code>jp</code> for now.
 <code>jp</code>, such as the one line 5, simply sets PC to its argument, jumping execution there.
 In other words, after executing <code>jp EntryPoint</code> (line 5), the next instruction executed is the one below <code>EntryPoint</code> (line <!-- should be 9 + 1 --> 16).</p>
-<div class="box tip decorated">
-<div><p>🤔</p></div>
-<div>
+<div class="box tip decorated"><p>🤔</p>
 <p>You may be wondering what is the point of that specific <code>jp</code>.
 Don’t worry, we will see later why it’s required.</p>
-</div>
 </div>
 <h2 id="conditional-jumps"><a class="header" href="#conditional-jumps">Conditional jumps</a></h2>
 <p>Now to the <em>really</em> interesting part.
@@ -258,11 +255,8 @@ We increment the destination (via the implicit <code>inc hl</code> done by <code
 <p>Here’s the interesting part: since we’ve just copied one byte, that means we have one less to go, so we <code>dec bc</code>.
 (We have seen <code>dec</code> two lessons ago; as a refresher, it simply decreases the value stored in <code>bc</code> by one.)
 Since <code>bc</code> contains the amount of bytes that still need to be copied, it’s trivial to see that we should simply repeat the operation if <code>bc</code> != 0.</p>
-<div class="box danger decorated">
-<div><p>😓</p></div>
-<div>
+<div class="box danger decorated"><p>😓</p>
 <p><code>dec</code> usually updates flags, but unfortunately <code>dec bc</code> doesn’t, so we must check if <code>bc</code> reached 0 manually.</p>
-</div>
 </div>
 <p><code>ld a, b</code> and <code>or a, c</code> “bitwise OR” <code>b</code> and <code>c</code> together; it’s enough to know for now that it leaves 0 in <code>a</code> if and only if <code>bc</code> == 0.
 And <code>or</code> updates the Z flag!

@@ -204,18 +204,15 @@ Le cifre hanno una funzione ben specifica:</p>
 <pre><code>  42 =                       4 × 10   + 2
      =                       4 × 10^1 + 2 × 10^0
                                   ↑          ↑
-    	qui usiamo 10 perché contiamo in base 10!
+    These tens come from us counting in base 10!
 
 1024 = 1 × 1000 + 0 × 100  + 2 × 10   + 4
      = 1 × 10^3 + 0 × 10^2 + 2 × 10^1 + 4 × 10^0
        ↑          ↑          ↑          ↑
- e qui vediamo le cifre che compongono il numero!
+And here we can see the digits that make up the number!
 </code></pre>
-<div class="box tip decorated">
-<div><p>ℹ️</p></div>
-<div>
+<div class="box tip decorated"><p>ℹ️</p>
 <p><code>^</code> qui significa “alla potenza di”, dove <code>X^N</code> è uguale a moltiplicare <code>X</code> con se stesso <code>N</code> volte, e <code>X ^ 0 = 1</code>.</p>
-</div>
 </div>
 <p>Con le cifre decimali ogni numero viene <em>scomposto</em> in maniera univoca in potenze di 10 (il <em>deci</em>male è la base 10, ricordi?).
 Ma perché fermarsi alle potenze di 10?
@@ -226,7 +223,7 @@ Possiamo quindi generalizzare il principio descritto sopra e riscrivere i due nu
 <pre><code>  42 =                                                    1 × 32  + 0 × 16  + 1 × 8   + 0 × 4   + 1 × 2   + 0
      =                                                    1 × 2^5 + 0 × 2^4 + 1 × 2^3 + 0 × 2^2 + 1 × 2^1 + 0 × 2^0
                                                               ↑         ↑         ↑         ↑         ↑         ↑
-                                          E visto che stiamo contando in base 2, vediamo dei due invece dei dieci!
+                                          And since now we're counting in base 2, we're seeing twos instead of tens!
 
 1024 = 1 × 1024 + 0 × 512 + 0 × 256 + 0 × 128 + 0 × 64  + 0 × 32  + 0 × 16  + 0 × 8   + 0 × 4   + 0 × 2   + 0
      = 1 × 2^10 + 0 × 2^9 + 0 × 2^8 + 0 × 2^7 + 0 × 2^6 + 0 × 2^5 + 0 × 2^4 + 0 × 2^3 + 0 × 2^2 + 0 × 2^1 + 0 × 2^0
@@ -255,7 +252,7 @@ Per fortuna arriva l’esadecimale a salvare la situazione! 🦸</p>
 <p>Come per il binario useremo un prefisso per indicare l’esadecimale, cioè <code>$</code>.
 Quindi, 42 = $2A e 1024 = $400.
 Questo è <em>molto</em> più compatto del binario, e anche un po’ più del decimale; ma ciò che rende l’esadecimale molto interessante è che una sua cifra corrisponde <em>esattamente</em> a 4 bit!</p>
-<div class="table-wrapper"><table><thead><tr><th style="text-align: center">Nibble</th><th style="text-align: center">Bit</th></tr></thead><tbody>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: center">Nibble</th><th style="text-align: center">Bits</th></tr></thead><tbody>
 <tr><td style="text-align: center">$0</td><td style="text-align: center">%0000</td></tr>
 <tr><td style="text-align: center">$1</td><td style="text-align: center">%0001</td></tr>
 <tr><td style="text-align: center">$2</td><td style="text-align: center">%0010</td></tr>
@@ -278,18 +275,15 @@ Questo è <em>molto</em> più compatto del binario, e anche un po’ più del de
 Per questo, l’esadecimale è molto più utilizzato del binario.
 E non preoccuparti, puoi ancora usare il decimale 😜</p>
 <p>(Nota: si potrebbe pensare che anche l’ottale, cioè la base 8, funzioni altrettanto bene; tuttavia avremo a che fare perlopiù con unità di 8 bit, per le quali l’esadecimale funziona molto meglio dell’ottale. Volendo, RGBDS permette di usare l’ottale tramite il prefisso <code>&amp;</code>, ma non l’ho mai visto usare nella pratica)</p>
-<div class="box tip decorated">
-<div><p>💡</p></div>
-<div>
+<div class="box tip decorated"><p>💡</p>
 <p>Se vi è difficile convertire i numeri tra le diverse basi, controllate se la vostra calcolatrice ha una modalità “programmatore” o un altro modo per convertire i numeri: la maggior parte delle calcolatrici lo ha.</p>
-</div>
 </div>
 <h2 id="riepilogo"><a class="header" href="#riepilogo">Riepilogo</a></h2>
 <ul>
-<li>Nell’assembly RGBDS, il prefisso esadecimale è <code>$</code>, mentre il prefisso binario è <code>%</code>.</li>
-<li>L’esadecimale può essere usato come notazione “binaria compatta”.</li>
-<li>L’uso del binario o dell’esadecimale è utile quando i singoli bit sono importanti; altrimenti, il decimale va comunque bene.</li>
-<li>Nei casi in cui i numeri iniziano a diventare troppo lunghi, RGBASM consente di inserire dei trattini bassi tra le cifre (<code>123_465</code>, <code>%10_1010</code>, <code>$DE_AD_BE_EF</code>, ecc.).</li>
+<li>In RGBDS assembly, the hexadecimal prefix is <code>$</code>, and the binary prefix is <code>%</code>.</li>
+<li>Hexadecimal can be used as a “compact binary” notation.</li>
+<li>Using binary or hexadecimal is useful when individual bits matter; otherwise, decimal works just as well.</li>
+<li>For when numbers get a bit too long, RGBASM allows underscores between digits (<code>123_465</code>, <code>%10_1010</code>, <code>$DE_AD_BE_EF</code>, etc.)</li>
 </ul>
 
                     </main>

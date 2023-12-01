@@ -209,12 +209,9 @@ Then in the debugger’s menu, click “View”, then click “Show Addresses”
 <p>The debugger may look intimidating at first, but don’t worry, soon we’ll be very familiar with it!
 For now, let’s focus on this small box near the top-right, the <em>register viewer</em>.</p>
 <p><img src="../assets/img/reg_viewer.png" alt="Picture of the register viewer’s location" /></p>
-<div class="box warning decorated">
-<div><p>⚠️</p></div>
-<div>
+<div class="box warning decorated"><p>⚠️</p>
 <p>The register viewer shows both <em>CPU registers</em> and some <em>hardware registers</em>.
 This lesson will only deal with CPU registers, so that’s why we will be ignoring some of these entries here.</p>
-</div>
 </div>
 <p>What are CPU registers?
 Well, imagine you’re preparing a cake.
@@ -223,11 +220,8 @@ You will fetch some ingredients from the fridge as needed, but you don’t cook 
 <p>Registers are pretty much the CPU’s workspace.
 They are small, tiny chunks of memory embedded directly in the CPU (only 10 bytes for the Game Boy’s CPU, and even modern CPUs have less than a kilobyte if you don’t count <a href="https://en.wikipedia.org/wiki/SIMD"><abbr title="Single Instruction, Multiple Data">SIMD</abbr></a> registers).
 Operations are not performed directly on data stored in memory, which would be equivalent to breaking eggs directly inside our fridge, but they are performed on registers.</p>
-<div class="box tip decorated">
-<div><p>ℹ️</p></div>
-<div>
+<div class="box tip decorated"><p>ℹ️</p>
 <p>There are exceptions to this rule, like many other “rules” I will give in this tutorial; I will paper over them to keep the mental complexity reasonable, but don’t treat my word as gospel either.</p>
-</div>
 </div>
 <h2 id="general-purpose-registers"><a class="header" href="#general-purpose-registers">General-purpose registers</a></h2>
 <p>CPU registers can be placed into two categories: <em>general-purpose</em> and <em>special-purpose</em>.

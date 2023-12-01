@@ -203,11 +203,8 @@ It’s a good idea to create a new directory (<code>mkdir gb_hello_world</code>,
 <li><a href="https://raw.githubusercontent.com/gbdev/hardware.inc/v4.0/hardware.inc"><code>hardware.inc</code></a></li>
 </ul>
 <p>Then, still from a terminal within that directory, run the following three commands.</p>
-<div class="box warning decorated">
-<div><p>⚠️</p></div>
-<div>
+<div class="box warning decorated"><p>⚠️</p>
 <p>To clarify where each individual command begins, I’ve added a <code>$</code> before each command, but don’t type them!</p>
-</div>
 </div>
 <pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgbasm -L -o hello-world.o hello-world.asm</span>
 <span class="console-line hljs-meta"></span><span class="language-bash">rgblink -o hello-world.gb hello-world.o</span>
@@ -218,9 +215,7 @@ It’s a good idea to create a new directory (<code>mkdir gb_hello_world</code>,
 		list-style-type: symbols(fixed "👎" "👍" "👍");
 	}
 </style>
-<div class="box danger decorated">
-<div><p>‼️</p></div>
-<div>
+<div class="box danger decorated"><p>‼️</p>
 <p>Be careful with arguments! Some options, such as <code>-o</code> here, use the argument after them as a parameter:</p>
 <ol>
 <li><code>rgbasm -L -o hello-world.asm hello-world.o</code> won’t work (and may corrupt <code>hello-world.asm</code>!)</li>
@@ -232,7 +227,6 @@ It’s a good idea to create a new directory (<code>mkdir gb_hello_world</code>,
 <li><code>rgbasm -L -o hello world.o hello world.asm</code> won’t work</li>
 <li><code>rgbasm -L -o &quot;hello world.o&quot; &quot;hello world.asm&quot;</code> will work</li>
 </ol>
-</div>
 </div>
 <p>It should look like this:</p>
 <script id="asciicast-weljUlcp1KC5GqS9jqV62dy5m" src="https://asciinema.celforyon.fr/a/weljUlcp1KC5GqS9jqV62dy5m.js" async></script>

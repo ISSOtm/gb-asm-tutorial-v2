@@ -307,8 +307,8 @@ bulletTileData:: INCBIN &quot;src/generated/sprites/bullet.2bpp&quot;
 bulletTileDataEnd::
 
 </code></pre>
-<div class="box tip">
-<p class="box-title">Including binary files</p><p>You probably have some graphics, level data, etc. you’d like to include. Use <strong><code>INCBIN</code></strong> to include a raw binary file as it is. If the file isn’t found in the current directory, the include-path list passed to <a href="https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.1">rgbasm(1)</a> (see the <strong><code>-i</code></strong> option) on the command line will be searched.</p>
+<div class="box tip"><p class="box-title">Including binary files</p>
+<p>You probably have some graphics, level data, etc. you’d like to include. Use <strong><code>INCBIN</code></strong> to include a raw binary file as it is. If the file isn’t found in the current directory, the include-path list passed to <a href="https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.1">rgbasm(1)</a> (see the <strong><code>-i</code></strong> option) on the command line will be searched.</p>
 <pre><code>INCBIN &quot;titlepic.bin&quot;
 INCBIN &quot;sprites/hero.bin&quot;
 </code></pre>

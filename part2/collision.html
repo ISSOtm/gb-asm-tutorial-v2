@@ -433,8 +433,8 @@ There’s just one last thing to do before this chapter is over, and thats ball-
 <p>Unlike with the tilemap, there’s no position conversions to do here, just straight comparisons.
 However, for these, we will need <a href="../part1/operations.html#flags">the <em>carry</em> flag</a>.
 The carry flag is notated as <code>C</code>, like how the zero flag is notated as <code>Z</code>, but don’t confuse it with the <code>c</code> register!</p>
-<div class="box tip">
-<p class="box-title">A refresher on comparisons</p><p>Just like <code>Z</code>, you can use the carry flag to jump conditionally.
+<div class="box tip"><p class="box-title">A refresher on comparisons</p>
+<p>Just like <code>Z</code>, you can use the carry flag to jump conditionally.
 However, while <code>Z</code> is used to check if two numbers are equal, <code>C</code> can be used to check if a number is greater than or smaller than another one.
 For example, <code>cp a, b</code> sets <code>C</code> if <code>a &lt; b</code>, and clears it if <code>a &gt;= b</code>.
 (If you want to check <code>a &lt;= b</code> or <code>a &gt; b</code>, you can use <code>Z</code> and <code>C</code> in tandem with two <code>jp</code> instructions.)</p>
@@ -554,8 +554,8 @@ Then we undo this by subtracting 16, and while we’re at it, subtract another 8
 	<use href="#arrow-head" x="816" y="450" class="paddle"/><line x1="816" y1="450" x2="304" y2="450" class="paddle"/>
 	<text x="432" y="470">+ 8 + 16</text>
 </svg>
-<div class="box tip">
-<p class="box-title">Paddle width</p><p>You might be wondering why we checked 16 pixels to the right but only 8 pixels to the left.
+<div class="box tip"><p class="box-title">Paddle width</p>
+<p>You might be wondering why we checked 16 pixels to the right but only 8 pixels to the left.
 Remember that OAM positions represent the upper-<em>left</em> corner of a sprite, so the center of our paddle is actually 4 pixels to the right of the position in OAM.
 When you consider this, we’re actually checking 12 pixels out on either side from the center of the paddle.</p>
 <p>12 pixels might seem like a lot, but it gives some tolerance to the player in case their positioning is off.

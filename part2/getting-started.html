@@ -271,10 +271,10 @@ CopyTilemap:
 </code></pre>
 <p>Note that while this loop’s body is exactly the same as <code>CopyTiles</code>’s, the 3 values loaded into <code>de</code>, <code>hl</code>, and <code>bc</code> are different.
 These determine the source, destination, and size of the copy, respectively.</p>
-<div class="box tip">
-<p class="box-title">“<a href="https://en.wikipedia.org/wiki/Don&#x27;t_Repeat_Yourself"><abbr title="Don't Repeat Yourself">DRY</abbr></a>”</p><p>If you think that this is super redundant, you are not wrong, and we will see later how to write actual, reusable <em>functions</em>.
+<p>:::tip “<a href="https://en.wikipedia.org/wiki/Don&#x27;t_Repeat_Yourself"><abbr title="Don't Repeat Yourself">DRY</abbr></a>”</p>
+<p>If you think that this is super redundant, you are not wrong, and we will see later how to write actual, reusable <em>functions</em>.
 But there is more to them than meets the eye, so we will start tackling them much later.</p>
-</div>
+<p>:::</p>
 <p>Finally, let’s turn the screen back on, and set a <a href="../part1/palettes.html">background palette</a>.
 Rather than writing the non-descript number <code>%10000001</code> (or $81 or 129, to taste), we make use of two constants graciously provided by <code>hardware.inc</code>: <code>LCDCF_ON</code> and <code>LCDCF_BGON</code>.
 When written to <a href="https://gbdev.io/pandocs/LCDC"><code>rLCDC</code></a>, the former causes the PPU and screen to turn back on, and the latter enables the background to be drawn.
@@ -296,7 +296,7 @@ We will draw the following screen:</p>
 <p><img src="../assets/part2/img/tilemap.png" alt="Layout of unbricked" /></p>
 <p>In <code>hello-world.asm</code>, tile data had been written out by hand in hexadecimal; this was to let you see how the sausage is made at the lowest level, but <em>boy</em> is it impractical to write!
 This time, we will employ a more friendly way, which will let us write each row of pixels more easily.
-For each row of pixels, instead of writing <a href="../part1/tiles.html#encoding">the bitplanes</a> directly, we will use a backtick (<code>`</code>) followed by 8 characters.
+For each row of pixels, instead of writing <a href="../part1/tiles.html#encoding">the bitplanes</a> directly, we will use a backtick (```) followed by 8 characters.
 Each character defines a single pixel, intuitively from left to right; it must be one of 0, 1, 2, and 3, representing the corresponding color index in <a href="../part1/palettes.html">the palette</a>.</p>
 <div class="box tip">
 <p>If the character selection isn’t to your liking, you can use <a href="https://rgbds.gbdev.io/docs/v0.5.2/rgbasm.1#g">RGBASM’s <code>-g</code> option</a> or <a href="https://rgbds.gbdev.io/docs/v0.5.2/rgbasm.5/#Changing_options_while_assembling"><code>OPT g</code></a> to pick others.

@@ -210,21 +210,15 @@ In other emulators, it is very much inconvenient to debug without them, and so s
 Let’s run RGBLINK to generate a sym file for our ROM:</p>
 <pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgblink -n hello-world.sym hello-world.o</span>
 </code></pre>
-<div class="box warning decorated">
-<div><p>‼️</p></div>
-<div>
+<div class="box warning decorated"><p>‼️</p>
 <p>The file names matter!
 When looking for a ROM’s sym file, emulators take the ROM’s file name, strip the extension (here, <code>.gb</code>), replace it with <code>.sym</code>, and look for a file <strong>in the same directory</strong> with that name.</p>
-</div>
 </div>
 <h2 id="passo"><a class="header" href="#passo">Passo</a></h2>
 <p>Quando si mette in pausa l’esecuzione, il debugger si concentra automaticamente sull’istruzione che la CPU sta per eseguire, come indicato dalla riga evidenziata in blu.
 <img src="../assets/img/pc.png" alt="Schermata del debugger che mostra che la riga evidenziata corrisponde a PC" /></p>
-<div class="box tip decorated">
-<div><p>ℹ️</p></div>
-<div>
+<div class="box tip decorated"><p>ℹ️</p>
 <p>The instruction highlighted in blue is always what the CPU is <em>about to execute</em>, not what it <em>just executed</em>. Keep this in mind.</p>
-</div>
 </div>
 <p>If we want to watch execution from the beginning, we need to reset the emulator.
 Go into the emulator’s “File” menu, and select “Reset”, or press <kbd><kbd>Ctrl</kbd>+<kbd>Backspace</kbd></kbd>.</p>
@@ -242,7 +236,7 @@ And if we press it a few more times, can see the instructions being executed, on
 <video controls poster="../assets/vid/reset_trace.poster.png">
   <source src="../assets/vid/reset_trace.webm" type="video/webm">
   <source src="../assets/vid/reset_trace.mp4" type="video/mp4">
-<img src="../assets/vid/reset_trace.gif" alt="Dimostrazione video in Emulicious">
+<img src="../assets/vid/reset_trace.gif" alt="Video demonstration in Emulicious">
 </video>
 <p>Now, you may notice the <code>WaitVBlank</code> loop runs a <em>lot</em> of times, but what we are interested in is the <code>CopyTiles</code> loop.
 We can easily skip over it in several ways; this time, we will use a <em>breakpoint</em>.
@@ -261,7 +255,7 @@ As we can see from the image above, that would be $9000!</p>
 <video controls poster="../assets/vid/trace_copy.poster.png">
   <source src="../assets/vid/trace_copy.webm" type="video/webm">
   <source src="../assets/vid/trace_copy.mp4" type="video/mp4">
-<img src="../assets/vid/trace_copy.gif" alt="Dimostrazione video in Emulicious">
+<img src="../assets/vid/trace_copy.gif" alt="Video demonstration in Emulicious">
 </video>
 <p>Fantastico, vero?</p>
 <h2 id="e-poi"><a class="header" href="#e-poi">E poi?</a></h2>
@@ -269,9 +263,10 @@ As we can see from the image above, that would be $9000!</p>
 We have only scratched the surface, though; we will use more of Emulicious’ tools to illustrate the next parts.
 Don’t worry, from here on, lessons will go with a lot more images—you’ve made it through the hardest part!</p>
 <hr />
-<div class="footnote-definition" id="boot_addr"><sup class="footnote-definition-label">1</sup></div>
+<div class="footnote-definition" id="boot_addr"><sup class="footnote-definition-label">1</sup>
 <p>Why does execution start at $0100?
 That’s because it’s where the <a href="https://gbdev.io/pandocs/Power_Up_Sequence">boot ROM</a> hands off control to our game once it’s done.</p>
+</div>
 
                     </main>
 

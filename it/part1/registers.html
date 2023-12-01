@@ -210,12 +210,9 @@ Then in the debugger’s menu, click “View”, then click “Show Addresses”
 <p>Il debugger potrebbe sembrare incomprensibile all’inizio, ma non ti preoccupare: ti ci abituerai in fretta!
 Per il momento guarda in alto a destra, dove c’è un piccolo spazio intitolato <em>register viewer</em> (visualizzatore dei registri).</p>
 <p><img src="../assets/img/reg_viewer.png" alt="Immagine della posizione del visualizzatore di registri" /></p>
-<div class="box warning decorated">
-<div><p>⚠️</p></div>
-<div>
+<div class="box warning decorated"><p>⚠️</p>
 <p>Il visualizzatore mostra sia i <em>registri della CPU</em> che alcuni <em>registri hardware</em>.
 In questa lezione parleremo solo dei registri della CPU, perciò non ti preoccupare se salteremo alcuni nomi.</p>
-</div>
 </div>
 <p>Ma cosa sono questi registri della CPU?
 Ti faccio un esempio: immagina di star preparando una torta.
@@ -224,11 +221,8 @@ Dopo aver preso gli ingredienti, non li usi direttamente nel frigo; per comodit�
 <p>I registri sono questo tavolo, su cui il processore poggia temporaneamente i suoi ingredienti.
 Più concretamente, sono dei piccoli spazi di memoria (Il GameBoy ne ha solo 10 byte, e anche le CPU moderne hanno meno di un kilobyte se non si contano i registri <a href="https://it.wikipedia.org/wiki/SIMD"><abbr title="Single Instruction, Multiple Data">SIMD</abbr></a>).
 Eseguire le operazioni direttamente sulla memoria è scomodo, sarebbe come rompere le uova nel frigo: per questo le spostiamo sul tavolo, i registri, prima di romperle.</p>
-<div class="box tip decorated">
-<div><p>ℹ️</p></div>
-<div>
+<div class="box tip decorated"><p>ℹ️</p>
 <p>Ovviamente ci sono eccezioni a questa regola, come un po’ tutte le regole che ti spiegheremo nel tutorial; stiamo semplificando di molto le cose per mantenerle ad un livello abbastanza facile da comprendere, perciò non prendere mai queste regole troppo alla lettera.</p>
-</div>
 </div>
 <h2 id="registri-generici"><a class="header" href="#registri-generici">Registri Generici</a></h2>
 <p>A grandi linee ci sono due tipi di registri: <em>registri generici</em> e <em>registri speciali</em>.

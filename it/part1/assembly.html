@@ -220,11 +220,11 @@ Come vedi alla riga 7, puoi anche inserire commenti dopo aver scritto altro.</p>
 È più o meno la differenza tra “scalda il forno fino a 180°C” e “scalda il forno a 180°C, se lo scaldassi di più la torta brucerebbe”.
 I commenti sono utilissimi in ogni linguaggio di programmazione, ma in Assembly sono ancora più importanti: infatti, il codice Assembly è molto più astratto.</p>
 <h2 id="istruzioni"><a class="header" href="#istruzioni">Istruzioni</a></h2>
-<p>L’assembly è un linguaggio “line-based”, ovvero incentrato sulle righe.
-Ogni riga di codice può contenere una di queste due cose:</p>
+<p>Assembly is a very line-based language.
+Each line can contain one of two things:</p>
 <ul>
-<li>una <em>direttiva</em>, che istruisce RGBASM a fare qualcosa, oppure</li>
-<li>una <em>istruzione</em><sup class="footnote-reference"><a href="#instr_direttiva">1</a></sup>, che viene scritta direttamente nella ROM.</li>
+<li>a <em>directive</em>, which instructs RGBASM to do something, or</li>
+<li>an <em>instruction</em><sup class="footnote-reference"><a href="#instr_directive">1</a></sup>, which is written directly into the ROM.</li>
 </ul>
 <p>Parleremo delle direttive più avanti, per ora concentriamoci sulle istruzioni: per esempio, nello snippet qui sopra, ignoreremo le righe 1 (<code>INCLUDE</code>), 7 (<code>ds</code>) e 3 (<code>SECTION</code>).</p>
 <p>Per continuare l’analogia con la preparazione di una torta, le istruzioni sono come i passi di una ricetta.
@@ -236,22 +236,15 @@ Ad esempio: in “sciogli il cioccolato ed il burro in una padella” l’istruz
 <code>ld</code> sta per “<abbr title="LoaD in inglese">carica</abbr>”, e semplicemente copia i dati contenuti nel secondo parametro (“<a href="https://en.wikipedia.org/wiki/Sides_of_an_equation"><abbr title="Right-Hand Side">RHS</abbr></a>”) nel primo (“<a href="https://en.wikipedia.org/wiki/Sides_of_an_equation"><abbr title="Left-Hand Side">LHS</abbr></a>”).
 Per esempio, guardiamo la riga 11 del nostro programma, <code>ld a, 0</code>: copia (“carica”) il numero zero nel registro <code>a</code><sup class="footnote-reference"><a href="#ld_imm_from">2</a></sup>.
 Per fare un altro esempio, a riga 33 troviamo <code>ld a, b</code>: significa semplicemente “copia il valore di <code>b</code> in <code>a</code>.</p>
-<div class="table-wrapper"><table><thead><tr><th>Istruzione</th><th>Mnemonica</th><th>Effetto</th></tr></thead><tbody>
-<tr><td>Carica</td><td><code>ld</code></td><td>Copia dei valori</td></tr>
+<div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Mnemonic</th><th>Effect</th></tr></thead><tbody>
+<tr><td>Load</td><td><code>ld</code></td><td>Copies values around</td></tr>
 </tbody></table>
-</div>
-<div class="box tip decorated">
-<div><p>ℹ️</p></div>
-<div>
+</div><div class="box tip decorated"><p>ℹ️</p>
 <p>Per via delle limitazioni del processore, non tutte le combinazioni di operandi sono valide per <code>ld</code> e per molte altre istruzioni; ne parleremo in seguito, quando arriverà il momento di scrivere il nostro codice.</p>
 </div>
-</div>
-<div class="box tip decorated">
-<div><p>🤔</p></div>
-<div>
+<div class="box tip decorated"><p>🤔</p>
 <p>RGBDS ha una <a href="https://rgbds.gbdev.io/docs/gbz80.7">lista delle istruzioni del GameBoy</a> che vale la pena tenere tra i preferiti, e che si può anche consultare dal terminale scrivendo <code>man 7 gbz80</code> se RGBDS è installato sulla propria macchina (tranne su Windows…).
 Le descrizioni che trovate in quella pagina sono più concise: sono intese come un promemoria, non come un tutorial.</p>
-</div>
 </div>
 <h2 id="direttive"><a class="header" href="#direttive">Direttive</a></h2>
 <p>Quindi, in un certo senso, le istruzioni sono destinate al processore del GameBoy mentre i commenti sono destinati al programmatore.
@@ -293,7 +286,7 @@ Ne parleremo nella Parte Ⅱ.</p>
 <p>Dove dice <code>[100$]</code> invece è più interessante, perché è un’indicazione speciale per questa sezione.
 Se ricordi, prima abbiamo detto che:</p>
 <blockquote>
-<p>Una sezione […], di base, finisce da <em>qualche</em> parte non nota in anticipo.</p>
+<p>a section […] by default, ends up <em>somewhere</em> not known in advance.</p>
 </blockquote>
 <p>Però alcune parti della memoria sono speciali, e quindi a volte è necessario che una sezione specifica copra un intervallo di memoria specifico.
 Per permetterlo, RGBASM ha la sintassi <code>[addr]</code> che <em>forza</em> l’indirizzo iniziale della sezione a essere <code>addr</code>.</p>
@@ -324,24 +317,24 @@ Nel corso dell’esercitazione esploreremo i diversi tipi di simboli, a partire 
 <p>Ora vi starete chiedendo cosa siano questi “indirizzi di memoria” di cui continuo a parlare.
 Andiamo subito a scoprirlo!</p>
 <hr />
-<div class="footnote-definition" id="instr_directive"><sup class="footnote-definition-label">6</sup>
-<p>Tecnicamente le istruzioni in RGBASM sono implementate come direttive, che in pratica scrivono la loro forma codificata nella ROM; ma in questo momento non vale la pena di tirare fuori la distinzione tra le istruzioni nel codice sorgente e quelle nella ROM finale.</p>
+<div class="footnote-definition" id="instr_directive"><sup class="footnote-definition-label">1</sup>
+<p>Technically, instructions in RGBASM are implemented as directives, basically writing their encoded form to the ROM; but the distinction between the instructions in the source code and those in the final ROM is not worth bringing up right now.</p>
 </div>
 <div class="footnote-definition" id="ld_imm_from"><sup class="footnote-definition-label">2</sup>
-<p>Il lettore curioso potrebbe chiedersi da <em>dove</em> venga copiato il valore. La risposta è semplicemente che il byte cosiddetto &quot;immediato&quot; ($00 in questo esempio) è memorizzato nella ROM <em>immediat</em>amente dopo il byte del codice dell’istruzione, ed è questo valore che viene copiato in <code>a</code>.
-Torneremo su questo punto più avanti, quando parleremo di come vengono codificate le istruzioni.</p>
+<p>The curious reader may ask where the value is copied <em>from</em>. The answer is simply that the “immediate” byte ($00 in this example) is stored in ROM just after the instruction’s opcode byte, and it’s what gets copied to <code>a</code>.
+We will come back to this when we talk about how instructions are encoded later on.</p>
 </div>
 <div class="footnote-definition" id="hw_inc_directives"><sup class="footnote-definition-label">3</sup>
-<p>Lo stesso <code>hardware.inc</code> contiene altre direttive, in particolare per definire molti simboli.
-Saranno trattate molto più avanti, quindi non esamineremo ancora <code>hardware.inc</code>.</p>
+<p><code>hardware.inc</code> itself contains more directives, in particular to define a lot of symbols.
+They will be touched upon much later, so we won’t look into <code>hardware.inc</code> yet.</p>
 </div>
-<div class="footnote-definition" id="nome_sezione"><sup class="footnote-definition-label">4</sup>
-<p>I nomi delle sezioni devono essere univoci solo per le sezioni “semplici” e funzionano in modo diverso con le sezioni “unificate” e “a frammenti”, di cui parleremo più avanti.</p>
+<div class="footnote-definition" id="sect_name"><sup class="footnote-definition-label">6</sup>
+<p>Section names actually only need to be unique for “plain” sections, and function differently with “unionized” and “fragment” sections, which we will discuss much later.</p>
 </div>
 <div class="footnote-definition" id="ds_pattern"><sup class="footnote-definition-label">5</sup>
-<p>In realtà, da RGBASM 0.5.0, <code>ds</code> si può usare con un <em>elenco</em> di byte e la pattern sarà ripetuta per il numero di byte necessario.
-Questo complica un po’ la spiegazione, quindi per ora l’ho omesso.
-Inoltre, se il parametro di <code>ds</code> viene omesso, il suo valore assume quello predefinito specificato con l’opzione <code>-p</code> <strong>di RGBASM</strong>.</p>
+<p>Actually, since RGBASM 0.5.0, <code>ds</code> can accept a <em>list</em> of bytes, and will repeat the pattern for as many bytes as specified.
+It just complicates the explanation slightly, so I omitted it for now.
+Also, if the argument is omitted, it defaults to what is specified using the <code>-p</code> option <strong>to RGBASM</strong>.</p>
 </div>
 
                     </main>

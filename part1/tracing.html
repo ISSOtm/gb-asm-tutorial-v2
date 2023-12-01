@@ -209,21 +209,15 @@ In other emulators, it is very much inconvenient to debug without them, and so s
 Let’s run RGBLINK to generate a sym file for our ROM:</p>
 <pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgblink -n hello-world.sym hello-world.o</span>
 </code></pre>
-<div class="box warning decorated">
-<div><p>‼️</p></div>
-<div>
+<div class="box warning decorated"><p>‼️</p>
 <p>The file names matter!
 When looking for a ROM’s sym file, emulators take the ROM’s file name, strip the extension (here, <code>.gb</code>), replace it with <code>.sym</code>, and look for a file <strong>in the same directory</strong> with that name.</p>
-</div>
 </div>
 <h2 id="stepping"><a class="header" href="#stepping">Stepping</a></h2>
 <p>When pausing execution, the debugger will automatically focus on the instruction the CPU is about to execute, as indicated by the line highlighted in blue.
 <img src="../assets/img/pc.png" alt="Screenshot of the debugger showing that the highlighted line corresponds to PC" /></p>
-<div class="box tip decorated">
-<div><p>ℹ️</p></div>
-<div>
+<div class="box tip decorated"><p>ℹ️</p>
 <p>The instruction highlighted in blue is always what the CPU is <em>about to execute</em>, not what it <em>just executed</em>. Keep this in mind.</p>
-</div>
 </div>
 <p>If we want to watch execution from the beginning, we need to reset the emulator.
 Go into the emulator’s “File” menu, and select “Reset”, or press <kbd><kbd>Ctrl</kbd>+<kbd>Backspace</kbd></kbd>.</p>
@@ -268,9 +262,10 @@ As we can see from the image above, that would be $9000!</p>
 We have only scratched the surface, though; we will use more of Emulicious’ tools to illustrate the next parts.
 Don’t worry, from here on, lessons will go with a lot more images—you’ve made it through the hardest part!</p>
 <hr />
-<div class="footnote-definition" id="boot_addr"><sup class="footnote-definition-label">1</sup></div>
+<div class="footnote-definition" id="boot_addr"><sup class="footnote-definition-label">1</sup>
 <p>Why does execution start at $0100?
 That’s because it’s where the <a href="https://gbdev.io/pandocs/Power_Up_Sequence">boot ROM</a> hands off control to our game once it’s done.</p>
+</div>
 
                     </main>
 

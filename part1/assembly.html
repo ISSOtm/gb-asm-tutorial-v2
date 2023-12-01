@@ -239,19 +239,12 @@ If you look further in the file, line 33 has <code>ld a, b</code>, which causes 
 <div class="table-wrapper"><table><thead><tr><th>Instruction</th><th>Mnemonic</th><th>Effect</th></tr></thead><tbody>
 <tr><td>Load</td><td><code>ld</code></td><td>Copies values around</td></tr>
 </tbody></table>
-</div>
-<div class="box tip decorated">
-<div><p>ℹ️</p></div>
-<div>
+</div><div class="box tip decorated"><p>ℹ️</p>
 <p>Due to CPU limitations, not all operand combinations are valid for <code>ld</code> and many other instructions; we will talk about this when writing our own code later.</p>
 </div>
-</div>
-<div class="box tip decorated">
-<div><p>🤔</p></div>
-<div>
+<div class="box tip decorated"><p>🤔</p>
 <p>RGBDS has an <a href="https://rgbds.gbdev.io/docs/gbz80.7">instruction reference</a> worth bookmarking, and you can also consult it locally with <code>man 7 gbz80</code> if RGBDS is installed on your machine (except Windows…).
 The descriptions there are more succinct, since they’re intended as reminders, not as tutorials.</p>
-</div>
 </div>
 <h2 id="directives"><a class="header" href="#directives">Directives</a></h2>
 <p>In a way, instructions are destined to the console’s CPU, and comments are destined to the programmer.
@@ -328,7 +321,7 @@ Let’s see about those!</p>
 <p>Technically, instructions in RGBASM are implemented as directives, basically writing their encoded form to the ROM; but the distinction between the instructions in the source code and those in the final ROM is not worth bringing up right now.</p>
 </div>
 <div class="footnote-definition" id="ld_imm_from"><sup class="footnote-definition-label">2</sup>
-<p>The curious reader may ask where the value is copied <em>from</em>. The answer is simply that the &quot;immediate&quot; byte ($00 in this example) is stored in ROM just after the instruction’s opcode byte, and it’s what gets copied to <code>a</code>.
+<p>The curious reader may ask where the value is copied <em>from</em>. The answer is simply that the “immediate” byte ($00 in this example) is stored in ROM just after the instruction’s opcode byte, and it’s what gets copied to <code>a</code>.
 We will come back to this when we talk about how instructions are encoded later on.</p>
 </div>
 <div class="footnote-definition" id="hw_inc_directives"><sup class="footnote-definition-label">3</sup>

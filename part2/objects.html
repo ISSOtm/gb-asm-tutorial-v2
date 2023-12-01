@@ -316,12 +316,9 @@ WaitVBlank2:
 	ld [_OAMRAM + 1], a
 	jp Main
 </code></pre>
-<div class="box tip decorated">
-<div><p>🤨</p></div>
-<div>
+<div class="box tip decorated"><p>🤨</p>
 <p>Here, we are accessing OAM without turning the LCD off, but it’s still safe.
 Explaining why requires a more thorough explanation of the Game Boy’s rendering, so let’s ignore it for now.</p>
-</div>
 </div>
 <p>Now you should see the paddle moving… very quickly.
 Because it moves by a pixel every frame, it’s going at a speed of 60 pixels per second!
