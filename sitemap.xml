@@ -2,374 +2,374 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/help-feedback.html</loc>
-        <lastmod>2023-12-01T13:43:15.470Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.127Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/index.html</loc>
-        <lastmod>2023-12-01T13:43:15.470Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.123Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/next.html</loc>
-        <lastmod>2023-12-01T13:43:15.542Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.195Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/resources.html</loc>
-        <lastmod>2023-12-01T13:43:15.542Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.195Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/roadmap.html</loc>
-        <lastmod>2023-12-01T13:43:15.470Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.123Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/thanks.html</loc>
-        <lastmod>2023-12-01T13:43:15.542Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.195Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/404.html</loc>
-        <lastmod>2023-12-01T13:43:17.582Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.271Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/help-feedback.html</loc>
-        <lastmod>2023-12-01T13:43:17.942Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.635Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/index.html</loc>
-        <lastmod>2023-12-01T13:43:17.938Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.631Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/next.html</loc>
-        <lastmod>2023-12-01T13:43:18.010Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.703Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/resources.html</loc>
-        <lastmod>2023-12-01T13:43:18.010Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.703Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/roadmap.html</loc>
-        <lastmod>2023-12-01T13:43:17.938Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.635Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/thanks.html</loc>
-        <lastmod>2023-12-01T13:43:18.014Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.707Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/assembly.html</loc>
-        <lastmod>2023-12-01T13:43:15.482Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.135Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/bin_and_hex.html</loc>
-        <lastmod>2023-12-01T13:43:15.478Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.131Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/header.html</loc>
-        <lastmod>2023-12-01T13:43:15.486Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.139Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/hello_world.html</loc>
-        <lastmod>2023-12-01T13:43:15.474Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.127Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/jumps.html</loc>
-        <lastmod>2023-12-01T13:43:15.486Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.139Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/memory.html</loc>
-        <lastmod>2023-12-01T13:43:15.482Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.135Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/operations.html</loc>
-        <lastmod>2023-12-01T13:43:15.486Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.139Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/palettes.html</loc>
-        <lastmod>2023-12-01T13:43:15.490Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.147Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/registers.html</loc>
-        <lastmod>2023-12-01T13:43:15.478Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.131Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/setup.html</loc>
-        <lastmod>2023-12-01T13:43:15.474Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.127Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/tilemap.html</loc>
-        <lastmod>2023-12-01T13:43:15.494Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.147Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/tiles.html</loc>
-        <lastmod>2023-12-01T13:43:15.490Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.143Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/toolchain.html</loc>
-        <lastmod>2023-12-01T13:43:15.478Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.131Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/tracing.html</loc>
-        <lastmod>2023-12-01T13:43:15.490Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.143Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part1/wrapup.html</loc>
-        <lastmod>2023-12-01T13:43:15.494Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.147Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part2/bricks.html</loc>
-        <lastmod>2023-12-01T13:43:15.506Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.159Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part2/collision.html</loc>
-        <lastmod>2023-12-01T13:43:15.502Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.159Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part2/functions.html</loc>
-        <lastmod>2023-12-01T13:43:15.498Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.155Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part2/getting-started.html</loc>
-        <lastmod>2023-12-01T13:43:15.494Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.151Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part2/input.html</loc>
-        <lastmod>2023-12-01T13:43:15.502Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.155Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part2/objects.html</loc>
-        <lastmod>2023-12-01T13:43:15.498Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.151Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part2/wip.html</loc>
-        <lastmod>2023-12-01T13:43:15.506Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.159Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/bullets.html</loc>
-        <lastmod>2023-12-01T13:43:15.530Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.183Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/changing-game-states.html</loc>
-        <lastmod>2023-12-01T13:43:15.514Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.167Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/collision.html</loc>
-        <lastmod>2023-12-01T13:43:15.534Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.187Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/conclusion.html</loc>
-        <lastmod>2023-12-01T13:43:15.538Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.191Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/enemies.html</loc>
-        <lastmod>2023-12-01T13:43:15.534Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.187Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/enemy-bullet-collision.html</loc>
-        <lastmod>2023-12-01T13:43:15.538Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.191Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/enemy-player-collision.html</loc>
-        <lastmod>2023-12-01T13:43:15.534Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.187Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/entry-point.html</loc>
-        <lastmod>2023-12-01T13:43:15.510Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.163Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/gameplay.html</loc>
-        <lastmod>2023-12-01T13:43:15.518Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.171Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/getting-started.html</loc>
-        <lastmod>2023-12-01T13:43:15.506Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.163Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/heads-up-interface.html</loc>
-        <lastmod>2023-12-01T13:43:15.522Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.175Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/object-pools.html</loc>
-        <lastmod>2023-12-01T13:43:15.526Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.179Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/project-structure.html</loc>
-        <lastmod>2023-12-01T13:43:15.510Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.163Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/scrolling-background.html</loc>
-        <lastmod>2023-12-01T13:43:15.522Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.175Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/sprites-metasprites.html</loc>
-        <lastmod>2023-12-01T13:43:15.522Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.175Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/story-screen.html</loc>
-        <lastmod>2023-12-01T13:43:15.518Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.171Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/the-player.html</loc>
-        <lastmod>2023-12-01T13:43:15.526Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.179Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/part3/title-screen.html</loc>
-        <lastmod>2023-12-01T13:43:15.514Z</lastmod>
+        <lastmod>2023-12-11T09:26:56.167Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/assembly.html</loc>
-        <lastmod>2023-12-01T13:43:17.950Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.643Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/bin_and_hex.html</loc>
-        <lastmod>2023-12-01T13:43:17.946Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.639Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/header.html</loc>
-        <lastmod>2023-12-01T13:43:17.954Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.647Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/hello_world.html</loc>
-        <lastmod>2023-12-01T13:43:17.942Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.639Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/jumps.html</loc>
-        <lastmod>2023-12-01T13:43:17.954Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.651Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/memory.html</loc>
-        <lastmod>2023-12-01T13:43:17.950Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.647Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/operations.html</loc>
-        <lastmod>2023-12-01T13:43:17.954Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.647Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/palettes.html</loc>
-        <lastmod>2023-12-01T13:43:17.962Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.655Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/registers.html</loc>
-        <lastmod>2023-12-01T13:43:17.946Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.643Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/setup.html</loc>
-        <lastmod>2023-12-01T13:43:17.942Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.635Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/tilemap.html</loc>
-        <lastmod>2023-12-01T13:43:17.962Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.655Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/tiles.html</loc>
-        <lastmod>2023-12-01T13:43:17.958Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.655Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/toolchain.html</loc>
-        <lastmod>2023-12-01T13:43:17.946Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.639Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/tracing.html</loc>
-        <lastmod>2023-12-01T13:43:17.958Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.651Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part1/wrapup.html</loc>
-        <lastmod>2023-12-01T13:43:17.962Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.659Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part2/bricks.html</loc>
-        <lastmod>2023-12-01T13:43:17.974Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.667Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part2/collision.html</loc>
-        <lastmod>2023-12-01T13:43:17.974Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.667Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part2/functions.html</loc>
-        <lastmod>2023-12-01T13:43:17.970Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.663Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part2/getting-started.html</loc>
-        <lastmod>2023-12-01T13:43:17.966Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.659Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part2/input.html</loc>
-        <lastmod>2023-12-01T13:43:17.970Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.663Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part2/objects.html</loc>
-        <lastmod>2023-12-01T13:43:17.966Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.663Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part2/wip.html</loc>
-        <lastmod>2023-12-01T13:43:17.974Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.671Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/bullets.html</loc>
-        <lastmod>2023-12-01T13:43:17.998Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.691Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/changing-game-states.html</loc>
-        <lastmod>2023-12-01T13:43:17.982Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.675Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/collision.html</loc>
-        <lastmod>2023-12-01T13:43:18.002Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.699Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/conclusion.html</loc>
-        <lastmod>2023-12-01T13:43:18.010Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.703Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/enemies.html</loc>
-        <lastmod>2023-12-01T13:43:18.002Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.695Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/enemy-bullet-collision.html</loc>
-        <lastmod>2023-12-01T13:43:18.006Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.699Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/enemy-player-collision.html</loc>
-        <lastmod>2023-12-01T13:43:18.006Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.699Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/entry-point.html</loc>
-        <lastmod>2023-12-01T13:43:17.982Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.675Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/gameplay.html</loc>
-        <lastmod>2023-12-01T13:43:17.986Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.683Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/getting-started.html</loc>
-        <lastmod>2023-12-01T13:43:17.978Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.671Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/heads-up-interface.html</loc>
-        <lastmod>2023-12-01T13:43:17.990Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.683Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/object-pools.html</loc>
-        <lastmod>2023-12-01T13:43:17.994Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.687Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/project-structure.html</loc>
-        <lastmod>2023-12-01T13:43:17.978Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.671Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/scrolling-background.html</loc>
-        <lastmod>2023-12-01T13:43:17.990Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.683Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/sprites-metasprites.html</loc>
-        <lastmod>2023-12-01T13:43:17.994Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.687Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/story-screen.html</loc>
-        <lastmod>2023-12-01T13:43:17.986Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.679Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/the-player.html</loc>
-        <lastmod>2023-12-01T13:43:17.998Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.691Z</lastmod>
     </url>
     <url>
         <loc>https://gbdev.io/gb-asm-tutorial/it/part3/title-screen.html</loc>
-        <lastmod>2023-12-01T13:43:17.986Z</lastmod>
+        <lastmod>2023-12-11T09:26:58.679Z</lastmod>
     </url>
 </urlset>
