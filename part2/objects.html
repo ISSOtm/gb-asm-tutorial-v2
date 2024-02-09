@@ -243,7 +243,7 @@ The NES, for example, lacks such offsets, so you will notice that objects always
 <p>First off, when the Game Boy is powered on, OAM is filled with a bunch of semi-random values, which may cover the screen with some random garbage.
 Let’s fix that by first clearing OAM before enabling objects for the first time.
 Let’s add the following just after the <code>CopyTilemap</code> loop:</p>
-<pre><code class="language-rgbasm">	ld a, 0
+<pre><code class="language-rgbasm linenos start=59">	ld a, 0
 	ld b, 160
 	ld hl, _OAMRAM
 ClearOam:

@@ -244,7 +244,7 @@ Il NES, ad esempio, non dispone di tali offset, per cui si noterà che gli ogget
 <p>Innanzitutto, all’accensione del Game Boy, l’OAM si riempie di valori semicasuali, che possono coprire lo schermo di spazzatura casuale.
 Risolviamo questo problema cancellando l’OAM prima di attivare gli oggetti per la prima volta.
 Aggiungiamo quanto segue subito dopo il ciclo <code>CopyTilemap</code>:</p>
-<pre><code class="language-rgbasm">	ld a, 0
+<pre><code class="language-rgbasm linenos start=59">	ld a, 0
 	ld b, 160
 	ld hl, _OAMRAM
 ClearOam:
