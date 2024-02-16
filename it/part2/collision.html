@@ -214,7 +214,7 @@
 Come per la racchetta, il primo passo è creare un riquadro per la palla e caricarlo nella VRAM.</p>
 <h2 id="grafica"><a class="header" href="#grafica">Grafica</a></h2>
 <p>Add this to the bottom of your file along with the other graphics:</p>
-<pre><code class="language-rgbasm linenos start=570">Ball:
+<pre><code class="language-rgbasm linenos start=573">Ball:
 	dw `00033000
 	dw `00322300
 	dw `03222230
@@ -254,7 +254,7 @@ BallEnd:
 </code></pre>
 <p>As the ball bounces around the screen its momentum will change, sending it in different directions.
 Let’s create two new variables to track the ball’s momentum in each axis: <code>wBallMomentumX</code> and <code>wBallMomentumY</code>.</p>
-<pre><code class="language-rgbasm linenos start=581">SECTION &quot;Counter&quot;, WRAM0
+<pre><code class="language-rgbasm linenos start=584">SECTION &quot;Counter&quot;, WRAM0
 wFrameCounter: db
 
 SECTION &quot;Input Variables&quot;, WRAM0
@@ -289,7 +289,7 @@ Add a bit of code at the beginning of your main loop that adds the momentum to t
 Notice that since this is the second OAM entry, we use <code>+ 4</code> for Y and <code>+ 5</code> for X.
 This can get pretty confusing, but luckily we only have two objects to keep track of.
 In the future, we’ll go over a much easier way to use OAM.</p>
-<pre><code class="language-rgbasm linenos start=90">Main:
+<pre><code class="language-rgbasm linenos start=93">Main:
 	ld a, [rLY]
 	cp 144
 	jp nc, Main
@@ -320,7 +320,7 @@ Dovremo ripetere il controllo delle collisioni un paio di volte, quindi utilizze
 L’idea di base è che converte la posizione dello sprite in una posizione sulla mappa delle piastrelle.
 In questo modo, possiamo controllare quale piastrella sta toccando la nostra palla, in modo da sapere quando rimbalzare!</p>
 </div>
-<pre><code class="language-rgbasm linenos start=226">; Convert a pixel position to a tilemap address
+<pre><code class="language-rgbasm linenos start=229">; Convert a pixel position to a tilemap address
 ; hl = $9800 + X + Y * 32
 ; @param b: X
 ; @param c: Y
@@ -353,7 +353,7 @@ GetTileByPixel:
 	ret
 </code></pre>
 <p>The next function is called <code>IsWallTile</code>, and it’s going to contain a list of tiles which the ball can bounce off of.</p>
-<pre><code class="language-rgbasm linenos start=258">; @param a: tile ID
+<pre><code class="language-rgbasm linenos start=261">; @param a: tile ID
 ; @return z: set if a is a wall.
 IsWallTile:
 	cp a, $00
@@ -379,7 +379,7 @@ Ma se, dopo aver effettuato l’ultimo confronto, <code>Z</code> non viene ancor
 <h2 id="unificare-il-tutto"><a class="header" href="#unificare-il-tutto">Unificare il tutto</a></h2>
 <p>Time to use these new functions to add collision detection!
 Add the following after the code that updates the ball’s position:</p>
-<pre><code class="language-rgbasm linenos start=112">BounceOnTop:
+<pre><code class="language-rgbasm linenos start=115">BounceOnTop:
 	; Remember to offset the OAM position!
 	; (8, 16) in OAM coordinates is (0, 0) on the screen.
 	ld a, [_OAMRAM + 4]
@@ -401,7 +401,7 @@ Queste istruzioni <code>sub</code> annullano questo offset.</p>
 <p>Tuttavia, c’è dell’altro: avrete notato che abbiamo sottratto un pixel in più dalla posizione Y. Questo perché (come suggerisce l’etichetta) questo codice controlla la presenza di una piastrella sopra la palla.
 Questo perché (come suggerisce l’etichetta), il codice controlla la presenza di una piastrella sopra la palla.
 In realtà abbiamo bisogno di controllare <em>tutti e quattro</em> i lati della palla, in modo da sapere come cambiare la quantità di moto a seconda del lato che si è scontrato, quindi… aggiungiamo il resto!</p>
-<pre><code class="language-rgbasm linenos start=128">BounceOnRight:
+<pre><code class="language-rgbasm linenos start=131">BounceOnRight:
 	ld a, [_OAMRAM + 4]
 	sub a, 16
 	ld c, a
@@ -457,7 +457,7 @@ Per esempio, <code>cp a, b</code> imposta <code>C</code> se <code>a &lt; b</code
 (Per verificare <code>a &lt;= b</code> o <code>a &gt; b</code> si possono usare <code>Z</code> e <code>C</code> in tandem con due istruzioni <code>jp</code>)</p>
 </div>
 <p>Armed with this knowledge, let’s work through the paddle bounce code:</p>
-<pre><code class="language-rgbasm linenos start=171">	; First, check if the ball is low enough to bounce off the paddle.
+<pre><code class="language-rgbasm linenos start=174">	; First, check if the ball is low enough to bounce off the paddle.
 	ld a, [_OAMRAM]
 	ld b, a
 	ld a, [_OAMRAM + 4]
@@ -582,7 +582,7 @@ Se si preferisce rendere il tutto più facile o più difficile, è possibile reg
 <p>Si può notare che la pallina sembra “affondare” un po’ nella paletta prima di rimbalzare. Questo perché la pallina rimbalza quando la sua riga superiore di pixel si allinea con la riga superiore della paletta (si veda l’immagine sopra). Se volete, provate a regolare questo aspetto in modo che la pallina rimbalzi quando la sua fila di pixel inferiore tocca quella superiore della paletta.</p>
 <p>Suggerimento: è possibile farlo con una sola istruzione!</p>
 <details><summary>Risposta:</summary>
-<pre><code class="language-diff linenos start=171">	ld a, [_OAMRAM]
+<pre><code class="language-diff linenos start=174">	ld a, [_OAMRAM]
 	ld b, a
 	ld a, [_OAMRAM + 4]
 +	add a, 6

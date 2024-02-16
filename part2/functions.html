@@ -213,7 +213,7 @@
 Let’s use <strong>functions</strong> to “factor out” code!</p>
 <p>For example, in three places, we are copying chunks of memory around.
 Let’s write a function below the <code>jp Main</code>, and let’s call it <code>Memcpy</code>, like <a href="https://man7.org/linux/man-pages/man3/memcpy.3.html">the similar C function</a>:</p>
-<pre><code class="language-rgbasm linenos start=93">; Copy bytes from one area to another.
+<pre><code class="language-rgbasm linenos start=94">; Copy bytes from one area to another.
 ; @param de: Source
 ; @param hl: Destination
 ; @param bc: Length

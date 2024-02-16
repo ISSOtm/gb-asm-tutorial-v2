@@ -1633,7 +1633,7 @@ In realtà ci sono due tavolozze di oggetti, ma ne useremo solo una.</p>
 <p>Ora che abbiamo un oggetto sullo schermo, spostiamolo.
 In precedenza, il ciclo <code>Done</code> non faceva nulla; rinominiamolo in <code>Main</code> e usiamolo per spostare il nostro oggetto.
 Aspetteremo il VBlank prima di cambiare OAM, proprio come abbiamo fatto prima di spegnere lo schermo.</p>
-<pre><code class="language-rgbasm linenos start=89">Main:
+<pre><code class="language-rgbasm linenos start=90">Main:
     ; Wait until it's *not* VBlank
     ld a, [rLY]
     cp 144
@@ -1660,13 +1660,14 @@ To slow this down, we’ll use a <em>variable</em>.</p>
 Per farlo, creiamo un’altra sezione, ma mettiamola in <code>WRAM0</code> invece che in <code>ROM0</code>.
 A differenza della ROM (“Read-Only Memory”, memoria di sola lettura), la RAM (“Random-Access Memory”, memoria ad accesso casuale) può essere scritta; quindi, la WRAM, o Work RAM, è il luogo in cui possiamo memorizzare le variabili del nostro gioco.</p>
 <p>Aggiungete questo in fondo al vostro file:</p>
-<pre><code class="language-rgbasm linenos start=358">SECTION &quot;Counter&quot;, WRAM0
+<pre><code class="language-rgbasm linenos start=359">SECTION &quot;Counter&quot;, WRAM0
 wFrameCounter: db
 </code></pre>
 <p>Now we’ll use the <code>wFrameCounter</code> variable to count how many frames have passed since we last moved the paddle.
 Every 15th frame, we’ll move the paddle by one pixel, slowing it down to 4 pixels per second.
 Don’t forget that RAM is filled with garbage values when the Game Boy starts, so we need to initialize our variables before first using them.</p>
-<pre><code class="language-rgbasm linenos start=86">	ld a, 0
+<pre><code class="language-rgbasm linenos start=86">	; Initialize global variables
+	ld a, 0
 	ld [wFrameCounter], a
 
 Main:
@@ -1701,7 +1702,7 @@ Il prossimo passo è prendere il controllo della tessera.</p>
 Usiamo le <strong>funzioni</strong> per “sfoltire” il codice!</p>
 <p>Per esempio, in tre punti stiamo copiando pezzi di memoria.
 Scriviamo una funzione sotto la <code>jp Main</code> e chiamiamola <code>Memcpy</code>, come <a href="https://man7.org/linux/man-pages/man3/memcpy.3.html">l’analoga funzione C</a>:</p>
-<pre><code class="language-rgbasm linenos start=93">; Copy bytes from one area to another.
+<pre><code class="language-rgbasm linenos start=94">; Copy bytes from one area to another.
 ; @param de: Source
 ; @param hl: Destination
 ; @param bc: Length
@@ -1793,7 +1794,7 @@ CopyPaddle:
 Un gioco che si gioca da solo non è molto divertente, quindi cerchiamo di risolvere questo problema.</p>
 <p>Incollare questo codice sotto il ciclo <code>Main</code>.
 Come <code>Memcpy</code>, questa è una funzione che può essere riutilizzata da diversi punti, utilizzando l’istruzione <code>call</code>.</p>
-<pre><code class="language-rgbasm linenos start=110">UpdateKeys:
+<pre><code class="language-rgbasm linenos start=113">UpdateKeys:
   ; Poll half the controller
   ld a, P1F_GET_BTN
   call .onenibble
@@ -1837,15 +1838,23 @@ La funzione <code>UpdateKeys</code> scrive i pulsanti tenuti in una posizione in
 Per questo motivo, è sufficiente chiamare <code>UpdateKeys</code> una sola volta per ogni fotogramma.</p>
 <p>Questo è importante, perché non solo è più veloce ricaricare gli input che abbiamo già elaborato, ma significa anche che agiremo sempre sugli stessi input, anche se il giocatore preme o rilascia un pulsante a metà fotogramma.</p>
 <p>Per prima cosa, mettiamo da parte un po’ di spazio per le due variabili che <code>UpdateKeys</code> utilizzerà; incollate questo alla fine del file <code>main.asm</code>:</p>
-<pre><code class="language-rgbasm linenos start=407">SECTION &quot;Input Variables&quot;, WRAM0
+<pre><code class="language-rgbasm linenos start=410">SECTION &quot;Input Variables&quot;, WRAM0
 wCurKeys: db
 wNewKeys: db
 </code></pre>
 <p>Ogni variabile deve risiedere nella RAM e non nella ROM, perché la ROM è “Read-Only” (quindi non può essere modificata).
 Inoltre, ogni variabile deve essere grande solo un byte, quindi si usa <code>db</code> (“Define Byte”) per riservare un byte di RAM a ciascuna.</p>
+<p>Before we read these variables we will also want to initialize them.
+We can do that below our initialization  of <code>wFrameCounter</code>.</p>
+<pre><code class="language-rgbasm linenos start=65">	; Initialize global variables
+	ld a, 0
+	ld [wFrameCounter], a
+	ld [wCurKeys], a
+	ld [wNewKeys], a
+</code></pre>
 <p>Utilizzeremo l’opcode <code>and</code>, che può essere utilizzato per impostare il flag di zero (<code>z</code>) sul valore del bit.
 Possiamo usare questo insieme alle costanti <code>PADF</code> in hardware.inc per leggere un particolare tasto.</p>
-<pre><code class="language-rgbasm linenos start=68">Main:
+<pre><code class="language-rgbasm linenos start=71">Main:
 	ld a, [rLY]
 	cp 144
 	jp nc, Main
@@ -1894,7 +1903,7 @@ Urrà, abbiamo l’inizio di un gioco!</p>
 Come per la racchetta, il primo passo è creare un riquadro per la palla e caricarlo nella VRAM.</p>
 <h2 id="grafica"><a class="header" href="#grafica">Grafica</a></h2>
 <p>Add this to the bottom of your file along with the other graphics:</p>
-<pre><code class="language-rgbasm linenos start=570">Ball:
+<pre><code class="language-rgbasm linenos start=573">Ball:
 	dw `00033000
 	dw `00322300
 	dw `03222230
@@ -1934,7 +1943,7 @@ BallEnd:
 </code></pre>
 <p>As the ball bounces around the screen its momentum will change, sending it in different directions.
 Let’s create two new variables to track the ball’s momentum in each axis: <code>wBallMomentumX</code> and <code>wBallMomentumY</code>.</p>
-<pre><code class="language-rgbasm linenos start=581">SECTION &quot;Counter&quot;, WRAM0
+<pre><code class="language-rgbasm linenos start=584">SECTION &quot;Counter&quot;, WRAM0
 wFrameCounter: db
 
 SECTION &quot;Input Variables&quot;, WRAM0
@@ -1969,7 +1978,7 @@ Add a bit of code at the beginning of your main loop that adds the momentum to t
 Notice that since this is the second OAM entry, we use <code>+ 4</code> for Y and <code>+ 5</code> for X.
 This can get pretty confusing, but luckily we only have two objects to keep track of.
 In the future, we’ll go over a much easier way to use OAM.</p>
-<pre><code class="language-rgbasm linenos start=90">Main:
+<pre><code class="language-rgbasm linenos start=93">Main:
 	ld a, [rLY]
 	cp 144
 	jp nc, Main
@@ -2000,7 +2009,7 @@ Dovremo ripetere il controllo delle collisioni un paio di volte, quindi utilizze
 L’idea di base è che converte la posizione dello sprite in una posizione sulla mappa delle piastrelle.
 In questo modo, possiamo controllare quale piastrella sta toccando la nostra palla, in modo da sapere quando rimbalzare!</p>
 </div>
-<pre><code class="language-rgbasm linenos start=226">; Convert a pixel position to a tilemap address
+<pre><code class="language-rgbasm linenos start=229">; Convert a pixel position to a tilemap address
 ; hl = $9800 + X + Y * 32
 ; @param b: X
 ; @param c: Y
@@ -2033,7 +2042,7 @@ GetTileByPixel:
 	ret
 </code></pre>
 <p>The next function is called <code>IsWallTile</code>, and it’s going to contain a list of tiles which the ball can bounce off of.</p>
-<pre><code class="language-rgbasm linenos start=258">; @param a: tile ID
+<pre><code class="language-rgbasm linenos start=261">; @param a: tile ID
 ; @return z: set if a is a wall.
 IsWallTile:
 	cp a, $00
@@ -2059,7 +2068,7 @@ Ma se, dopo aver effettuato l’ultimo confronto, <code>Z</code> non viene ancor
 <h2 id="unificare-il-tutto"><a class="header" href="#unificare-il-tutto">Unificare il tutto</a></h2>
 <p>Time to use these new functions to add collision detection!
 Add the following after the code that updates the ball’s position:</p>
-<pre><code class="language-rgbasm linenos start=112">BounceOnTop:
+<pre><code class="language-rgbasm linenos start=115">BounceOnTop:
 	; Remember to offset the OAM position!
 	; (8, 16) in OAM coordinates is (0, 0) on the screen.
 	ld a, [_OAMRAM + 4]
@@ -2081,7 +2090,7 @@ Queste istruzioni <code>sub</code> annullano questo offset.</p>
 <p>Tuttavia, c’è dell’altro: avrete notato che abbiamo sottratto un pixel in più dalla posizione Y. Questo perché (come suggerisce l’etichetta) questo codice controlla la presenza di una piastrella sopra la palla.
 Questo perché (come suggerisce l’etichetta), il codice controlla la presenza di una piastrella sopra la palla.
 In realtà abbiamo bisogno di controllare <em>tutti e quattro</em> i lati della palla, in modo da sapere come cambiare la quantità di moto a seconda del lato che si è scontrato, quindi… aggiungiamo il resto!</p>
-<pre><code class="language-rgbasm linenos start=128">BounceOnRight:
+<pre><code class="language-rgbasm linenos start=131">BounceOnRight:
 	ld a, [_OAMRAM + 4]
 	sub a, 16
 	ld c, a
@@ -2137,7 +2146,7 @@ Per esempio, <code>cp a, b</code> imposta <code>C</code> se <code>a &lt; b</code
 (Per verificare <code>a &lt;= b</code> o <code>a &gt; b</code> si possono usare <code>Z</code> e <code>C</code> in tandem con due istruzioni <code>jp</code>)</p>
 </div>
 <p>Armed with this knowledge, let’s work through the paddle bounce code:</p>
-<pre><code class="language-rgbasm linenos start=171">	; First, check if the ball is low enough to bounce off the paddle.
+<pre><code class="language-rgbasm linenos start=174">	; First, check if the ball is low enough to bounce off the paddle.
 	ld a, [_OAMRAM]
 	ld b, a
 	ld a, [_OAMRAM + 4]
@@ -2262,7 +2271,7 @@ Se si preferisce rendere il tutto più facile o più difficile, è possibile reg
 <p>Si può notare che la pallina sembra “affondare” un po’ nella paletta prima di rimbalzare. Questo perché la pallina rimbalza quando la sua riga superiore di pixel si allinea con la riga superiore della paletta (si veda l’immagine sopra). Se volete, provate a regolare questo aspetto in modo che la pallina rimbalzi quando la sua fila di pixel inferiore tocca quella superiore della paletta.</p>
 <p>Suggerimento: è possibile farlo con una sola istruzione!</p>
 <details><summary>Risposta:</summary>
-<pre><code class="language-diff linenos start=171">	ld a, [_OAMRAM]
+<pre><code class="language-diff linenos start=174">	ld a, [_OAMRAM]
 	ld b, a
 	ld a, [_OAMRAM + 4]
 +	add a, 6
@@ -2290,7 +2299,7 @@ But I think we can all agree that the former is much clearer, right?</p>
 Our bricks are two tiles wide, so when we hit one we’ll have to remove the adjacent tile as well.
 If we hit the left side of a brick (represented by <code>BRICK_LEFT</code>), we need to remove it and the tile to its right (which should be the right side).
 If we instead hit the right side, we need to remove the left!</p>
-<pre><code class="language-rgbasm linenos start=282">; Checks if a brick was collided with and breaks it if possible.
+<pre><code class="language-rgbasm linenos start=285">; Checks if a brick was collided with and breaks it if possible.
 ; @param hl: address of tile.
 CheckAndHandleBrick:
 	ld a, [hl]
@@ -2312,7 +2321,7 @@ CheckAndHandleBrickRight:
 <p>Just insert this function into each of your bounce checks now.
 Make sure you don’t miss any!
 It should go right <strong>before</strong> the momentum is modified.</p>
-<pre><code class="language-diff linenos start=116">BounceOnTop:
+<pre><code class="language-diff linenos start=119">BounceOnTop:
 	; Remember to offset the OAM position!
 	; (8, 16) in OAM coordinates is (0, 0) on the screen.
 	ld a, [_OAMRAM + 4]

@@ -316,7 +316,7 @@ There are actually two object palettes, but we’re only going to use one.</p>
 <p>Now that you have an object on the screen, let’s move it around.
 Previously, the <code>Done</code> loop did nothing; let’s rename it to <code>Main</code> and use it to move our object.
 We’re going to wait for VBlank before changing OAM, just like we did before turning off the screen.</p>
-<pre><code class="language-rgbasm linenos start=89">Main:
+<pre><code class="language-rgbasm linenos start=90">Main:
     ; Wait until it's *not* VBlank
     ld a, [rLY]
     cp 144
@@ -343,13 +343,14 @@ To slow this down, we’ll use a <em>variable</em>.</p>
 To do this, let’s create another section, but putting it in <code>WRAM0</code> instead of <code>ROM0</code>.
 Unlike ROM (“Read-Only Memory”), RAM (“Random-Access Memory”) can be written to; thus, WRAM, or Work RAM, is where we can store our game’s variables.</p>
 <p>Add this to the bottom of your file:</p>
-<pre><code class="language-rgbasm linenos start=358">SECTION &quot;Counter&quot;, WRAM0
+<pre><code class="language-rgbasm linenos start=359">SECTION &quot;Counter&quot;, WRAM0
 wFrameCounter: db
 </code></pre>
 <p>Now we’ll use the <code>wFrameCounter</code> variable to count how many frames have passed since we last moved the paddle.
 Every 15th frame, we’ll move the paddle by one pixel, slowing it down to 4 pixels per second.
 Don’t forget that RAM is filled with garbage values when the Game Boy starts, so we need to initialize our variables before first using them.</p>
-<pre><code class="language-rgbasm linenos start=86">	ld a, 0
+<pre><code class="language-rgbasm linenos start=86">	; Initialize global variables
+	ld a, 0
 	ld [wFrameCounter], a
 
 Main:

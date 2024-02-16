@@ -227,7 +227,7 @@ But I think we can all agree that the former is much clearer, right?</p>
 Our bricks are two tiles wide, so when we hit one we’ll have to remove the adjacent tile as well.
 If we hit the left side of a brick (represented by <code>BRICK_LEFT</code>), we need to remove it and the tile to its right (which should be the right side).
 If we instead hit the right side, we need to remove the left!</p>
-<pre><code class="language-rgbasm linenos start=282">; Checks if a brick was collided with and breaks it if possible.
+<pre><code class="language-rgbasm linenos start=285">; Checks if a brick was collided with and breaks it if possible.
 ; @param hl: address of tile.
 CheckAndHandleBrick:
 	ld a, [hl]
@@ -249,7 +249,7 @@ CheckAndHandleBrickRight:
 <p>Just insert this function into each of your bounce checks now.
 Make sure you don’t miss any!
 It should go right <strong>before</strong> the momentum is modified.</p>
-<pre><code class="language-diff linenos start=116">BounceOnTop:
+<pre><code class="language-diff linenos start=119">BounceOnTop:
 	; Remember to offset the OAM position!
 	; (8, 16) in OAM coordinates is (0, 0) on the screen.
 	ld a, [_OAMRAM + 4]

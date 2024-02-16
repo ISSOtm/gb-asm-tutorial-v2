@@ -213,7 +213,7 @@
 A game that plays itself isn’t very much fun, so let’s fix that.</p>
 <p>Paste this code below your <code>Main</code> loop.
 Like <code>Memcpy</code>, this is a function that can be reused from different places, using the <code>call</code> instruction.</p>
-<pre><code class="language-rgbasm linenos start=110">UpdateKeys:
+<pre><code class="language-rgbasm linenos start=113">UpdateKeys:
   ; Poll half the controller
   ld a, P1F_GET_BTN
   call .onenibble
@@ -257,15 +257,23 @@ Alright? Good!</p>
 Because of this, we only need to call <code>UpdateKeys</code> once per frame.</p>
 <p>This is important, because not only is it faster to reload the inputs that we’ve already processed, but it also means that we will always act on the same inputs, even if the player presses or releases a button mid-frame.</p>
 <p>First, let’s set aside some room for the two variables that <code>UpdateKeys</code> will use; paste this at the end of the <code>main.asm</code>:</p>
-<pre><code class="language-rgbasm linenos start=407">SECTION &quot;Input Variables&quot;, WRAM0
+<pre><code class="language-rgbasm linenos start=410">SECTION &quot;Input Variables&quot;, WRAM0
 wCurKeys: db
 wNewKeys: db
 </code></pre>
 <p>Each variable must reside in RAM, and not ROM, because ROM is “Read-Only” (so you can’t modify it).
 Additionally, each variable only needs to be one byte large, so we use <code>db</code> (“Define Byte”) to reserve one byte of RAM for each.</p>
+<p>Before we read these variables we will also want to initialize them.
+We can do that below our initialization  of <code>wFrameCounter</code>.</p>
+<pre><code class="language-rgbasm linenos start=65">	; Initialize global variables
+	ld a, 0
+	ld [wFrameCounter], a
+	ld [wCurKeys], a
+	ld [wNewKeys], a
+</code></pre>
 <p>We’re going to use the <code>and</code> opcode, which we can use to set the zero flag (<code>z</code>) to the value of the bit.
 We can use this along with the <code>PADF</code> constants in hardware.inc to read a particular key.</p>
-<pre><code class="language-rgbasm linenos start=68">Main:
+<pre><code class="language-rgbasm linenos start=71">Main:
 	ld a, [rLY]
 	cp 144
 	jp nc, Main

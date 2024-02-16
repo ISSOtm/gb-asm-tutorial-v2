@@ -214,7 +214,7 @@
 Un gioco che si gioca da solo non è molto divertente, quindi cerchiamo di risolvere questo problema.</p>
 <p>Incollare questo codice sotto il ciclo <code>Main</code>.
 Come <code>Memcpy</code>, questa è una funzione che può essere riutilizzata da diversi punti, utilizzando l’istruzione <code>call</code>.</p>
-<pre><code class="language-rgbasm linenos start=110">UpdateKeys:
+<pre><code class="language-rgbasm linenos start=113">UpdateKeys:
   ; Poll half the controller
   ld a, P1F_GET_BTN
   call .onenibble
@@ -258,15 +258,23 @@ La funzione <code>UpdateKeys</code> scrive i pulsanti tenuti in una posizione in
 Per questo motivo, è sufficiente chiamare <code>UpdateKeys</code> una sola volta per ogni fotogramma.</p>
 <p>Questo è importante, perché non solo è più veloce ricaricare gli input che abbiamo già elaborato, ma significa anche che agiremo sempre sugli stessi input, anche se il giocatore preme o rilascia un pulsante a metà fotogramma.</p>
 <p>Per prima cosa, mettiamo da parte un po’ di spazio per le due variabili che <code>UpdateKeys</code> utilizzerà; incollate questo alla fine del file <code>main.asm</code>:</p>
-<pre><code class="language-rgbasm linenos start=407">SECTION &quot;Input Variables&quot;, WRAM0
+<pre><code class="language-rgbasm linenos start=410">SECTION &quot;Input Variables&quot;, WRAM0
 wCurKeys: db
 wNewKeys: db
 </code></pre>
 <p>Ogni variabile deve risiedere nella RAM e non nella ROM, perché la ROM è “Read-Only” (quindi non può essere modificata).
 Inoltre, ogni variabile deve essere grande solo un byte, quindi si usa <code>db</code> (“Define Byte”) per riservare un byte di RAM a ciascuna.</p>
+<p>Before we read these variables we will also want to initialize them.
+We can do that below our initialization  of <code>wFrameCounter</code>.</p>
+<pre><code class="language-rgbasm linenos start=65">	; Initialize global variables
+	ld a, 0
+	ld [wFrameCounter], a
+	ld [wCurKeys], a
+	ld [wNewKeys], a
+</code></pre>
 <p>Utilizzeremo l’opcode <code>and</code>, che può essere utilizzato per impostare il flag di zero (<code>z</code>) sul valore del bit.
 Possiamo usare questo insieme alle costanti <code>PADF</code> in hardware.inc per leggere un particolare tasto.</p>
-<pre><code class="language-rgbasm linenos start=68">Main:
+<pre><code class="language-rgbasm linenos start=71">Main:
 	ld a, [rLY]
 	cp 144
 	jp nc, Main
