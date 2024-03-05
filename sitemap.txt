@@ -1,3 +1,4 @@
+https://gbdev.io/gb-asm-tutorial/cheatsheet.html
 https://gbdev.io/gb-asm-tutorial/help-feedback.html
 https://gbdev.io/gb-asm-tutorial/index.html
 https://gbdev.io/gb-asm-tutorial/next.html
@@ -5,6 +6,7 @@ https://gbdev.io/gb-asm-tutorial/resources.html
 https://gbdev.io/gb-asm-tutorial/roadmap.html
 https://gbdev.io/gb-asm-tutorial/thanks.html
 https://gbdev.io/gb-asm-tutorial/it/404.html
+https://gbdev.io/gb-asm-tutorial/it/cheatsheet.html
 https://gbdev.io/gb-asm-tutorial/it/help-feedback.html
 https://gbdev.io/gb-asm-tutorial/it/index.html
 https://gbdev.io/gb-asm-tutorial/it/next.html

@@ -1,0 +1,887 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Cheatsheet - GB ASM Tutorial</title>
+
+        <!-- Custom HTML head -->
+        <meta name="twitter:card" content="summary_large_image"/>
+        <meta name="twitter:site:id" content="@gbdev0"/>
+        <meta property="og:title" content="Cheatsheet - GB ASM Tutorial" />
+        <meta property="og:image" content="https://gbdev.io/gb-asm-tutorial/assets/banner/1200x628.png" />
+        <meta property="og:site_name" content="GB ASM Tutorial"/>
+        
+        <!-- Matomo tracking -->
+        <script>
+          var _paq = window._paq = window._paq || [];
+          /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+          _paq.push(['trackPageView']);
+          _paq.push(['enableLinkTracking']);
+          (function() {
+            var u="//stats.gbdev.io/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '1']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+          })();
+        </script>
+        <!-- End Matomo Code -->
+
+        <meta name="description" content="A complete guide to programming Game Boy games in assembly.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="css/custom.css">
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item affix "><a href="index.html">Home</a></li><li class="chapter-item affix "><a href="roadmap.html">Roadmap</a></li><li class="chapter-item affix "><a href="help-feedback.html">Help</a></li><li class="chapter-item affix "><li class="part-title">Part Ⅰ — Hello World!</li><li class="chapter-item "><a href="part1/setup.html"><strong aria-hidden="true">1.</strong> Setup</a></li><li class="chapter-item "><a href="part1/hello_world.html"><strong aria-hidden="true">2.</strong> Hello World!</a></li><li class="chapter-item "><a href="part1/toolchain.html"><strong aria-hidden="true">3.</strong> The toolchain</a></li><li class="chapter-item "><a href="part1/bin_and_hex.html"><strong aria-hidden="true">4.</strong> Binary and hexadecimal</a></li><li class="chapter-item "><a href="part1/registers.html"><strong aria-hidden="true">5.</strong> Registers</a></li><li class="chapter-item "><a href="part1/assembly.html"><strong aria-hidden="true">6.</strong> Assembly basics</a></li><li class="chapter-item "><a href="part1/memory.html"><strong aria-hidden="true">7.</strong> Memory</a></li><li class="chapter-item "><a href="part1/header.html"><strong aria-hidden="true">8.</strong> The header</a></li><li class="chapter-item "><a href="part1/operations.html"><strong aria-hidden="true">9.</strong> Operations & flags</a></li><li class="chapter-item "><a href="part1/jumps.html"><strong aria-hidden="true">10.</strong> Jumps</a></li><li class="chapter-item "><a href="part1/tracing.html"><strong aria-hidden="true">11.</strong> Tracing</a></li><li class="chapter-item "><div><strong aria-hidden="true">12.</strong> Graphics</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="part1/tiles.html"><strong aria-hidden="true">12.1.</strong> Tiles</a></li><li class="chapter-item "><a href="part1/palettes.html"><strong aria-hidden="true">12.2.</strong> Palettes</a></li><li class="chapter-item "><a href="part1/tilemap.html"><strong aria-hidden="true">12.3.</strong> Tilemap</a></li></ol></li><li class="chapter-item "><a href="part1/wrapup.html"><strong aria-hidden="true">13.</strong> Wrapping up</a></li><li class="chapter-item affix "><li class="part-title">Part Ⅱ — Our first game</li><li class="chapter-item "><a href="part2/getting-started.html"><strong aria-hidden="true">14.</strong> Getting started</a></li><li class="chapter-item "><a href="part2/objects.html"><strong aria-hidden="true">15.</strong> Objects</a></li><li class="chapter-item "><a href="part2/functions.html"><strong aria-hidden="true">16.</strong> Functions</a></li><li class="chapter-item "><a href="part2/input.html"><strong aria-hidden="true">17.</strong> Input</a></li><li class="chapter-item "><a href="part2/collision.html"><strong aria-hidden="true">18.</strong> Collision</a></li><li class="chapter-item "><a href="part2/bricks.html"><strong aria-hidden="true">19.</strong> Bricks</a></li><li class="chapter-item "><a href="part2/wip.html"><strong aria-hidden="true">20.</strong> Work in progress</a></li><li class="chapter-item affix "><li class="part-title">Part III — Our second game</li><li class="chapter-item "><a href="part3/getting-started.html"><strong aria-hidden="true">21.</strong> Getting Started</a></li><li class="chapter-item "><a href="part3/project-structure.html"><strong aria-hidden="true">22.</strong> Project Structure</a></li><li class="chapter-item "><a href="part3/entry-point.html"><strong aria-hidden="true">23.</strong> Entry Point</a></li><li class="chapter-item "><a href="part3/changing-game-states.html"><strong aria-hidden="true">24.</strong> Changing Game States</a></li><li class="chapter-item "><a href="part3/title-screen.html"><strong aria-hidden="true">25.</strong> Title Screen</a></li><li class="chapter-item "><a href="part3/story-screen.html"><strong aria-hidden="true">26.</strong> Story Screen</a></li><li class="chapter-item "><a href="part3/gameplay.html"><strong aria-hidden="true">27.</strong> Gameplay</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="part3/scrolling-background.html"><strong aria-hidden="true">27.1.</strong> Scrolling Background</a></li><li class="chapter-item "><a href="part3/heads-up-interface.html"><strong aria-hidden="true">27.2.</strong> Heads-Up Interface</a></li><li class="chapter-item "><a href="part3/sprites-metasprites.html"><strong aria-hidden="true">27.3.</strong> Sprites & Metasprites</a></li><li class="chapter-item "><a href="part3/object-pools.html"><strong aria-hidden="true">27.4.</strong> Object Pools</a></li><li class="chapter-item "><a href="part3/the-player.html"><strong aria-hidden="true">27.5.</strong> The Player</a></li><li class="chapter-item "><a href="part3/bullets.html"><strong aria-hidden="true">27.6.</strong> Bullets</a></li><li class="chapter-item "><a href="part3/enemies.html"><strong aria-hidden="true">27.7.</strong> Enemies</a></li><li class="chapter-item "><a href="part3/collision.html"><strong aria-hidden="true">27.8.</strong> Collision Detection</a></li><li class="chapter-item "><a href="part3/enemy-player-collision.html"><strong aria-hidden="true">27.9.</strong> Enemy-Player Collision</a></li><li class="chapter-item "><a href="part3/enemy-bullet-collision.html"><strong aria-hidden="true">27.10.</strong> Enemy-Bullet Collision</a></li></ol></li><li class="chapter-item "><a href="part3/conclusion.html"><strong aria-hidden="true">28.</strong> Conclusion</a></li><li class="chapter-item affix "><a href="next.html">Where to go next</a></li><li class="chapter-item affix "><a href="cheatsheet.html" class="active">Cheatsheet</a></li><li class="chapter-item affix "><a href="resources.html">Resources</a></li><li class="chapter-item affix "><a href="thanks.html">Thanks</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">GB ASM Tutorial</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        <button id="language-toggle" class="icon-button" type="button"
+                                title="Change language" aria-label="Change language"
+                                aria-haspopup="true" aria-expanded="false"
+                                aria-controls="language-list">
+                            <i class="fa fa-globe"></i>
+                        </button>
+                        <ul id="language-list" class="theme-popup" aria-label="Languages" role="menu">
+                          <li role="none"><button role="menuitem" class="theme">
+                              <a id="en">English</a>
+                          </button></li>
+                          <li role="none"><button role="menuitem" class="theme">
+                              <a id="it">Italian</a>
+                          </button></li>
+                        </ul>
+
+                        <script>
+                          let langToggle = document.getElementById("language-toggle");
+                          let langList = document.getElementById("language-list");
+                          langToggle.addEventListener("click", (event) => {
+                              langList.style.display = langList.style.display == "block" ? "none" : "block";
+                          });
+                          let selectedLang = document.getElementById("en");
+                          selectedLang.parentNode.classList.add("theme-selected");
+
+                          // The path to the root, taking the current
+                          // language into account.
+                          let full_path_to_root = "";
+                          // The page path (mdbook only gives us
+                          // access to the path to the Markdown file).
+                          let path = "cheatsheet.md".replace(/\.md$/, ".html");
+                          for (let lang of langList.querySelectorAll("a")) {
+                              if (lang.id == "en") {
+                                  lang.href = `${full_path_to_root}${path}`;
+                              } else {
+                                  lang.href = `${full_path_to_root}${lang.id}/${path}`;
+                              }
+                          }
+                        </script>
+
+                        
+                        <a href="https://github.com/gbdev/gb-asm-tutorial" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+                        <a href="https://github.com/gbdev/gb-asm-tutorial/edit/master/src/cheatsheet.md" title="Suggest an edit" aria-label="Suggest an edit">
+                            <i id="git-edit-button" class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="rgbds-cheatsheet"><a class="header" href="#rgbds-cheatsheet">RGBDS Cheatsheet</a></h1>
+<p>The purpose of this page is to provide concise explanations and code snippets for common tasks.
+For extra depth, clarity, and understanding, it’s recommended you read through the <a href="part1/setup.html">Hello World</a>, <a href="part2/getting-started.html">Part II - Our first game</a>, and <a href="part3/getting-started.html">Part III - Our second game</a> tutorials.</p>
+<p>Assembly syntax &amp; CPU Instructions will not be explained, for more information see the <a href="https://rgbds.gbdev.io/docs/rgbasm.5">RGBDS Language Reference</a></p>
+<p>Is there something common you think is missing? Check the <a href="https://github.com/gbdev/gb-asm-tutorial">github repository</a> to open an Issue or contribute to this page. Alternatively, you can reach out on one of the @gbdev <a href="https://gbdev.io/chat.html">community channels</a>.</p>
+<h2 id="table-of-contents"><a class="header" href="#table-of-contents">Table of Contents</a></h2>
+<ul>
+<li><a href="#rgbds-cheatsheet">RGBDS Cheatsheet</a>
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#display">Display</a>
+<ul>
+<li><a href="#wait-for-the-vertical-blank-phase">Wait for the vertical blank phase</a></li>
+<li><a href="#turn-onoff-the-lcd">Turn on/off the LCD</a></li>
+<li><a href="#turn-onoff-the-background">Turn on/off the background</a></li>
+<li><a href="#turn-onoff-the-window">Turn on/off the window</a></li>
+<li><a href="#switch-which-tilemaps-are-used-by-the-window-andor-background">Switch which tilemaps are used by the window and/or background</a></li>
+<li><a href="#turn-onoff-sprites">Turn on/off sprites</a></li>
+<li><a href="#turn-onoff-tall-8x16-sprites">Turn on/off tall (8x16) sprites</a></li>
+</ul>
+</li>
+<li><a href="#backgrounds">Backgrounds</a>
+<ul>
+<li><a href="#put-backgroundwindow-tile-data-into-vram">Put background/window tile data into VRAM</a></li>
+<li><a href="#draw-on-the-backgroundwindow">Draw on the Background/Window</a></li>
+<li><a href="#move-the-background">Move the background</a></li>
+<li><a href="#move-the-window">Move the window</a></li>
+</ul>
+</li>
+<li><a href="#joypad-input">Joypad Input</a>
+<ul>
+<li><a href="#check-if-a-button-is-down">Check if a button is down</a></li>
+<li><a href="#check-if-a-button-was-just-pressed">Check if a button was JUST pressed</a></li>
+<li><a href="#wait-for-a-button-press">Wait for a button press</a></li>
+</ul>
+</li>
+<li><a href="#hud">HUD</a>
+<ul>
+<li><a href="#draw-text">Draw text</a></li>
+<li><a href="#draw-a-bottom-hud">Draw a bottom HUD</a></li>
+</ul>
+</li>
+<li><a href="#sprites">Sprites</a>
+<ul>
+<li><a href="#put-sprite-tile-data-in-vram">Put sprite tile data in VRAM</a></li>
+<li><a href="#manipulate-hardware-oam-sprites">Manipulate hardware OAM sprites</a></li>
+<li><a href="#implement-a-shadow-oam-using-eievui5s-sprite-object-library">Implement a Shadow OAM using @eievui5’s Sprite Object Library</a></li>
+<li><a href="#manipulate-shadow-oam-oam-sprites">Manipulate Shadow OAM OAM sprites</a></li>
+</ul>
+</li>
+<li><a href="#micelaneous">Micelaneous</a>
+<ul>
+<li><a href="#save-data">Save Data</a></li>
+<li><a href="#generate-random-numbers">Generate random numbers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="display"><a class="header" href="#display">Display</a></h2>
+<p>The <code>rLCDC</code> register controls all of the following:</p>
+<ul>
+<li>The screen</li>
+<li>The background</li>
+<li>The window</li>
+<li>Sprite objects</li>
+</ul>
+<p>For more information on LCD control, refer to the <a href="https://gbdev.io/pandocs/LCDC.html">Pan Docs</a></p>
+<h3 id="wait-for-the-vertical-blank-phase"><a class="header" href="#wait-for-the-vertical-blank-phase">Wait for the vertical blank phase</a></h3>
+<p>To check for the vertical blank phase, use the <code>rLY</code> register. Compare that register’s value against the height of the Game Boy screen in pixels: 144.</p>
+<pre><code class="language-rgbasm linenos">WaitUntilVerticalBlankStart:
+    ldh a, [rLY]
+    cp 144
+    jp c, WaitUntilVerticalBlankStart
+</code></pre>
+<h3 id="turn-onoff-the-lcd"><a class="header" href="#turn-onoff-the-lcd">Turn on/off the LCD</a></h3>
+<p>You can turn the LCD on and off by altering the most significant bit of the <code>rLCDC</code> register. hardware.inc a constant for this: <code>LCDCF_ON</code> .</p>
+<p><strong>To turn the LCD on:</strong></p>
+<pre><code class="language-rgbasm linenos">ld a, LCDCF_ON
+ldh [rLCDC], a
+</code></pre>
+<p><strong>To turn the LCD off:</strong></p>
+<p>::: warning</p>
+<p>Do not turn the LCD off outside of the Vertical Blank Phase. See “<a href="#how-to-wait-for-the-vertical-blank-phase">How to wait for vertical blank phase</a>”.</p>
+<p>:::</p>
+<pre><code class="language-rgbasm linenos">; Turn the LCD off
+ld a, LCDCF_OFF
+ldh [rLCDC], a
+</code></pre>
+<h3 id="turn-onoff-the-background"><a class="header" href="#turn-onoff-the-background">Turn on/off the background</a></h3>
+<p>To turn the background layer on and off, alter the least significant bit of the <code>rLCDC</code> register. You can use the <code>LCDCF_BGON</code> constant for this.</p>
+<p><strong>To turn the background on:</strong></p>
+<pre><code class="language-rgbasm linenos">; Turn the background on
+ldh a, [rLCDC]
+or a, LCDCF_BGON
+ldh [rLCDC], a
+</code></pre>
+<p><strong>To turn the background off:</strong></p>
+<pre><code class="language-rgbasm linenos">; Turn the background off
+ldh a, [rLCDC]
+and a, ~LCDCF_BGON
+ldh [rLCDC], a
+</code></pre>
+<h3 id="turn-onoff-the-window"><a class="header" href="#turn-onoff-the-window">Turn on/off the window</a></h3>
+<p>To turn the window layer on and off, alter the least significant bit of the <code>rLCDC</code> register. You can use the <code>LCDCF_WINON</code> and <code>LCDCF_WINOFF</code> constants for this.</p>
+<p><strong>To turn the window on:</strong></p>
+<pre><code class="language-rgbasm linenos">; Turn the window on
+ldh a, [rLCDC]
+or a, LCDCF_WINON
+ldh [rLCDC], a
+</code></pre>
+<p><strong>To turn the window off:</strong></p>
+<pre><code class="language-rgbasm linenos">; Turn the window off
+ldh a, [rLCDC]
+and a, LCDCF_WINOFF
+ldh [rLCDC], a
+</code></pre>
+<h3 id="switch-which-tilemaps-are-used-by-the-window-andor-background"><a class="header" href="#switch-which-tilemaps-are-used-by-the-window-andor-background">Switch which tilemaps are used by the window and/or background</a></h3>
+<p>By default, the window and background layer will use the same tilemap.</p>
+<p>For the window and background, there are 2 memory regions they can use: <code>$9800</code> and <code>$9C00</code>. For more information, refer to the <a href="https://gbdev.io/pandocs/Tile_Maps.html">Pan Docs</a></p>
+<p>Which region the background uses is controlled by the 4th bit of the <code>rLCDC</code> register. Which region the window uses is controlled by the 7th bit.</p>
+<p>You can use one of the 4 constants to specify which layer uses which region:</p>
+<ul>
+<li>LCDCF_WIN9800</li>
+<li>LCDCF_WIN9C00</li>
+<li>LCDCF_BG9800</li>
+<li>LCDCF_BG9C00</li>
+</ul>
+<p>::: tip Note</p>
+<p>You still need to make sure the window and background are turned on when using these constants.</p>
+<p>:::</p>
+<h3 id="turn-onoff-sprites"><a class="header" href="#turn-onoff-sprites">Turn on/off sprites</a></h3>
+<p>Sprites (or objects) can be toggled on and off using the 2nd bit of the <code>rLCDC</code> register. You can use the <code>LCDCF_OBJON</code> and <code>LCDCF_OBJOFF</code> constants for this.</p>
+<p><strong>To turn sprite objects on:</strong></p>
+<pre><code class="language-rgbasm linenos">; Turn the sprites on
+ldh a, [rLCDC]
+or a, LCDCF_OBJON
+ldh [rLCDC], a
+</code></pre>
+<p><strong>To turn sprite objects off:</strong></p>
+<pre><code class="language-rgbasm linenos">; Turn the sprites off
+ldh a, [rLCDC]
+and a, LCDCF_OBJOFF
+ldh [rLCDC], a
+</code></pre>
+<p>::: tip</p>
+<p>Sprites are in 8x8 mode by default.</p>
+<p>:::</p>
+<h3 id="turn-onoff-tall-8x16-sprites"><a class="header" href="#turn-onoff-tall-8x16-sprites">Turn on/off tall (8x16) sprites</a></h3>
+<p>Once sprites are enabled, you can enable tall sprites using the 3rd bit of the <code>rLCDC</code> register: <code>LCDCF_OBJ16</code></p>
+<p>::: tip</p>
+<p>You can not have some 8x8 sprites and some 8x16 sprites. All sprites must be of the same size.</p>
+<p>:::</p>
+<pre><code class="language-rgbasm linenos">; Turn tall sprites on
+ldh a, [rLCDC]
+or a, LCDCF_OBJ16
+ldh [rLCDC], a
+</code></pre>
+<h2 id="backgrounds"><a class="header" href="#backgrounds">Backgrounds</a></h2>
+<h3 id="put-backgroundwindow-tile-data-into-vram"><a class="header" href="#put-backgroundwindow-tile-data-into-vram">Put background/window tile data into VRAM</a></h3>
+<p>The region in VRAM dedicated for the background/window tilemaps is from $9000 to $97FF. hardware.inc defines a <code>_VRAM9000</code> constant you can use for that.</p>
+<p>MyBackground:
+INCBIN “src/path/to/my-background.2bpp”
+.end</p>
+<p>CopyBackgroundWindowTileDataIntoVram:
+; Copy the tile data
+ld de, myBackground
+ld hl, _VRAM
+ld bc, MyBackground.end - MyBackground
+.loop:
+ld a, [de]
+ld [hli], a
+inc de
+dec bc
+ld a, b
+or a, c
+jr nz, .Loop</p>
+<h3 id="draw-on-the-backgroundwindow"><a class="header" href="#draw-on-the-backgroundwindow">Draw on the Background/Window</a></h3>
+<p>The Game Boy has 2 32x32 tilemaps, one at <code>$9800</code> and another at <code>$9C00</code>. Either can be used for the background or window. By default, they both use the tilemap at <code>$9800</code>.</p>
+<p>Drawing on the background or window is as simple as copying bytes starting at one of those addresses:</p>
+<pre><code class="language-rgbasm  lineno">CopyTilemapTo
+   ; Copy the tilemap
+    ld de, Tilemap
+    ld hl, $9800
+    ld bc, TilemapEnd - Tilemap
+CopyTilemap:
+    ld a, [de]
+    ld [hli], a
+    inc de
+    dec bc
+    ld a, b
+    or a, c
+    jp nz, CopyTilemap
+</code></pre>
+<p>::: tip</p>
+<p>Make sure the layer you’re targetting has been turned on. See <a href="#turn-onoff-the-window">“Turn on/off the window”</a> and <a href="#turn-onoff-the-background">“Turn on/off the background”</a></p>
+<p>:::</p>
+<p>::: tip</p>
+<p>In terms of tiles, The background/window tilemaps are 32x32. The Game Boy’s screen is 20x18. When copying tiles, understand that RGBDS or the Game Boy won’t automatically jump to the next visible row after you’ve reached the 20th column.</p>
+<p>:::</p>
+<h3 id="move-the-background"><a class="header" href="#move-the-background">Move the background</a></h3>
+<p>You can move the background horizontally &amp; vertically using the <code>$FF43</code> and <code>$FF42</code> registers, respectively. Hardware.inc defines two constants for that: <code>rSCX</code> and <code>rSCY</code>.</p>
+<p><strong>How to change the background’s X Position:</strong></p>
+<pre><code class="language-rgbasm linenos">ld a,64
+ld [rSCX], a
+</code></pre>
+<p><strong>How to change the background’s Y Position:</strong></p>
+<pre><code class="language-rgbasm linenos">ld a,64
+ld [rSCY], a
+</code></pre>
+<p>Check out the Pan Docs for more info on the <a href="https://gbdev.io/pandocs/Scrolling.html#ff42ff43--scy-scx-background-viewport-y-position-x-position">Background viewport Y position, X position</a></p>
+<h3 id="move-the-window"><a class="header" href="#move-the-window">Move the window</a></h3>
+<p>Moving the window is the same as moving the background, except using the <code>$FF4B</code> and <code>$FF4A</code> registers. Hardware.inc defines two constants for that: <code>rWX</code> and <code>rWY</code>.</p>
+<p>::: tip</p>
+<p>The window layer has a -7 pixel horizontal offset. This means setting <code>rWX</code> to 7 places the window at the left side of the screen, and setting <code>rWX</code> to 87 places the window with its left side halfway across the screen.</p>
+<p>:::</p>
+<p><strong>How to change the window’s X Position:</strong></p>
+<pre><code class="language-rgbasm linenos">ld a,64
+ld [rWX], a
+</code></pre>
+<p><strong>How to change the window’s Y Position:</strong></p>
+<pre><code class="language-rgbasm linenos">ld a,64
+ld [rWY], a
+</code></pre>
+<p>Check out the Pan Docs for more info on the <a href="https://gbdev.io/pandocs/Scrolling.html#ff4aff4b--wy-wx-window-y-position-x-position-plus-7">WY, WX: Window Y position, X position plus 7</a></p>
+<h2 id="joypad-input"><a class="header" href="#joypad-input">Joypad Input</a></h2>
+<p>Reading joypad input is not a trivial task. For more info see <a href="https://gbdev.io/gb-asm-tutorial/part2/input.html">Tutorial #2</a>, or the <a href="https://gbdev.io/pandocs/Joypad_Input.html">Joypad Input Page</a> in the Pan Docs. Paste this code somewhere in your project:</p>
+<pre><code class="language-rgbasm linenos start=113">UpdateKeys:
+  ; Poll half the controller
+  ld a, P1F_GET_BTN
+  call .onenibble
+  ld b, a ; B7-4 = 1; B3-0 = unpressed buttons
+
+  ; Poll the other half
+  ld a, P1F_GET_DPAD
+  call .onenibble
+  swap a ; A3-0 = unpressed directions; A7-4 = 1
+  xor a, b ; A = pressed buttons + directions
+  ld b, a ; B = pressed buttons + directions
+
+  ; And release the controller
+  ld a, P1F_GET_NONE
+  ldh [rP1], a
+
+  ; Combine with previous wCurKeys to make wNewKeys
+  ld a, [wCurKeys]
+  xor a, b ; A = keys that changed state
+  and a, b ; A = keys that changed to pressed
+  ld [wNewKeys], a
+  ld a, b
+  ld [wCurKeys], a
+  ret
+
+.onenibble
+  ldh [rP1], a ; switch the key matrix
+  call .knownret ; burn 10 cycles calling a known ret
+  ldh a, [rP1] ; ignore value while waiting for the key matrix to settle
+  ldh a, [rP1]
+  ldh a, [rP1] ; this read counts
+  or a, $F0 ; A7-4 = 1; A3-0 = unpressed keys
+.knownret
+  ret
+</code></pre>
+<p>Next setup 2 variables in working ram:</p>
+<pre><code class="language-rgbasm linenos start=410">SECTION &quot;Input Variables&quot;, WRAM0
+wCurKeys: db
+wNewKeys: db
+</code></pre>
+<p>Finally, during your game loop, be sure to call the <code>UpdateKeys</code> function during the Vertical Blank phase.</p>
+<pre><code class="language-rgbasm linenos">; Check the current keys every frame and move left or right.
+call UpdateKeys
+</code></pre>
+<h3 id="check-if-a-button-is-down"><a class="header" href="#check-if-a-button-is-down">Check if a button is down</a></h3>
+<p>You can check if a button is down using any of the following constants from hardware.inc:</p>
+<ul>
+<li>PADF_DOWN</li>
+<li>PADF_UP</li>
+<li>PADF_LEFT</li>
+<li>PADF_RIGHT</li>
+<li>PADF_START</li>
+<li>PADF_SELECT</li>
+<li>PADF_B</li>
+<li>PADF_A</li>
+</ul>
+<p>You can check if the associataed button is down using the <code>wCurKeys</code> variable:</p>
+<pre><code class="language-rgbasm linenos">ld a, [wCurKeys]
+and a, PADF_LEFT
+jp nz, LeftIsPressedDown
+</code></pre>
+<h3 id="check-if-a-button-was-just-pressed"><a class="header" href="#check-if-a-button-was-just-pressed">Check if a button was JUST pressed</a></h3>
+<p>You can tell if a button was JUST pressed using the <code>wNewKeys</code> variable</p>
+<pre><code class="language-rgbasm linenos">ld a, [wNewKeys]
+and a, PADF_A
+jp nz, AWasJustPressed
+</code></pre>
+<h3 id="wait-for-a-button-press"><a class="header" href="#wait-for-a-button-press">Wait for a button press</a></h3>
+<p>To wait <strong>indefinitely</strong> for a button press, create a loop where you:</p>
+<ul>
+<li>check if the button has JUST been pressed</li>
+<li>If not:
+<ul>
+<li>Wait until the next vertical blank phase completes</li>
+<li>call the <code>UpdateKeys</code> function again</li>
+<li>Loop background to the beginning</li>
+</ul>
+</li>
+</ul>
+<p>::: tip</p>
+<p>This will halt all other logic (outside of interrupts), be careful if you need any logic running simultaneously.</p>
+<p>:::</p>
+<pre><code class="language-rgbasm  linenos">WaitForAButtonToBePressed:
+    ld a, [wNewKeys]
+    and a, PADF_A
+    ret nz
+WaitUntilVerticalBlankStart:
+    ld a, [rLY]
+    cp 144
+    jp nc, WaitUntilVerticalBlankStart
+WaitUntilVerticalBlankEnd:
+    ld a, [rLY]
+    cp 144
+    jp c, WaitUntilVerticalBlankEnd
+    call UpdateKeys
+    jp WaitForAButtonToBePressed
+</code></pre>
+<h2 id="hud"><a class="header" href="#hud">HUD</a></h2>
+<p>Heads Up Displays, or HUDs; are commonly used to prevent extra information to the player. Good examples are: Score, Health, and the current level. The window layer is drawn on top of the background, and cannot move like the background. For this reason, commonly the window layer is used for HUDs. See <a href="#how-to-draw-on-the-backgroundwindow">“How to Draw on the Background/Window”</a>.</p>
+<h3 id="draw-text"><a class="header" href="#draw-text">Draw text</a></h3>
+<p>Drawing text on the window is essentially drawing tiles (with letters/numbers/punctuation on them) on the window and/or background layer.</p>
+<p>To simplify the process you can define constant strings.</p>
+<p>::: tip</p>
+<p>These constants end with a literal 255, which our code will read as the end of the string.</p>
+<p>:::</p>
+<pre><code class="language-rgbasm  lineno">
+SECTION &quot;Text ASM&quot;, ROM0
+
+wScoreText::  db &quot;score&quot;, 255
+
+</code></pre>
+<p>RGBDS has a character map functionality. You can read more in the <a href="https://rgbds.gbdev.io/docs/rgbasm.5#DEFINING_DATA">RGBDS Assembly Syntax Documentation</a>. This functionality, tells the compiler how to map each letter:</p>
+<p>::: tip</p>
+<p>You need to have your text font tiles in VRAM at the locations specified in the map. See <a href="#how-to-put-backgroundwindow-tile-data-into-vram">How to put background/window tile data in VRAM</a></p>
+<p>:::</p>
+<pre><code class="language-rgbasm  lineno">
+CHARMAP &quot; &quot;, 0
+CHARMAP &quot;.&quot;, 24
+CHARMAP &quot;-&quot;, 25
+CHARMAP &quot;a&quot;, 26
+CHARMAP &quot;b&quot;, 27
+CHARMAP &quot;c&quot;, 28
+CHARMAP &quot;d&quot;, 29
+CHARMAP &quot;e&quot;, 30
+CHARMAP &quot;f&quot;, 31
+CHARMAP &quot;g&quot;, 32
+CHARMAP &quot;h&quot;, 33
+CHARMAP &quot;i&quot;, 34
+CHARMAP &quot;j&quot;, 35
+CHARMAP &quot;k&quot;, 36
+CHARMAP &quot;l&quot;, 37
+CHARMAP &quot;m&quot;, 38
+CHARMAP &quot;n&quot;, 39
+CHARMAP &quot;o&quot;, 40
+CHARMAP &quot;p&quot;, 41
+CHARMAP &quot;q&quot;, 42
+CHARMAP &quot;r&quot;, 43
+CHARMAP &quot;s&quot;, 44
+CHARMAP &quot;t&quot;, 45
+CHARMAP &quot;u&quot;, 46
+CHARMAP &quot;v&quot;, 47
+CHARMAP &quot;w&quot;, 48
+CHARMAP &quot;x&quot;, 49
+CHARMAP &quot;y&quot;, 50
+CHARMAP &quot;z&quot;, 51
+
+</code></pre>
+<p>The above character mapping would convert (by the compiler) our <code>wScoreText</code> text to:</p>
+<ul>
+<li>s =&gt; 44</li>
+<li>c =&gt; 28</li>
+<li>o =&gt; 40</li>
+<li>r =&gt; 43</li>
+<li>e =&gt; 30</li>
+<li>255</li>
+</ul>
+<p>With that setup, we would loop though the bytes of <code>wScoreText</code> and copy each byte to the background/window layer. After we copy each byte, we’ll increment where we will copy to, and which byte in <code>wScoreText</code> we are reading. When we read 255, our code will end.</p>
+<p>::: tip</p>
+<p>This example implies that your font tiles are located in VRAM at the locations specified in the character mapping.</p>
+<p>:::</p>
+<p>** Drawing ‘score’ on the window **</p>
+<pre><code class="language-rgbasm  lineno">
+DrawTextTiles::
+
+    ld hl, wScoreText
+    ld de, $9C00 ; The window tilemap starts at $9C00
+
+DrawTextTilesLoop::
+
+    ; Check for the end of string character 255
+    ld a, [hl]
+    cp 255
+    ret z
+
+    ; Write the current character (in hl) to the address
+    ; on the tilemap (in de)
+    ld a, [hl]
+    ld [de], a
+
+    inc hl
+    inc de
+
+    ; move to the next character and next background tile
+    jp DrawTextTilesLoop
+</code></pre>
+<h3 id="draw-a-bottom-hud"><a class="header" href="#draw-a-bottom-hud">Draw a bottom HUD</a></h3>
+<ul>
+<li>Enable the window (with a different tilemap than the background)</li>
+<li>Move the window downwards, so only 1 or 2 rows show at the bottom of the screen</li>
+<li>Draw your text, score, and icons on the top of the window layer.</li>
+</ul>
+<p>::: tip</p>
+<p>Sprites will still show over the window. To fully prevent that, you can use STAT interrupts to hide sprites where the bottom HUD will be shown.</p>
+<p>:::</p>
+<h2 id="sprites"><a class="header" href="#sprites">Sprites</a></h2>
+<h3 id="put-sprite-tile-data-in-vram"><a class="header" href="#put-sprite-tile-data-in-vram">Put sprite tile data in VRAM</a></h3>
+<p>The region in VRAM dedicated for sprites is from <code>$8000</code> to <code>$87F0</code>. Hardware.inc defines a <code>_VRAM</code> constant you can use for that. To copy sprite tile data into VRAM, you can use a loop to copy the bytes.</p>
+<pre><code class="language-rgbasm linenos">mySprite: INCBIN &quot;src/path/to/my/sprite.2bpp&quot;
+mySpriteEnd:
+
+CopySpriteTileDataIntoVram:
+    ; Copy the tile data
+    ld de, Paddle
+    ld hl, _VRAM
+    ld bc, mySpriteEnd - mySprite
+CopySpriteTileDataIntoVram_Loop:
+    ld a, [de]
+    ld [hli], a
+    inc de
+    dec bc
+    ld a, b
+    or a, c
+    jp nz, CopySpriteTileDataIntoVram_Loop
+</code></pre>
+<h3 id="manipulate-hardware-oam-sprites"><a class="header" href="#manipulate-hardware-oam-sprites">Manipulate hardware OAM sprites</a></h3>
+<p>Each hardware sprite has 4 bytes: (in this order)</p>
+<ul>
+<li>Y position</li>
+<li>X Position</li>
+<li>Tile ID</li>
+<li>Flags/Props (priority, y flip, x flip, palette 0 [DMG], palette 1 [DMG], bank 0 [GBC], bank 1 [GBC])</li>
+</ul>
+<p>Check out the Pan Docs page on <a href="https://gbdev.io/pandocs/OAM.html">Object Attribute Memory (OAM)</a> for more info.</p>
+<p>The bytes controlling hardware OAM sprites start at <code>$FE00</code>, for which hardware.inc has defined a constant as <code>_OAMRAM</code>.</p>
+<p><strong>Moving (the first) OAM sprite, one pixel downwards:</strong></p>
+<pre><code class="language-rgbasm  linenos">ld a, [_OAMRAM]
+inc a
+ld [_OAMRAM], a
+</code></pre>
+<p><strong>Moving (the first) OAM sprite, one pixel to the right:</strong></p>
+<pre><code class="language-rgbasm  linenos">ld a, [_OAMRAM + 1]
+inc a
+ld [_OAMRAM + 1], a
+</code></pre>
+<p><strong>Setting the tile for the first OAM sprite:</strong></p>
+<pre><code class="language-rgbasm  linenos">ld a, 3
+ld [_OAMRAM+2], a
+</code></pre>
+<p><strong>Moving (the fifth) OAM sprite, one pixel downwards:</strong></p>
+<pre><code class="language-rgbasm  linenos">ld a, [_OAMRAM + 20]
+inc a
+ld [_OAMRAM + 20], a
+</code></pre>
+<p>TODO - Explanation on limitations of direct OAM manipulation.</p>
+<p>::: tip</p>
+<p>It’s recommended that developers implement a shadow OAM, like @eievui5’s <a href="https://github.com/eievui5/gb-sprobj-lib">Sprite Object Library</a></p>
+<p>:::</p>
+<h3 id="implement-a-shadow-oam-using-eievui5s-sprite-object-library"><a class="header" href="#implement-a-shadow-oam-using-eievui5s-sprite-object-library">Implement a Shadow OAM using @eievui5’s Sprite Object Library</a></h3>
+<p>GitHub URL: <a href="https://github.com/eievui5/gb-sprobj-lib">https://github.com/eievui5/gb-sprobj-lib</a></p>
+<blockquote>
+<p>This is a small, lightweight library meant to facilitate the rendering of sprite objects, including Shadow OAM and OAM DMA, single-entry “simple” sprite objects, and Q12.4 fixed-point position metasprite rendering.</p>
+</blockquote>
+<p><strong>Usage</strong></p>
+<p>The library is relatively simple to get set up. First, put the following in your initialization code:</p>
+<pre><code class="language-rgbasm  linenos">    ; Initilize Sprite Object Library.
+    call InitSprObjLib
+
+    ; Reset hardware OAM
+    xor a, a
+    ld b, 160
+    ld hl, _OAMRAM
+.resetOAM
+    ld [hli], a
+    dec b
+    jr nz, .resetOAM
+</code></pre>
+<p>Then put a call to <code>ResetShadowOAM</code> at the beginning of your main loop.</p>
+<p>Finally, run the following code during VBlank:</p>
+<pre><code class="language-rgbasm  linenos">ld a, HIGH(wShadowOAM)
+call hOAMDMA
+</code></pre>
+<h3 id="manipulate-shadow-oam-oam-sprites"><a class="header" href="#manipulate-shadow-oam-oam-sprites">Manipulate Shadow OAM OAM sprites</a></h3>
+<p>Once you’ve set up @eievui5’s Sprite Object Library, you can manipulate shadow OAM sprites the exact same way you would manipulate normal hardware OAM sprites. Except, this time you would use the library’s <code>wShadowOAM</code> constant instead of the <code>_OAMRAM</code> register.</p>
+<p><strong>Moving (the first) OAM sprite, one pixel downwards:</strong></p>
+<pre><code class="language-rgbasm  linenos">ld a,LOW(wShadowOAM)
+ld l, a
+ld a, HIGH(wShadowOAM)
+ld h, a
+
+ld a, [hl]
+inc a
+ld [wShadowOAM], a
+</code></pre>
+<h2 id="micelaneous"><a class="header" href="#micelaneous">Micelaneous</a></h2>
+<h3 id="save-data"><a class="header" href="#save-data">Save Data</a></h3>
+<p>If you want to save data in your game, your game’s header needs to specify the correct MBC/cartridge type, and it needs to have a non-zero SRAM size. This should be done in your makefile by passing special parameters to <a href="https://rgbds.gbdev.io/docs/rgbfix.1">rgbfix</a>.</p>
+<ul>
+<li>Use the <code>-m</code> or <code>--mbc-type</code> parameters to set the mbc/cartidge type, 0x147, to a given value from 0 to 0xFF. <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0147--cartridge-type">More Info</a></li>
+<li>Use the <code>-r</code> or <code>--ram-size</code> parameters to set the RAM size, 0x149, to a given value from 0 to 0xFF. <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0149--ram-size">More Info</a>.</li>
+</ul>
+<p>To save data you need to store variables in Static RAM. This is done by creating a new SRAM “SECTION”. <a href="https://rgbds.gbdev.io/docs/rgbasm.5#SECTIONS">More Info</a></p>
+<pre><code class="language-rgbasm  linenos">SECTION &quot;SaveVariables&quot;, SRAM
+
+wCurrentLevel:: db
+
+</code></pre>
+<p>To access SRAM, you need to write <code>CART_SRAM_ENABLE</code> to the <code>rRAMG</code> register. When done, you can disable SRAM using the <code>CART_SRAM_DISABLE</code> constant.</p>
+<p><strong>To enable read/write access to SRAM:</strong></p>
+<pre><code class="language-rgbasm  linenos">
+ld a, CART_SRAM_ENABLE
+ld [rRAMG], a
+
+</code></pre>
+<p><strong>To disable read/write access to SRAM:</strong></p>
+<pre><code class="language-rgbasm  linenos">
+ld a, CART_SRAM_DISABLE
+ld [rRAMG], a
+
+</code></pre>
+<p><strong>Initiating Save Data</strong></p>
+<p>By default, save data for your game may or may not exist. When the save data does not exist, the value of the bytes dedicated for saving will be random.</p>
+<p>You can dedicate a couple bytes towards creating a pseudo-checksum. When these bytes have a <strong>very specific</strong> value, you can be somewhat sure the save data has been initialized.</p>
+<pre><code class="language-rgbasm  linenos">SECTION &quot;SaveVariables&quot;, SRAM
+
+wCurrentLevel:: db
+wCheckSum1:: db
+wCheckSum2:: db
+wCheckSum3:: db
+</code></pre>
+<p>When initializing your save data, you’ll need to</p>
+<ul>
+<li>enable SRAM access</li>
+<li>set your checksum bytes</li>
+<li>give your other variables default values</li>
+<li>disable SRAM access</li>
+</ul>
+<pre><code class="language-rgbasm  linenos">
+;; Setup our save data
+InitSaveData::
+
+    ld a, CART_SRAM_ENABLE
+    ld [rRAMG], a
+
+    ld a, 123
+    ld [wCheckSum1], a
+
+    ld a, 111
+    ld [wCheckSum2], a
+
+    ld a, 222
+    ld [wCheckSum3], a
+
+    ld a, 0
+    ld [wCurrentLevel], a
+
+    ld a, CART_SRAM_DISABLE
+    ld [rRAMG], a
+
+    ret
+</code></pre>
+<p>Once your save file has been initialized, you can access any variable normally once SRAM is enabled.</p>
+<pre><code class="language-rgbasm  linenos">
+;; Setup our save data
+StartNextLevel::
+
+    ld a, CART_SRAM_ENABLE
+    ld [rRAMG], a
+
+    ld a, [wCurrentLevel]
+    cp a, 3
+    call z, StartLevel3
+
+    ld a, CART_SRAM_DISABLE
+    ld [rRAMG], a
+
+    ret
+</code></pre>
+<h3 id="generate-random-numbers"><a class="header" href="#generate-random-numbers">Generate random numbers</a></h3>
+<p>Random number generation is a <a href="https://en.wikipedia.org/wiki/Random_number_generation">complex task in software</a>. What you can implement is a “pseudorandom” generator, giving you a very unpredictable sequence of values. Here’s a <code>rand</code> function (from <a href="https://github.com/pinobatch">Damian Yerrick</a>) you can use.</p>
+<pre><code class="language-rgbasm  lineno">
+SECTION &quot;MathVariables&quot;, WRAM0
+randstate:: ds 4
+
+SECTION &quot;Math&quot;, ROM0
+
+;; From: https://github.com/pinobatch/libbet/blob/master/src/rand.z80#L34-L54
+; Generates a pseudorandom 16-bit integer in BC
+; using the LCG formula from cc65 rand():
+; x[i + 1] = x[i] * 0x01010101 + 0xB3B3B3B3
+; @return A=B=state bits 31-24 (which have the best entropy),
+; C=state bits 23-16, HL trashed
+rand::
+  ; Add 0xB3 then multiply by 0x01010101
+  ld hl, randstate+0
+  ld a, [hl]
+  add a, $B3
+  ld [hl+], a
+  adc a, [hl]
+  ld [hl+], a
+  adc a, [hl]
+  ld [hl+], a
+  ld c, a
+  adc a, [hl]
+  ld [hl], a
+  ld b, a
+  ret
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="next.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next" href="resources.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="next.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="resources.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="js/linenos.js"></script>
+
+
+    </body>
+</html>
