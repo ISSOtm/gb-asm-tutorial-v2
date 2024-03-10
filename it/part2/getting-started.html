@@ -288,10 +288,10 @@ CopyTilemap:
 </code></pre>
 <p>Si noti che, mentre il corpo di questo ciclo è esattamente lo stesso di <code>CopyTiles</code>, i 3 valori caricati in <code>de</code>, <code>hl</code> e <code>bc</code> sono diversi.
 Questi determinano rispettivamente l’origine, la destinazione e la dimensione della copia.</p>
-<p>:::tip “<a href="https://en.wikipedia.org/wiki/Don&#x27;t_Repeat_Yourself"><abbr title="Don't Repeat Yourself">DRY</abbr></a>”</p>
+<div class="box tip"><p class="box-title">"Don't Repeat Yourself"</p>
 <p>Se pensate che tutto ciò sia superfluo, non avete torto: vedremo più avanti come scrivere delle vere e proprie <em>funzioni</em> riutilizzabili.
 Ma c’è molto di più di quello che sembra, quindi inizieremo ad affrontarle molto più avanti.</p>
-<p>:::</p>
+</div>
 <p>Infine, riaccendiamo lo schermo e impostiamo una <a href="../part1/palettes.html">palette di sfondo</a>.
 Invece di scrivere il numero non descritto <code>%10000001</code> (o $81 o 129, a seconda dei gusti), usiamo due costanti gentilmente fornite da <code>hardware.inc</code>: <code>LCDCF_ON</code> e <code>LCDCF_BGON</code>.
 Quando vengono scritte su <a href="https://gbdev.io/pandocs/LCDC"><code>rLCDC</code></a>, la prima fa sì che la PPU e lo schermo si riaccendano, mentre la seconda permette di disegnare lo sfondo.

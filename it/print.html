@@ -1452,10 +1452,10 @@ CopyTilemap:
 </code></pre>
 <p>Si noti che, mentre il corpo di questo ciclo è esattamente lo stesso di <code>CopyTiles</code>, i 3 valori caricati in <code>de</code>, <code>hl</code> e <code>bc</code> sono diversi.
 Questi determinano rispettivamente l’origine, la destinazione e la dimensione della copia.</p>
-<p>:::tip “<a href="https://en.wikipedia.org/wiki/Don&#x27;t_Repeat_Yourself"><abbr title="Don't Repeat Yourself">DRY</abbr></a>”</p>
+<div class="box tip"><p class="box-title">"Don't Repeat Yourself"</p>
 <p>Se pensate che tutto ciò sia superfluo, non avete torto: vedremo più avanti come scrivere delle vere e proprie <em>funzioni</em> riutilizzabili.
 Ma c’è molto di più di quello che sembra, quindi inizieremo ad affrontarle molto più avanti.</p>
-<p>:::</p>
+</div>
 <p>Infine, riaccendiamo lo schermo e impostiamo una <a href="part2/../part1/palettes.html">palette di sfondo</a>.
 Invece di scrivere il numero non descritto <code>%10000001</code> (o $81 o 129, a seconda dei gusti), usiamo due costanti gentilmente fornite da <code>hardware.inc</code>: <code>LCDCF_ON</code> e <code>LCDCF_BGON</code>.
 Quando vengono scritte su <a href="https://gbdev.io/pandocs/LCDC"><code>rLCDC</code></a>, la prima fa sì che la PPU e lo schermo si riaccendano, mentre la seconda permette di disegnare lo sfondo.
@@ -5296,9 +5296,9 @@ For extra depth, clarity, and understanding, it’s recommended you read through
 ldh [rLCDC], a
 </code></pre>
 <p><strong>To turn the LCD off:</strong></p>
-<p>::: warning</p>
+<div class="box warning decorated"><p></p><p class="box-title">⚠️</p>
 <p>Do not turn the LCD off outside of the Vertical Blank Phase. See “<a href="cheatsheet.html#how-to-wait-for-the-vertical-blank-phase">How to wait for vertical blank phase</a>”.</p>
-<p>:::</p>
+</div>
 <pre><code class="language-rgbasm linenos">; Turn the LCD off
 ld a, LCDCF_OFF
 ldh [rLCDC], a
@@ -5342,9 +5342,9 @@ ldh [rLCDC], a
 <li>LCDCF_BG9800</li>
 <li>LCDCF_BG9C00</li>
 </ul>
-<p>::: tip Note</p>
+<div class="box tip"><p class="box-title">Note</p>
 <p>You still need to make sure the window and background are turned on when using these constants.</p>
-<p>:::</p>
+</div>
 <h3 id="turn-onoff-sprites"><a class="header" href="#turn-onoff-sprites">Turn on/off sprites</a></h3>
 <p>Sprites (or objects) can be toggled on and off using the 2nd bit of the <code>rLCDC</code> register. You can use the <code>LCDCF_OBJON</code> and <code>LCDCF_OBJOFF</code> constants for this.</p>
 <p><strong>To turn sprite objects on:</strong></p>
@@ -5359,14 +5359,14 @@ ldh a, [rLCDC]
 and a, LCDCF_OBJOFF
 ldh [rLCDC], a
 </code></pre>
-<p>::: tip</p>
+<div class="box tip">
 <p>Sprites are in 8x8 mode by default.</p>
-<p>:::</p>
+</div>
 <h3 id="turn-onoff-tall-8x16-sprites"><a class="header" href="#turn-onoff-tall-8x16-sprites">Turn on/off tall (8x16) sprites</a></h3>
 <p>Once sprites are enabled, you can enable tall sprites using the 3rd bit of the <code>rLCDC</code> register: <code>LCDCF_OBJ16</code></p>
-<p>::: tip</p>
+<div class="box tip">
 <p>You can not have some 8x8 sprites and some 8x16 sprites. All sprites must be of the same size.</p>
-<p>:::</p>
+</div>
 <pre><code class="language-rgbasm linenos">; Turn tall sprites on
 ldh a, [rLCDC]
 or a, LCDCF_OBJ16
@@ -5408,12 +5408,12 @@ CopyTilemap:
     or a, c
     jp nz, CopyTilemap
 </code></pre>
-<p>::: tip</p>
+<div class="box tip">
 <p>Make sure the layer you’re targetting has been turned on. See <a href="cheatsheet.html#turn-onoff-the-window">“Turn on/off the window”</a> and <a href="cheatsheet.html#turn-onoff-the-background">“Turn on/off the background”</a></p>
-<p>:::</p>
-<p>::: tip</p>
+</div>
+<div class="box tip">
 <p>In terms of tiles, The background/window tilemaps are 32x32. The Game Boy’s screen is 20x18. When copying tiles, understand that RGBDS or the Game Boy won’t automatically jump to the next visible row after you’ve reached the 20th column.</p>
-<p>:::</p>
+</div>
 <h3 id="move-the-background"><a class="header" href="#move-the-background">Move the background</a></h3>
 <p>You can move the background horizontally &amp; vertically using the <code>$FF43</code> and <code>$FF42</code> registers, respectively. Hardware.inc defines two constants for that: <code>rSCX</code> and <code>rSCY</code>.</p>
 <p><strong>How to change the background’s X Position:</strong></p>
@@ -5427,9 +5427,9 @@ ld [rSCY], a
 <p>Check out the Pan Docs for more info on the <a href="https://gbdev.io/pandocs/Scrolling.html#ff42ff43--scy-scx-background-viewport-y-position-x-position">Background viewport Y position, X position</a></p>
 <h3 id="move-the-window"><a class="header" href="#move-the-window">Move the window</a></h3>
 <p>Moving the window is the same as moving the background, except using the <code>$FF4B</code> and <code>$FF4A</code> registers. Hardware.inc defines two constants for that: <code>rWX</code> and <code>rWY</code>.</p>
-<p>::: tip</p>
+<div class="box tip">
 <p>The window layer has a -7 pixel horizontal offset. This means setting <code>rWX</code> to 7 places the window at the left side of the screen, and setting <code>rWX</code> to 87 places the window with its left side halfway across the screen.</p>
-<p>:::</p>
+</div>
 <p><strong>How to change the window’s X Position:</strong></p>
 <pre><code class="language-rgbasm linenos">ld a,64
 ld [rWX], a
@@ -5521,9 +5521,9 @@ jp nz, AWasJustPressed
 </ul>
 </li>
 </ul>
-<p>::: tip</p>
+<div class="box tip">
 <p>This will halt all other logic (outside of interrupts), be careful if you need any logic running simultaneously.</p>
-<p>:::</p>
+</div>
 <pre><code class="language-rgbasm  linenos">WaitForAButtonToBePressed:
     ld a, [wNewKeys]
     and a, PADF_A
@@ -5544,9 +5544,9 @@ WaitUntilVerticalBlankEnd:
 <h3 id="draw-text"><a class="header" href="#draw-text">Draw text</a></h3>
 <p>Drawing text on the window is essentially drawing tiles (with letters/numbers/punctuation on them) on the window and/or background layer.</p>
 <p>To simplify the process you can define constant strings.</p>
-<p>::: tip</p>
+<div class="box tip">
 <p>These constants end with a literal 255, which our code will read as the end of the string.</p>
-<p>:::</p>
+</div>
 <pre><code class="language-rgbasm  lineno">
 SECTION &quot;Text ASM&quot;, ROM0
 
@@ -5554,9 +5554,9 @@ wScoreText::  db &quot;score&quot;, 255
 
 </code></pre>
 <p>RGBDS has a character map functionality. You can read more in the <a href="https://rgbds.gbdev.io/docs/rgbasm.5#DEFINING_DATA">RGBDS Assembly Syntax Documentation</a>. This functionality, tells the compiler how to map each letter:</p>
-<p>::: tip</p>
+<div class="box tip">
 <p>You need to have your text font tiles in VRAM at the locations specified in the map. See <a href="cheatsheet.html#how-to-put-backgroundwindow-tile-data-into-vram">How to put background/window tile data in VRAM</a></p>
-<p>:::</p>
+</div>
 <pre><code class="language-rgbasm  lineno">
 CHARMAP &quot; &quot;, 0
 CHARMAP &quot;.&quot;, 24
@@ -5599,10 +5599,10 @@ CHARMAP &quot;z&quot;, 51
 <li>255</li>
 </ul>
 <p>With that setup, we would loop though the bytes of <code>wScoreText</code> and copy each byte to the background/window layer. After we copy each byte, we’ll increment where we will copy to, and which byte in <code>wScoreText</code> we are reading. When we read 255, our code will end.</p>
-<p>::: tip</p>
+<div class="box tip">
 <p>This example implies that your font tiles are located in VRAM at the locations specified in the character mapping.</p>
-<p>:::</p>
-<p>** Drawing ‘score’ on the window **</p>
+</div>
+<p><strong>Drawing ‘score’ on the window</strong></p>
 <pre><code class="language-rgbasm  lineno">
 DrawTextTiles::
 
@@ -5633,9 +5633,9 @@ DrawTextTilesLoop::
 <li>Move the window downwards, so only 1 or 2 rows show at the bottom of the screen</li>
 <li>Draw your text, score, and icons on the top of the window layer.</li>
 </ul>
-<p>::: tip</p>
+<div class="box tip">
 <p>Sprites will still show over the window. To fully prevent that, you can use STAT interrupts to hide sprites where the bottom HUD will be shown.</p>
-<p>:::</p>
+</div>
 <h2 id="sprites"><a class="header" href="#sprites">Sprites</a></h2>
 <h3 id="put-sprite-tile-data-in-vram"><a class="header" href="#put-sprite-tile-data-in-vram">Put sprite tile data in VRAM</a></h3>
 <p>The region in VRAM dedicated for sprites is from <code>$8000</code> to <code>$87F0</code>. Hardware.inc defines a <code>_VRAM</code> constant you can use for that. To copy sprite tile data into VRAM, you can use a loop to copy the bytes.</p>
@@ -5686,9 +5686,9 @@ inc a
 ld [_OAMRAM + 20], a
 </code></pre>
 <p>TODO - Explanation on limitations of direct OAM manipulation.</p>
-<p>::: tip</p>
+<div class="box tip">
 <p>It’s recommended that developers implement a shadow OAM, like @eievui5’s <a href="https://github.com/eievui5/gb-sprobj-lib">Sprite Object Library</a></p>
-<p>:::</p>
+</div>
 <h3 id="implement-a-shadow-oam-using-eievui5s-sprite-object-library"><a class="header" href="#implement-a-shadow-oam-using-eievui5s-sprite-object-library">Implement a Shadow OAM using @eievui5’s Sprite Object Library</a></h3>
 <p>GitHub URL: <a href="https://github.com/eievui5/gb-sprobj-lib">https://github.com/eievui5/gb-sprobj-lib</a></p>
 <blockquote>

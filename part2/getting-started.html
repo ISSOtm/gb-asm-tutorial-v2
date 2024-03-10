@@ -287,10 +287,10 @@ CopyTilemap:
 </code></pre>
 <p>Note that while this loop’s body is exactly the same as <code>CopyTiles</code>’s, the 3 values loaded into <code>de</code>, <code>hl</code>, and <code>bc</code> are different.
 These determine the source, destination, and size of the copy, respectively.</p>
-<p>:::tip “<a href="https://en.wikipedia.org/wiki/Don&#x27;t_Repeat_Yourself"><abbr title="Don't Repeat Yourself">DRY</abbr></a>”</p>
+<div class="box tip"><p class="box-title">"Don't Repeat Yourself"</p>
 <p>If you think that this is super redundant, you are not wrong, and we will see later how to write actual, reusable <em>functions</em>.
 But there is more to them than meets the eye, so we will start tackling them much later.</p>
-<p>:::</p>
+</div>
 <p>Finally, let’s turn the screen back on, and set a <a href="../part1/palettes.html">background palette</a>.
 Rather than writing the non-descript number <code>%10000001</code> (or $81 or 129, to taste), we make use of two constants graciously provided by <code>hardware.inc</code>: <code>LCDCF_ON</code> and <code>LCDCF_BGON</code>.
 When written to <a href="https://gbdev.io/pandocs/LCDC"><code>rLCDC</code></a>, the former causes the PPU and screen to turn back on, and the latter enables the background to be drawn.
