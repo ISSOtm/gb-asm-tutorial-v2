@@ -231,24 +231,23 @@
 <blockquote>
 <p>It will be the responsibility of the “init” function for each game state to turn the LCD back on.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=50">
+<pre><code class="language-rgbasm linenos start=48">
 NextGameState::
 
 	; Do not turn the LCD off outside of VBlank
     call WaitForOneVBlank
 
-	call ClearBackground;
+	call ClearBackground
 
 
 	; Turn the LCD off
-	ld a, 0
+	xor a
 	ld [rLCDC], a
 
-	ld a, 0
-	ld [rSCX],a
-	ld [rSCY],a
-	ld [rWX],a
-	ld [rWY],a
+	ld [rSCX], a
+	ld [rSCY], a
+	ld [rWX], a
+	ld [rWY], a
 	; disable interrupts
 	call DisableInterrupts
 	
@@ -257,20 +256,20 @@ NextGameState::
 
 	; Initiate the next state
 	ld a, [wGameState]
-	cp a, 2 ; 2 = Gameplay
+	cp 2 ; 2 = Gameplay
 	call z, InitGameplayState
 	ld a, [wGameState]
-	cp a, 1 ; 1 = Story
+	cp 1 ; 1 = Story
 	call z, InitStoryState
 	ld a, [wGameState]
-	cp a, 0 ; 0 = Menu
+	and a ; 0 = Menu
 	call z, InitTitleScreenState
 
 	; Update the next state
 	ld a, [wGameState]
-	cp a, 2 ; 2 = Gameplay
+	cp 2 ; 2 = Gameplay
 	jp z, UpdateGameplayState
-	cp a, 1 ; 1 = Story
+	cp 1 ; 1 = Story
 	jp z, UpdateStoryState
 	jp UpdateTitleScreenState
 

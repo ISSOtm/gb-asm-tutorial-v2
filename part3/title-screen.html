@@ -259,10 +259,10 @@ titleScreenTileMapEnd:
 	ld a, LCDCF_ON  | LCDCF_BGON|LCDCF_OBJON | LCDCF_OBJ16
 	ld [rLCDC], a
 
-    ret;
+    ret
 </code></pre>
 <p>In order to draw text in our game, we’ve created a function called “DrawTextTilesLoop”. We’ll pass this function which tile to start on in <code>de</code>, and the address of our text in <code>hl</code>.</p>
-<pre><code class="language-rgbasm linenos start=15">DrawTextTilesLoop::
+<pre><code class="language-rgbasm linenos start=14">DrawTextTilesLoop::
 
     ; Check for the end of string character 255
     ld a, [hl]
@@ -290,15 +290,14 @@ titleScreenTileMapEnd:
 	ld de, titleScreenTileData ; de contains the address where data will be copied from;
 	ld hl, $9340 ; hl contains the address where data will be copied to;
 	ld bc, titleScreenTileDataEnd - titleScreenTileData ; bc contains how many bytes we have to copy.
-	call CopyDEintoMemoryAtHL;
+	call CopyDEintoMemoryAtHL
 	
 	; Copy the tilemap
 	ld de, titleScreenTileMap
 	ld hl, $9800
 	ld bc, titleScreenTileMapEnd - titleScreenTileMap
-	call CopyDEintoMemoryAtHL_With52Offset
+	jp CopyDEintoMemoryAtHL_With52Offset
 
-	ret
 </code></pre>
 <p>The “CopyDEintoMemoryAtHL” and “CopyDEintoMemoryAtHL_With52Offset” functions are defined in “src/main/utils/memory-utils.asm”:</p>
 <pre><code class="language-rgbasm linenos start=1">SECTION &quot;MemoryUtilsSection&quot;, ROM0
@@ -309,9 +308,9 @@ CopyDEintoMemoryAtHL::
 	inc de
 	dec bc
 	ld a, b
-	or a, c
-	jp nz, CopyDEintoMemoryAtHL ; Jump to COpyTiles, if the z flag is not set. (the last operation had a non zero result)
-	ret;
+	or c
+	jp nz, CopyDEintoMemoryAtHL ; Jump to CopyTiles if the last operation had a non zero result.
+	ret
 
 CopyDEintoMemoryAtHL_With52Offset::
 	ld a, [de]
@@ -320,13 +319,13 @@ CopyDEintoMemoryAtHL_With52Offset::
 	inc de
 	dec bc
 	ld a, b
-	or a, c
+	or c
 	jp nz, CopyDEintoMemoryAtHL_With52Offset ; Jump to COpyTiles, if the z flag is not set. (the last operation had a non zero result)
-	ret;
+	ret
 </code></pre>
 <h2 id="updating-the-title-screen"><a class="header" href="#updating-the-title-screen">Updating the Title Screen</a></h2>
 <p>The title screen’s update logic is the simplest of the 3. All we are going to do is wait until the A button is pressed. Afterwards, we’ll go to the story screen game state.</p>
-<pre><code class="language-rgbasm linenos start=52">UpdateTitleScreenState::
+<pre><code class="language-rgbasm linenos start=51">UpdateTitleScreenState::
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; Wait for A
@@ -334,7 +333,7 @@ CopyDEintoMemoryAtHL_With52Offset::
 
     ; Save the passed value into the variable: mWaitKey
     ; The WaitForKeyFunction always checks against this vriable
-    ld a,PADF_A
+    ld a, PADF_A
     ld [mWaitKey], a
 
     call WaitForKeyFunction
@@ -373,14 +372,14 @@ WaitForKeyFunction_Loop:
 
     
 	ld a, [mWaitKey]
-    ld b,a
+    ld b, a
 	ld a, [wCurKeys]
     and a, b
-    jp z,WaitForKeyFunction_NotPressed
+    jp WaitForKeyFunction_NotPressed
     
 	ld a, [wLastKeys]
-    and a, b
-    jp nz,WaitForKeyFunction_NotPressed
+    and b
+    jp nz, WaitForKeyFunction_NotPressed
 
 	; restore our original value
 	pop bc

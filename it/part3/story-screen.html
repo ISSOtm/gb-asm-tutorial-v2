@@ -229,7 +229,7 @@ InitStoryState::
 	ld a, LCDCF_ON  | LCDCF_BGON|LCDCF_OBJON | LCDCF_OBJ16
 	ld [rLCDC], a
 
-    ret;
+    ret
 </code></pre>
 <h2 id="updating-the-story-screen"><a class="header" href="#updating-the-story-screen">Updating the Story Screen</a></h2>
 <p>Here’s the data for our story screen. We have this defined just above our <code>UpdateStoryState</code> function:</p>
@@ -248,7 +248,7 @@ InitStoryState::
 <p>You could bind this to a variable and make it configurable via an options screen too!</p>
 </blockquote>
 <p>For this effect, we’ve defined a function in our “src/main/utils/text-utils.asm” file:</p>
-<pre><code class="language-rgbasm linenos start=33">DrawText_WithTypewriterEffect::
+<pre><code class="language-rgbasm linenos start=32">DrawText_WithTypewriterEffect::
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; Wait a small amount of time
@@ -310,7 +310,7 @@ InitStoryState::
 
     ; Save the passed value into the variable: mWaitKey
     ; The WaitForKeyFunction always checks against this vriable
-    ld a,PADF_A
+    ld a, PADF_A
     ld [mWaitKey], a
 
     call WaitForKeyFunction
@@ -325,21 +325,21 @@ SECTION &quot;Background&quot;, ROM0
 ClearBackground::
 
 	; Turn the LCD off
-	ld a, 0
+	xor a
 	ld [rLCDC], a
 
-	ld bc,1024
+	ld bc, 1024
 	ld hl, $9800
 
 ClearBackgroundLoop:
 
-	ld a,0
+	xor a
 	ld [hli], a
 
 	
 	dec bc
 	ld a, b
-	or a, c
+	or c
 
 	jp nz, ClearBackgroundLoop
 
@@ -376,7 +376,7 @@ ClearBackgroundLoop:
 
     ; Save the passed value into the variable: mWaitKey
     ; The WaitForKeyFunction always checks against this vriable
-    ld a,PADF_A
+    ld a, PADF_A
     ld [mWaitKey], a
 
     call WaitForKeyFunction

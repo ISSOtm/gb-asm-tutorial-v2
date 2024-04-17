@@ -248,30 +248,28 @@ InitializeBackground::
 	ld bc, starFieldMapEnd - starFieldMap
     call CopyDEintoMemoryAtHL_With52Offset
 
-	ld a, 0
-	ld [mBackgroundScroll+0],a
-	ld a, 0
-	ld [mBackgroundScroll+1],a
-
+	xor a
+	ld [mBackgroundScroll], a
+	ld [mBackgroundScroll+1], a
 	ret
 </code></pre>
 <p>To scroll the background in a gameboy game, we simply need to gradually change the <code>SCX</code> or <code>SCX</code> registers. Our code is a tiny bit more complicated because of scaled integer usage. Our background’s scroll position is stored in a 16-bit integer called <code>mBackgroundScroll</code>. We’l increase that 16-bit integer by a set amount.</p>
-<pre><code class="language-rgbasm linenos start=37">; This is called during gameplay state on every frame
+<pre><code class="language-rgbasm linenos start=35">; This is called during gameplay state on every frame
 UpdateBackground::
 
 	; Increase our scaled integer by 5
 	; Get our true (non-scaled) value, and save it for later usage in bc
-	ld a , [mBackgroundScroll+0]
-	add a , 5
-    ld b,a
-	ld [mBackgroundScroll+0], a
-	ld a , [mBackgroundScroll+1]
-	adc a , 0
-    ld c,a
+	ld a, [mBackgroundScroll]
+	add a, 5
+    ld b, a
+	ld [mBackgroundScroll], a
+	ld a, [mBackgroundScroll+1]
+	adc 0
+    ld c, a
 	ld [mBackgroundScroll+1], a
 </code></pre>
 <p>We won’t directly draw the background using this value. De-scaling a scaled integer simulates having a (more precise and useful for smooth movement) floating-point number. The value we draw our background at will be the de-scaled version of that 16-bit integer. To get that non-scaled version, we’ll simply shift all of it’s bit rightward 4 places. The final result will saved for when we update our background’s y position.</p>
-<pre><code class="language-rgbasm linenos start=51">    ; Descale our scaled integer 
+<pre><code class="language-rgbasm linenos start=49">    ; Descale our scaled integer 
     ; shift bits to the right 4 spaces
     srl c
     rr b
@@ -283,9 +281,8 @@ UpdateBackground::
     rr b
 
     ; Use the de-scaled low byte as the backgrounds position
-    ld a,b
+    ld a, b
 	ld [rSCY], a
-
 	ret
 </code></pre>
 <div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>

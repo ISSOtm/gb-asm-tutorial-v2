@@ -232,7 +232,7 @@ There’s only one problem. Since the window is drawn between sprites and the ba
  SECTION &quot;Interrupts&quot;, ROM0
 
  DisableInterrupts::
-	ld a, 0
+	xor a
 	ldh [rSTAT], a
 	di
 	ret
@@ -241,7 +241,7 @@ InitStatInterrupts::
 
     ld a, IEF_STAT
 	ldh [rIE], a
-	xor a, a ; This is equivalent to `ld a, 0`!
+	xor a
 	ldh [rIF], a
 	ei
 
@@ -251,7 +251,7 @@ InitStatInterrupts::
 
 	; We'll start with the first scanline
 	; The first stat interrupt will call the next time rLY = 0
-	ld a, 0
+	xor a
 	ldh [rLYC], a
 
     ret
@@ -266,13 +266,13 @@ StatInterrupt:
 
 	; Check if we are on the first scanline
 	ldh a, [rLYC]
-	cp 0
+	and a
 	jp z, LYCEqualsZero
 
 LYCEquals8:
 
 	; Don't call the next stat interrupt until scanline 8
-	ld a, 0
+	xor a
 	ldh [rLYC], a
 
 	; Turn the LCD on including sprites. But no window
@@ -317,19 +317,18 @@ IncreaseScore_Loop:
     ld [hl], a
 
     ; Stop if it hasn't gone past 0
-    cp a, 9
+    cp 9
     ret c
 
 ; If it HAS gone past 9
 IncreaseScore_Next:
 
     ; Increase a counter so we can not go out of our scores bounds
+    inc c
     ld a, c
-    inc a 
-    ld c, a
 
-    ; Check if we've gone our o our scores bounds
-    cp a, 6
+    ; Check if we've gone over our scores bounds
+    cp 6
     ret z
 
     ; Reset the current digit to zero
@@ -341,7 +340,7 @@ IncreaseScore_Next:
     jp IncreaseScore_Loop
 </code></pre>
 <p>We can call that score whenever a bullet hits an enemy. This function however does not draw our score on the background. We do that the same way we drew text previously:</p>
-<pre><code class="language-rgbasm linenos start=55">DrawScore::
+<pre><code class="language-rgbasm linenos start=54">DrawScore::
 
     ; Our score has max 6 digits
     ; We'll start with the left-most digit (visually) which is also the first byte
@@ -352,13 +351,11 @@ IncreaseScore_Next:
 DrawScore_Loop:
 
     ld a, [hli]
-    add a, 10 ; our numeric tiles start at tile 10, so add to 10 to each bytes value
+    add 10 ; our numeric tiles start at tile 10, so add to 10 to each bytes value
     ld [de], a
 
     ; Decrease how many numbers we have drawn
-    ld a, c
-    dec a
-    ld c, a
+    dec c
 		
     ; Stop when we've drawn all the numbers
     ret z
@@ -369,13 +366,13 @@ DrawScore_Loop:
     jp DrawScore_Loop
 </code></pre>
 <p>Because we’ll only ever have 3 lives, drawing our lives is much easier. The numeric characters in our text font start at 10, so  we just need to put on the window, our lives plus 10.</p>
-<pre><code class="language-rgbasm linenos start=44">DrawLives::
+<pre><code class="language-rgbasm linenos start=43">DrawLives::
 
     ld hl, wLives
     ld de, $9C13 ; The window tilemap starts at $9C00
 
     ld a, [hl]
-    add a, 10 ; our numeric tiles start at tile 10, so add to 10 to each bytes value
+    add 10 ; our numeric tiles start at tile 10, so add 10 to each bytes value
     ld [de], a
 
     ret

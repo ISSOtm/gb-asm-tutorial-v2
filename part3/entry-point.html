@@ -277,10 +277,9 @@ CHARMAP &quot;z&quot;, 51
 </code></pre>
 <p>Getting back to our entry point. Were going to wait until a vertical blank begins to do all of this. We’ll also turn the LCD off before loading our tile data into VRAM..</p>
 <pre><code class="language-rgbasm linenos start=18">	; Shut down audio circuitry
-	ld a, 0
+	xor a
 	ld [rNR52], a
-
-	ld a, 0
+	; We don't actually need another xor a here, because the value of A doesn't change between these two instructions
 	ld [wGameState], a
 
 	; Wait for the vertical blank phase before initiating the library
@@ -292,7 +291,7 @@ CHARMAP &quot;z&quot;, 51
 	call InitSprObjLibWrapper
 
 	; Turn the LCD off
-	ld a, 0
+	xor a
 	ld [rLCDC], a
 
 	; Load our common text font into VRAM
@@ -305,12 +304,14 @@ CHARMAP &quot;z&quot;, 51
 	; During the first (blank) frame, initialize display registers
 	ld a, %11100100
 	ld [rBGP], a
-    ld a, %11100100
 	ld [rOBP0], a
 
 </code></pre>
 <div class="box tip">
-<p>Even though we haven’t specifically defined a color palette. The <a href="https://emulicious.net/">emulicious</a> emulator may automatically apply a default color palette if in “Automatic” or “Gameboy Color” Mode</p>
+<p>Even though we haven’t specifically defined a color palette. The <a href="https://emulicious.net/">emulicious</a> emulator may automatically apply a default color palette if in “Automatic” or “Gameboy Color” mode.</p>
+</div>
+<div class="box tip">
+<p>Instead of <code>ld a, 0</code>, we can use <code>xor a</code> to set <code>a</code> to 0. It takes one byte less, which matters a lot on the Game Boy.</p>
 </div>
 <p>In the above snippet you saw use of a function called <code>WaitFOrOneVBLank</code>. We’ve setup some vblank utility functions in the “src/main/utils/vblank-utils.asm” file:</p>
 <pre><code class="language-rgbasm linenos start=1">INCLUDE &quot;src/main/utils/hardware.inc&quot;
@@ -337,7 +338,7 @@ WaitForVBlankFunction_Loop::
 	jp c, WaitForVBlankFunction_Loop ; A conditional jump. The condition is that 'c' is set, the last operation overflowed
 
     ld a, [wVBlankCount]
-    sub a, 1
+    sub 1
     ld [wVBlankCount], a
     ret z
 

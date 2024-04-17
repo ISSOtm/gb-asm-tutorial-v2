@@ -262,14 +262,14 @@ DEF BULLET_TILES_START          RB 0
 <p>Here’s what our “InitializePlayer” function looks like. Recall, this was called when initiating the gameplay game state:</p>
 <pre><code class="language-rgbasm linenos start=22">InitializePlayer::
 
-    ld a, 0
-    ld [mPlayerFlash+0],a
-    ld [mPlayerFlash+1],a
+    xor a
+    ld [mPlayerFlash], a
+    ld [mPlayerFlash+1], a
 
     ; Place in the middle of the screen
-    ld a, 0
-    ld [wPlayerPositionX+0], a
-    ld [wPlayerPositionY+0], a
+    xor a
+    ld [wPlayerPositionX], a
+    ld [wPlayerPositionY], a
 
     ld a, 5
     ld [wPlayerPositionX+1], a
@@ -283,7 +283,7 @@ CopyPlayerTileDataIntoVRAM:
 	ld bc, playerShipTileDataEnd - playerShipTileData
     call CopyDEintoMemoryAtHL
 
-    ret;
+    ret
 </code></pre>
 <h2 id="updating-the-player"><a class="header" href="#updating-the-player">Updating the Player</a></h2>
 <p>We can break our player’s update logic into 2 parts:</p>
@@ -297,48 +297,48 @@ CopyPlayerTileDataIntoVRAM:
 UpdatePlayer_HandleInput:
 
 	ld a, [wCurKeys]
-	and a, PADF_UP
+	and PADF_UP
 	call nz, MoveUp
 
 	ld a, [wCurKeys]
-	and a, PADF_DOWN
+	and PADF_DOWN
 	call nz, MoveDown
 
 	ld a, [wCurKeys]
-	and a, PADF_LEFT
+	and PADF_LEFT
 	call nz, MoveLeft
 
 	ld a, [wCurKeys]
-	and a, PADF_RIGHT
+	and PADF_RIGHT
 	call nz, MoveRight
 
 	ld a, [wCurKeys]
-	and a, PADF_A
+	and PADF_A
 	call nz, TryShoot
 </code></pre>
 <p>For player movement, our X &amp; Y are 16-bit integers. These both require two bytes. There is a little endian ordering, the first byte will be the low byte. The second byte will be the high byte. To increase/decrease these values, we add/subtract our change amount to/from the low byte. Then afterwards, we add/subtract the remainder of that operation to/from the high byte.</p>
-<pre><code class="language-rgbasm linenos start=213">MoveUp:
+<pre><code class="language-rgbasm linenos start=211">MoveUp:
 
     ; decrease the player's y position
-    ld a, [wPlayerPositionY+0]
-    sub a, PLAYER_MOVE_SPEED
-    ld [wPlayerPositionY+0], a
+    ld a, [wPlayerPositionY]
+    sub PLAYER_MOVE_SPEED
+    ld [wPlayerPositionY], a
 
-    ld a, [wPlayerPositionY+1]
-    sbc a, 0
-    ld [wPlayerPositionY+1], a
+    ld a, [wPlayerPositionY]
+    sbc 0
+    ld [wPlayerPositionY], a
 
     ret
 
 MoveDown:
 
     ; increase the player's y position
-    ld a, [wPlayerPositionY+0]
-    add a, PLAYER_MOVE_SPEED
-    ld [wPlayerPositionY+0], a
+    ld a, [wPlayerPositionY]
+    add PLAYER_MOVE_SPEED
+    ld [wPlayerPositionY], a
 
     ld a, [wPlayerPositionY+1]
-    adc a, 0
+    adc 0
     ld [wPlayerPositionY+1], a
 
     ret
@@ -346,24 +346,24 @@ MoveDown:
 MoveLeft:
 
     ; decrease the player's x position
-    ld a, [wPlayerPositionX+0]
-    sub a, PLAYER_MOVE_SPEED
-    ld [wPlayerPositionX+0], a
+    ld a, [wPlayerPositionX]
+    sub PLAYER_MOVE_SPEED
+    ld [wPlayerPositionX], a
 
     ld a, [wPlayerPositionX+1]
-    sbc a, 0
+    sbc 0
     ld [wPlayerPositionX+1], a
     ret
 
 MoveRight:
 
     ; increase the player's x position
-    ld a, [wPlayerPositionX+0]
-    add a, PLAYER_MOVE_SPEED
-    ld [wPlayerPositionX+0], a
+    ld a, [wPlayerPositionX]
+    add PLAYER_MOVE_SPEED
+    ld [wPlayerPositionX], a
 
     ld a, [wPlayerPositionX+1]
-    adc a, 0
+    adc 0
     ld [wPlayerPositionX+1], a
 
     ret
@@ -371,12 +371,10 @@ MoveRight:
 <p>When the player wants to shoot, we first check if the A button previously was down. If it was, we won’t shoot a new bullet. This avoids bullet spamming a little. For spawning bullets, we have a function called “FireNextBullet”. This function will need the new bullet’s 8-bit X coordinate and 16-bit Y coordinate, both set in a variable it uses called “wNextBullet”</p>
 <pre><code class="language-rgbasm linenos start=189">TryShoot:
 	ld a, [wLastKeys]
-	and a, PADF_A
+	and PADF_A
     ret nz
 
-    call FireNextBullet;
-
-    ret
+    jp FireNextBullet
 </code></pre>
 <p>After we’ve potentially moved the player and/or shot a new bullet. We need to draw our player. However, to create the “flashing” effect when damaged, we’ll conditionally NOT draw our player sprite. We do this based on the “wPlayerFlash” variable.</p>
 <ul>
@@ -401,22 +399,22 @@ MoveRight:
 UpdatePlayer_UpdateSprite_CheckFlashing:
 
     ld a, b
-    or a, c
+    or c
     jp z, UpdatePlayer_UpdateSprite
 
     ; decrease bc by 5
     ld a, b
-    sub a, 5
+    sub 5
     ld b, a
     ld a, c
-    sbc a, 0
+    sbc 0
     ld c, a
     
 
 UpdatePlayer_UpdateSprite_DecreaseFlashing:
 
     ld a, b
-    ld [mPlayerFlash+0], a
+    ld [mPlayerFlash], a
     ld a, c
     ld [mPlayerFlash+1], a
 
@@ -431,7 +429,7 @@ UpdatePlayer_UpdateSprite_DecreaseFlashing:
     rr b
 
     ld a, b
-    cp a, 5
+    cp 5
     jp c, UpdatePlayer_UpdateSprite_StopFlashing
 
 
@@ -440,11 +438,11 @@ UpdatePlayer_UpdateSprite_DecreaseFlashing:
 
 UpdatePlayer_UpdateSprite_Flashing:
 
-    ret;
+    ret
 UpdatePlayer_UpdateSprite_StopFlashing:
 
-    ld a, 0
-    ld [mPlayerFlash+0],a
+    xor a
+    ld [mPlayerFlash],a
     ld [mPlayerFlash+1],a
 </code></pre>
 <p>If we get past all of the “wPlayerFlash” logic, we’ll draw our player using the “DrawMetasprite” function we previously discussed.</p>
@@ -495,11 +493,11 @@ UpdatePlayer_UpdateSprite_StopFlashing:
 
     ; Save the x position
     ld a, b
-    ld [wMetaspriteX],a
+    ld [wMetaspriteX], a
 
     ; Save the y position
     ld a, c
-    ld [wMetaspriteY],a
+    ld [wMetaspriteY], a
 
     ; Actually call the 'DrawMetasprites function
     call DrawMetasprites;
@@ -511,13 +509,13 @@ UpdatePlayer_UpdateSprite_StopFlashing:
     ret
 </code></pre>
 <p>That’s the end our our “UpdatePlayer” function. The final bit of code for our player handles when they are damaged. When an enemy damages the player, we want to decrease our lives by one. We’ll also start flashing  by giving our ‘mPlayerFlash’ variable a non-zero value. In the gameplay game state, if we’ve lost all lives, gameplay will end.</p>
-<pre><code class="language-rgbasm linenos start=198">DamagePlayer::
+<pre><code class="language-rgbasm linenos start=196">DamagePlayer::
 
     
 
-    ld a, 0
-    ld [mPlayerFlash+0], a
-    ld a, 1
+    xor a
+    ld [mPlayerFlash], a
+    inc a
     ld [mPlayerFlash+1], a
 
     ld a, [wLives]

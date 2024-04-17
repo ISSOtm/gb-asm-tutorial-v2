@@ -2618,10 +2618,9 @@ CHARMAP &quot;z&quot;, 51
 </code></pre>
 <p>Getting back to our entry point. Were going to wait until a vertical blank begins to do all of this. We’ll also turn the LCD off before loading our tile data into VRAM..</p>
 <pre><code class="language-rgbasm linenos start=18">	; Shut down audio circuitry
-	ld a, 0
+	xor a
 	ld [rNR52], a
-
-	ld a, 0
+	; We don't actually need another xor a here, because the value of A doesn't change between these two instructions
 	ld [wGameState], a
 
 	; Wait for the vertical blank phase before initiating the library
@@ -2633,7 +2632,7 @@ CHARMAP &quot;z&quot;, 51
 	call InitSprObjLibWrapper
 
 	; Turn the LCD off
-	ld a, 0
+	xor a
 	ld [rLCDC], a
 
 	; Load our common text font into VRAM
@@ -2646,12 +2645,14 @@ CHARMAP &quot;z&quot;, 51
 	; During the first (blank) frame, initialize display registers
 	ld a, %11100100
 	ld [rBGP], a
-    ld a, %11100100
 	ld [rOBP0], a
 
 </code></pre>
 <div class="box tip">
-<p>Even though we haven’t specifically defined a color palette. The <a href="https://emulicious.net/">emulicious</a> emulator may automatically apply a default color palette if in “Automatic” or “Gameboy Color” Mode</p>
+<p>Even though we haven’t specifically defined a color palette. The <a href="https://emulicious.net/">emulicious</a> emulator may automatically apply a default color palette if in “Automatic” or “Gameboy Color” mode.</p>
+</div>
+<div class="box tip">
+<p>Instead of <code>ld a, 0</code>, we can use <code>xor a</code> to set <code>a</code> to 0. It takes one byte less, which matters a lot on the Game Boy.</p>
 </div>
 <p>In the above snippet you saw use of a function called <code>WaitFOrOneVBLank</code>. We’ve setup some vblank utility functions in the “src/main/utils/vblank-utils.asm” file:</p>
 <pre><code class="language-rgbasm linenos start=1">INCLUDE &quot;src/main/utils/hardware.inc&quot;
@@ -2678,7 +2679,7 @@ WaitForVBlankFunction_Loop::
 	jp c, WaitForVBlankFunction_Loop ; A conditional jump. The condition is that 'c' is set, the last operation overflowed
 
     ld a, [wVBlankCount]
-    sub a, 1
+    sub 1
     ld [wVBlankCount], a
     ret z
 
@@ -2715,24 +2716,23 @@ WaitForVBlankFunction_Loop2::
 <blockquote>
 <p>It will be the responsibility of the “init” function for each game state to turn the LCD back on.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=50">
+<pre><code class="language-rgbasm linenos start=48">
 NextGameState::
 
 	; Do not turn the LCD off outside of VBlank
     call WaitForOneVBlank
 
-	call ClearBackground;
+	call ClearBackground
 
 
 	; Turn the LCD off
-	ld a, 0
+	xor a
 	ld [rLCDC], a
 
-	ld a, 0
-	ld [rSCX],a
-	ld [rSCY],a
-	ld [rWX],a
-	ld [rWY],a
+	ld [rSCX], a
+	ld [rSCY], a
+	ld [rWX], a
+	ld [rWY], a
 	; disable interrupts
 	call DisableInterrupts
 	
@@ -2741,20 +2741,20 @@ NextGameState::
 
 	; Initiate the next state
 	ld a, [wGameState]
-	cp a, 2 ; 2 = Gameplay
+	cp 2 ; 2 = Gameplay
 	call z, InitGameplayState
 	ld a, [wGameState]
-	cp a, 1 ; 1 = Story
+	cp 1 ; 1 = Story
 	call z, InitStoryState
 	ld a, [wGameState]
-	cp a, 0 ; 0 = Menu
+	and a ; 0 = Menu
 	call z, InitTitleScreenState
 
 	; Update the next state
 	ld a, [wGameState]
-	cp a, 2 ; 2 = Gameplay
+	cp 2 ; 2 = Gameplay
 	jp z, UpdateGameplayState
-	cp a, 1 ; 1 = Story
+	cp 1 ; 1 = Story
 	jp z, UpdateStoryState
 	jp UpdateTitleScreenState
 
@@ -2812,10 +2812,10 @@ titleScreenTileMapEnd:
 	ld a, LCDCF_ON  | LCDCF_BGON|LCDCF_OBJON | LCDCF_OBJ16
 	ld [rLCDC], a
 
-    ret;
+    ret
 </code></pre>
 <p>In order to draw text in our game, we’ve created a function called “DrawTextTilesLoop”. We’ll pass this function which tile to start on in <code>de</code>, and the address of our text in <code>hl</code>.</p>
-<pre><code class="language-rgbasm linenos start=15">DrawTextTilesLoop::
+<pre><code class="language-rgbasm linenos start=14">DrawTextTilesLoop::
 
     ; Check for the end of string character 255
     ld a, [hl]
@@ -2843,15 +2843,14 @@ titleScreenTileMapEnd:
 	ld de, titleScreenTileData ; de contains the address where data will be copied from;
 	ld hl, $9340 ; hl contains the address where data will be copied to;
 	ld bc, titleScreenTileDataEnd - titleScreenTileData ; bc contains how many bytes we have to copy.
-	call CopyDEintoMemoryAtHL;
+	call CopyDEintoMemoryAtHL
 	
 	; Copy the tilemap
 	ld de, titleScreenTileMap
 	ld hl, $9800
 	ld bc, titleScreenTileMapEnd - titleScreenTileMap
-	call CopyDEintoMemoryAtHL_With52Offset
+	jp CopyDEintoMemoryAtHL_With52Offset
 
-	ret
 </code></pre>
 <p>The “CopyDEintoMemoryAtHL” and “CopyDEintoMemoryAtHL_With52Offset” functions are defined in “src/main/utils/memory-utils.asm”:</p>
 <pre><code class="language-rgbasm linenos start=1">SECTION &quot;MemoryUtilsSection&quot;, ROM0
@@ -2862,9 +2861,9 @@ CopyDEintoMemoryAtHL::
 	inc de
 	dec bc
 	ld a, b
-	or a, c
-	jp nz, CopyDEintoMemoryAtHL ; Jump to COpyTiles, if the z flag is not set. (the last operation had a non zero result)
-	ret;
+	or c
+	jp nz, CopyDEintoMemoryAtHL ; Jump to CopyTiles if the last operation had a non zero result.
+	ret
 
 CopyDEintoMemoryAtHL_With52Offset::
 	ld a, [de]
@@ -2873,13 +2872,13 @@ CopyDEintoMemoryAtHL_With52Offset::
 	inc de
 	dec bc
 	ld a, b
-	or a, c
+	or c
 	jp nz, CopyDEintoMemoryAtHL_With52Offset ; Jump to COpyTiles, if the z flag is not set. (the last operation had a non zero result)
-	ret;
+	ret
 </code></pre>
 <h2 id="updating-the-title-screen"><a class="header" href="#updating-the-title-screen">Updating the Title Screen</a></h2>
 <p>The title screen’s update logic is the simplest of the 3. All we are going to do is wait until the A button is pressed. Afterwards, we’ll go to the story screen game state.</p>
-<pre><code class="language-rgbasm linenos start=52">UpdateTitleScreenState::
+<pre><code class="language-rgbasm linenos start=51">UpdateTitleScreenState::
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; Wait for A
@@ -2887,7 +2886,7 @@ CopyDEintoMemoryAtHL_With52Offset::
 
     ; Save the passed value into the variable: mWaitKey
     ; The WaitForKeyFunction always checks against this vriable
-    ld a,PADF_A
+    ld a, PADF_A
     ld [mWaitKey], a
 
     call WaitForKeyFunction
@@ -2926,14 +2925,14 @@ WaitForKeyFunction_Loop:
 
     
 	ld a, [mWaitKey]
-    ld b,a
+    ld b, a
 	ld a, [wCurKeys]
     and a, b
-    jp z,WaitForKeyFunction_NotPressed
+    jp WaitForKeyFunction_NotPressed
     
 	ld a, [wLastKeys]
-    and a, b
-    jp nz,WaitForKeyFunction_NotPressed
+    and b
+    jp nz, WaitForKeyFunction_NotPressed
 
 	; restore our original value
 	pop bc
@@ -2976,7 +2975,7 @@ InitStoryState::
 	ld a, LCDCF_ON  | LCDCF_BGON|LCDCF_OBJON | LCDCF_OBJ16
 	ld [rLCDC], a
 
-    ret;
+    ret
 </code></pre>
 <h2 id="updating-the-story-screen"><a class="header" href="#updating-the-story-screen">Updating the Story Screen</a></h2>
 <p>Here’s the data for our story screen. We have this defined just above our <code>UpdateStoryState</code> function:</p>
@@ -2995,7 +2994,7 @@ InitStoryState::
 <p>You could bind this to a variable and make it configurable via an options screen too!</p>
 </blockquote>
 <p>For this effect, we’ve defined a function in our “src/main/utils/text-utils.asm” file:</p>
-<pre><code class="language-rgbasm linenos start=33">DrawText_WithTypewriterEffect::
+<pre><code class="language-rgbasm linenos start=32">DrawText_WithTypewriterEffect::
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; Wait a small amount of time
@@ -3057,7 +3056,7 @@ InitStoryState::
 
     ; Save the passed value into the variable: mWaitKey
     ; The WaitForKeyFunction always checks against this vriable
-    ld a,PADF_A
+    ld a, PADF_A
     ld [mWaitKey], a
 
     call WaitForKeyFunction
@@ -3072,21 +3071,21 @@ SECTION &quot;Background&quot;, ROM0
 ClearBackground::
 
 	; Turn the LCD off
-	ld a, 0
+	xor a
 	ld [rLCDC], a
 
-	ld bc,1024
+	ld bc, 1024
 	ld hl, $9800
 
 ClearBackgroundLoop:
 
-	ld a,0
+	xor a
 	ld [hli], a
 
 	
 	dec bc
 	ld a, b
-	or a, c
+	or c
 
 	jp nz, ClearBackgroundLoop
 
@@ -3123,7 +3122,7 @@ ClearBackgroundLoop:
 
     ; Save the passed value into the variable: mWaitKey
     ; The WaitForKeyFunction always checks against this vriable
-    ld a,PADF_A
+    ld a, PADF_A
     ld [mWaitKey], a
 
     call WaitForKeyFunction
@@ -3170,10 +3169,10 @@ wLivesText::  db &quot;lives&quot;, 255
 <pre><code class="language-rgbasm linenos start=14">InitGameplayState::
 
 	ld a, 3
-	ld [wLives+0], a
+	ld [wLives], a
 
-	ld a, 0
-	ld [wScore+0], a
+	xor a
+	ld [wScore], a
 	ld [wScore+1], a
 	ld [wScore+2], a
 	ld [wScore+3], a
@@ -3197,7 +3196,7 @@ wLivesText::  db &quot;lives&quot;, 255
     call DrawTextTilesLoop
 
 	; Call Our function that draws text onto background/window tiles
-    ld de, $9c0D
+    ld de, $9c0d
     ld hl, wLivesText
     call DrawTextTilesLoop
 	
@@ -3217,7 +3216,7 @@ wLivesText::  db &quot;lives&quot;, 255
 	ld a, LCDCF_ON  | LCDCF_BGON|LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WINON | LCDCF_WIN9C00|LCDCF_BG9800
 	ld [rLCDC], a
 
-    ret;
+    ret
 </code></pre>
 <p>The initialization logic for our the background, the player, the enemies, the bullets will be explained in later pages. Every game state is responsible for turning the LCD back on. The gameplay game state needs to use the window layer, so we’ll make sure that’s enabled before we return.</p>
 <h2 id="updating-the-gameplay-game-state"><a class="header" href="#updating-the-gameplay-game-state">Updating the Gameplay Game State</a></h2>
@@ -3262,13 +3261,13 @@ wLivesText::  db &quot;lives&quot;, 255
 <blockquote>
 <p><strong>NOTE:</strong> We also keep a counter on how many shadow OAM sprites are used. In our “ResetOAMSpriteAddress” function, we’ll reset that counter too.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=64">ResetOAMSpriteAddress::
+<pre><code class="language-rgbasm linenos start=61">ResetOAMSpriteAddress::
     
-    ld a, 0
+    xor a
     ld [wSpritesUsed], a
 
 	ld a, LOW(wShadowOAM)
-	ld [wLastOAMAddress+0], a
+	ld [wLastOAMAddress], a
 	ld a, HIGH(wShadowOAM)
 	ld [wLastOAMAddress+1], a
 
@@ -3289,7 +3288,7 @@ wLivesText::  db &quot;lives&quot;, 255
 <p>At this point in time, we need to check if gameplay needs to continue. When the vertical blank phase starts, we check if the player has lost all of their lives. If so, we end gameplay. We end gameplay similar to how we started it, we’ll update our ‘wGameState’ variable and jump to “NextGameState”.</p>
 <p>If the player hasn’t lost all of their lives, we’ll copy our shadow OAM sprites over to the actual hardware OAM sprites and loop background.</p>
 <pre><code class="language-rgbasm linenos start=91">	ld a, [wLives]
-	cp a, 250
+	cp 250
 	jp nc, EndGameplay
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3354,30 +3353,28 @@ InitializeBackground::
 	ld bc, starFieldMapEnd - starFieldMap
     call CopyDEintoMemoryAtHL_With52Offset
 
-	ld a, 0
-	ld [mBackgroundScroll+0],a
-	ld a, 0
-	ld [mBackgroundScroll+1],a
-
+	xor a
+	ld [mBackgroundScroll], a
+	ld [mBackgroundScroll+1], a
 	ret
 </code></pre>
 <p>To scroll the background in a gameboy game, we simply need to gradually change the <code>SCX</code> or <code>SCX</code> registers. Our code is a tiny bit more complicated because of scaled integer usage. Our background’s scroll position is stored in a 16-bit integer called <code>mBackgroundScroll</code>. We’l increase that 16-bit integer by a set amount.</p>
-<pre><code class="language-rgbasm linenos start=37">; This is called during gameplay state on every frame
+<pre><code class="language-rgbasm linenos start=35">; This is called during gameplay state on every frame
 UpdateBackground::
 
 	; Increase our scaled integer by 5
 	; Get our true (non-scaled) value, and save it for later usage in bc
-	ld a , [mBackgroundScroll+0]
-	add a , 5
-    ld b,a
-	ld [mBackgroundScroll+0], a
-	ld a , [mBackgroundScroll+1]
-	adc a , 0
-    ld c,a
+	ld a, [mBackgroundScroll]
+	add a, 5
+    ld b, a
+	ld [mBackgroundScroll], a
+	ld a, [mBackgroundScroll+1]
+	adc 0
+    ld c, a
 	ld [mBackgroundScroll+1], a
 </code></pre>
 <p>We won’t directly draw the background using this value. De-scaling a scaled integer simulates having a (more precise and useful for smooth movement) floating-point number. The value we draw our background at will be the de-scaled version of that 16-bit integer. To get that non-scaled version, we’ll simply shift all of it’s bit rightward 4 places. The final result will saved for when we update our background’s y position.</p>
-<pre><code class="language-rgbasm linenos start=51">    ; Descale our scaled integer 
+<pre><code class="language-rgbasm linenos start=49">    ; Descale our scaled integer 
     ; shift bits to the right 4 spaces
     srl c
     rr b
@@ -3389,9 +3386,8 @@ UpdateBackground::
     rr b
 
     ; Use the de-scaled low byte as the backgrounds position
-    ld a,b
+    ld a, b
 	ld [rSCY], a
-
 	ret
 </code></pre>
 <div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
@@ -3420,7 +3416,7 @@ There’s only one problem. Since the window is drawn between sprites and the ba
  SECTION &quot;Interrupts&quot;, ROM0
 
  DisableInterrupts::
-	ld a, 0
+	xor a
 	ldh [rSTAT], a
 	di
 	ret
@@ -3429,7 +3425,7 @@ InitStatInterrupts::
 
     ld a, IEF_STAT
 	ldh [rIE], a
-	xor a, a ; This is equivalent to `ld a, 0`!
+	xor a
 	ldh [rIF], a
 	ei
 
@@ -3439,7 +3435,7 @@ InitStatInterrupts::
 
 	; We'll start with the first scanline
 	; The first stat interrupt will call the next time rLY = 0
-	ld a, 0
+	xor a
 	ldh [rLYC], a
 
     ret
@@ -3454,13 +3450,13 @@ StatInterrupt:
 
 	; Check if we are on the first scanline
 	ldh a, [rLYC]
-	cp 0
+	and a
 	jp z, LYCEqualsZero
 
 LYCEquals8:
 
 	; Don't call the next stat interrupt until scanline 8
-	ld a, 0
+	xor a
 	ldh [rLYC], a
 
 	; Turn the LCD on including sprites. But no window
@@ -3505,19 +3501,18 @@ IncreaseScore_Loop:
     ld [hl], a
 
     ; Stop if it hasn't gone past 0
-    cp a, 9
+    cp 9
     ret c
 
 ; If it HAS gone past 9
 IncreaseScore_Next:
 
     ; Increase a counter so we can not go out of our scores bounds
+    inc c
     ld a, c
-    inc a 
-    ld c, a
 
-    ; Check if we've gone our o our scores bounds
-    cp a, 6
+    ; Check if we've gone over our scores bounds
+    cp 6
     ret z
 
     ; Reset the current digit to zero
@@ -3529,7 +3524,7 @@ IncreaseScore_Next:
     jp IncreaseScore_Loop
 </code></pre>
 <p>We can call that score whenever a bullet hits an enemy. This function however does not draw our score on the background. We do that the same way we drew text previously:</p>
-<pre><code class="language-rgbasm linenos start=55">DrawScore::
+<pre><code class="language-rgbasm linenos start=54">DrawScore::
 
     ; Our score has max 6 digits
     ; We'll start with the left-most digit (visually) which is also the first byte
@@ -3540,13 +3535,11 @@ IncreaseScore_Next:
 DrawScore_Loop:
 
     ld a, [hli]
-    add a, 10 ; our numeric tiles start at tile 10, so add to 10 to each bytes value
+    add 10 ; our numeric tiles start at tile 10, so add to 10 to each bytes value
     ld [de], a
 
     ; Decrease how many numbers we have drawn
-    ld a, c
-    dec a
-    ld c, a
+    dec c
 		
     ; Stop when we've drawn all the numbers
     ret z
@@ -3557,13 +3550,13 @@ DrawScore_Loop:
     jp DrawScore_Loop
 </code></pre>
 <p>Because we’ll only ever have 3 lives, drawing our lives is much easier. The numeric characters in our text font start at 10, so  we just need to put on the window, our lives plus 10.</p>
-<pre><code class="language-rgbasm linenos start=44">DrawLives::
+<pre><code class="language-rgbasm linenos start=43">DrawLives::
 
     ld hl, wLives
     ld de, $9C13 ; The window tilemap starts at $9C00
 
     ld a, [hl]
-    add a, 10 ; our numeric tiles start at tile 10, so add to 10 to each bytes value
+    add 10 ; our numeric tiles start at tile 10, so add 10 to each bytes value
     ld [de], a
 
     ret
@@ -3640,16 +3633,16 @@ DrawMetasprites::
     ret z
 
     ld a, [wMetaspriteY]
-    add a, b
-    ld [wMetaspriteY],a
+    add b
+    ld [wMetaspriteY], a
 
     ; Get the x position
     ld a, [hli]
     ld c, a
 
     ld a, [wMetaspriteX]
-    add a,c
-    ld [wMetaspriteX],a
+    add c
+    ld [wMetaspriteX], a
 
     ; Get the tile position
     ld a, [hli]
@@ -3660,7 +3653,7 @@ DrawMetasprites::
     ld e, a
     
 
-    ;Get our offset address in hl
+    ; Get our offset address in hl
 	ld a,[wLastOAMAddress+0]
     ld l, a
 	ld a, HIGH(wShadowOAM)
@@ -3681,26 +3674,26 @@ DrawMetasprites::
     call NextOAMSprite
 
      ; increase the wMetaspriteAddress
-    ld a, [wMetaspriteAddress+0]
+    ld a, [wMetaspriteAddress]
     add a, METASPRITE_BYTES_COUNT
-    ld  [wMetaspriteAddress+0], a
+    ld [wMetaspriteAddress], a
     ld a, [wMetaspriteAddress+1]
-    adc a, 0
-    ld  [wMetaspriteAddress+1], a
+    adc 0
+    ld [wMetaspriteAddress+1], a
 
 
     jp DrawMetasprites
 </code></pre>
 <p>When we call the “DrawMetasprites” function, the “wLastOAMAddress” variable will be advanced  to point at the next available shadow OAM sprite. This is done using the “NextOAMSprite” function in “src/main/utils/sprites-utils.asm”</p>
-<pre><code class="language-rgbasm linenos start=76">NextOAMSprite::
+<pre><code class="language-rgbasm linenos start=73">NextOAMSprite::
 
     ld a, [wSpritesUsed]
     inc a
     ld [wSpritesUsed], a
 
-	ld a,[wLastOAMAddress+0]
-    add a, sizeof_OAM_ATTRS
-	ld [wLastOAMAddress+0], a
+	ld a,[wLastOAMAddress]
+    add sizeof_OAM_ATTRS
+	ld [wLastOAMAddress], a
 	ld a, HIGH(wShadowOAM)
 	ld [wLastOAMAddress+1], a
 
@@ -3812,14 +3805,14 @@ DEF BULLET_TILES_START          RB 0
 <p>Here’s what our “InitializePlayer” function looks like. Recall, this was called when initiating the gameplay game state:</p>
 <pre><code class="language-rgbasm linenos start=22">InitializePlayer::
 
-    ld a, 0
-    ld [mPlayerFlash+0],a
-    ld [mPlayerFlash+1],a
+    xor a
+    ld [mPlayerFlash], a
+    ld [mPlayerFlash+1], a
 
     ; Place in the middle of the screen
-    ld a, 0
-    ld [wPlayerPositionX+0], a
-    ld [wPlayerPositionY+0], a
+    xor a
+    ld [wPlayerPositionX], a
+    ld [wPlayerPositionY], a
 
     ld a, 5
     ld [wPlayerPositionX+1], a
@@ -3833,7 +3826,7 @@ CopyPlayerTileDataIntoVRAM:
 	ld bc, playerShipTileDataEnd - playerShipTileData
     call CopyDEintoMemoryAtHL
 
-    ret;
+    ret
 </code></pre>
 <h2 id="updating-the-player"><a class="header" href="#updating-the-player">Updating the Player</a></h2>
 <p>We can break our player’s update logic into 2 parts:</p>
@@ -3847,48 +3840,48 @@ CopyPlayerTileDataIntoVRAM:
 UpdatePlayer_HandleInput:
 
 	ld a, [wCurKeys]
-	and a, PADF_UP
+	and PADF_UP
 	call nz, MoveUp
 
 	ld a, [wCurKeys]
-	and a, PADF_DOWN
+	and PADF_DOWN
 	call nz, MoveDown
 
 	ld a, [wCurKeys]
-	and a, PADF_LEFT
+	and PADF_LEFT
 	call nz, MoveLeft
 
 	ld a, [wCurKeys]
-	and a, PADF_RIGHT
+	and PADF_RIGHT
 	call nz, MoveRight
 
 	ld a, [wCurKeys]
-	and a, PADF_A
+	and PADF_A
 	call nz, TryShoot
 </code></pre>
 <p>For player movement, our X &amp; Y are 16-bit integers. These both require two bytes. There is a little endian ordering, the first byte will be the low byte. The second byte will be the high byte. To increase/decrease these values, we add/subtract our change amount to/from the low byte. Then afterwards, we add/subtract the remainder of that operation to/from the high byte.</p>
-<pre><code class="language-rgbasm linenos start=213">MoveUp:
+<pre><code class="language-rgbasm linenos start=211">MoveUp:
 
     ; decrease the player's y position
-    ld a, [wPlayerPositionY+0]
-    sub a, PLAYER_MOVE_SPEED
-    ld [wPlayerPositionY+0], a
+    ld a, [wPlayerPositionY]
+    sub PLAYER_MOVE_SPEED
+    ld [wPlayerPositionY], a
 
-    ld a, [wPlayerPositionY+1]
-    sbc a, 0
-    ld [wPlayerPositionY+1], a
+    ld a, [wPlayerPositionY]
+    sbc 0
+    ld [wPlayerPositionY], a
 
     ret
 
 MoveDown:
 
     ; increase the player's y position
-    ld a, [wPlayerPositionY+0]
-    add a, PLAYER_MOVE_SPEED
-    ld [wPlayerPositionY+0], a
+    ld a, [wPlayerPositionY]
+    add PLAYER_MOVE_SPEED
+    ld [wPlayerPositionY], a
 
     ld a, [wPlayerPositionY+1]
-    adc a, 0
+    adc 0
     ld [wPlayerPositionY+1], a
 
     ret
@@ -3896,24 +3889,24 @@ MoveDown:
 MoveLeft:
 
     ; decrease the player's x position
-    ld a, [wPlayerPositionX+0]
-    sub a, PLAYER_MOVE_SPEED
-    ld [wPlayerPositionX+0], a
+    ld a, [wPlayerPositionX]
+    sub PLAYER_MOVE_SPEED
+    ld [wPlayerPositionX], a
 
     ld a, [wPlayerPositionX+1]
-    sbc a, 0
+    sbc 0
     ld [wPlayerPositionX+1], a
     ret
 
 MoveRight:
 
     ; increase the player's x position
-    ld a, [wPlayerPositionX+0]
-    add a, PLAYER_MOVE_SPEED
-    ld [wPlayerPositionX+0], a
+    ld a, [wPlayerPositionX]
+    add PLAYER_MOVE_SPEED
+    ld [wPlayerPositionX], a
 
     ld a, [wPlayerPositionX+1]
-    adc a, 0
+    adc 0
     ld [wPlayerPositionX+1], a
 
     ret
@@ -3921,12 +3914,10 @@ MoveRight:
 <p>When the player wants to shoot, we first check if the A button previously was down. If it was, we won’t shoot a new bullet. This avoids bullet spamming a little. For spawning bullets, we have a function called “FireNextBullet”. This function will need the new bullet’s 8-bit X coordinate and 16-bit Y coordinate, both set in a variable it uses called “wNextBullet”</p>
 <pre><code class="language-rgbasm linenos start=189">TryShoot:
 	ld a, [wLastKeys]
-	and a, PADF_A
+	and PADF_A
     ret nz
 
-    call FireNextBullet;
-
-    ret
+    jp FireNextBullet
 </code></pre>
 <p>After we’ve potentially moved the player and/or shot a new bullet. We need to draw our player. However, to create the “flashing” effect when damaged, we’ll conditionally NOT draw our player sprite. We do this based on the “wPlayerFlash” variable.</p>
 <ul>
@@ -3951,22 +3942,22 @@ MoveRight:
 UpdatePlayer_UpdateSprite_CheckFlashing:
 
     ld a, b
-    or a, c
+    or c
     jp z, UpdatePlayer_UpdateSprite
 
     ; decrease bc by 5
     ld a, b
-    sub a, 5
+    sub 5
     ld b, a
     ld a, c
-    sbc a, 0
+    sbc 0
     ld c, a
     
 
 UpdatePlayer_UpdateSprite_DecreaseFlashing:
 
     ld a, b
-    ld [mPlayerFlash+0], a
+    ld [mPlayerFlash], a
     ld a, c
     ld [mPlayerFlash+1], a
 
@@ -3981,7 +3972,7 @@ UpdatePlayer_UpdateSprite_DecreaseFlashing:
     rr b
 
     ld a, b
-    cp a, 5
+    cp 5
     jp c, UpdatePlayer_UpdateSprite_StopFlashing
 
 
@@ -3990,11 +3981,11 @@ UpdatePlayer_UpdateSprite_DecreaseFlashing:
 
 UpdatePlayer_UpdateSprite_Flashing:
 
-    ret;
+    ret
 UpdatePlayer_UpdateSprite_StopFlashing:
 
-    ld a, 0
-    ld [mPlayerFlash+0],a
+    xor a
+    ld [mPlayerFlash],a
     ld [mPlayerFlash+1],a
 </code></pre>
 <p>If we get past all of the “wPlayerFlash” logic, we’ll draw our player using the “DrawMetasprite” function we previously discussed.</p>
@@ -4045,11 +4036,11 @@ UpdatePlayer_UpdateSprite_StopFlashing:
 
     ; Save the x position
     ld a, b
-    ld [wMetaspriteX],a
+    ld [wMetaspriteX], a
 
     ; Save the y position
     ld a, c
-    ld [wMetaspriteY],a
+    ld [wMetaspriteY], a
 
     ; Actually call the 'DrawMetasprites function
     call DrawMetasprites;
@@ -4061,13 +4052,13 @@ UpdatePlayer_UpdateSprite_StopFlashing:
     ret
 </code></pre>
 <p>That’s the end our our “UpdatePlayer” function. The final bit of code for our player handles when they are damaged. When an enemy damages the player, we want to decrease our lives by one. We’ll also start flashing  by giving our ‘mPlayerFlash’ variable a non-zero value. In the gameplay game state, if we’ve lost all lives, gameplay will end.</p>
-<pre><code class="language-rgbasm linenos start=198">DamagePlayer::
+<pre><code class="language-rgbasm linenos start=196">DamagePlayer::
 
     
 
-    ld a, 0
-    ld [mPlayerFlash+0], a
-    ld a, 1
+    xor a
+    ld [mPlayerFlash], a
+    inc a
     ld [mPlayerFlash+1], a
 
     ld a, [wLives]
@@ -4085,13 +4076,13 @@ include &quot;src/main/utils/constants.inc&quot;
 
 SECTION &quot;BulletVariables&quot;, WRAM0
 
-wSpawnBullet:db
+wSpawnBullet: db
 
 ; how many bullets are currently active
 wActiveBulletCounter:: db
 
 ; how many bullet's we've updated
-wUpdateBulletsCounter:db 
+wUpdateBulletsCounter: db 
 
 ; Bytes: active, x , y (low), y (high)
 wBullets:: ds MAX_BULLET_COUNT*PER_BULLET_BYTES_COUNT
@@ -4114,7 +4105,7 @@ bulletTileDataEnd::
 <p>We’ll iterate through bullet object pool, named “wBullets”, and activate the first of the the four bytes. Then skipping the next 3 bytes, to go onto the next bullet. We’ll do this until we’ve looped for each bullet in our pool.</p>
 <pre><code class="language-rgbasm linenos start=29">InitializeBullets::
 
-    ld a, 0
+    xor a
     ld [wSpawnBullet], a
 
     ; Copy the bullet tile data intto vram
@@ -4124,54 +4115,52 @@ bulletTileDataEnd::
     call CopyDEintoMemoryAtHL
 
     ; Reset how many bullets are active to 0
-    ld a,0
+    xor a
     ld [wActiveBulletCounter],a
 
-    ld b, 0
+    ld b, a
     ld hl, wBullets
+    ld [hl], a
 
 InitializeBullets_Loop:
 
-    ld a, 0
-    ld [hl], a
-
     ; Increase the address
     ld a, l
-    add a, PER_BULLET_BYTES_COUNT
+    add PER_BULLET_BYTES_COUNT
     ld l, a
     ld a, h
-    adc a, 0
+    adc 0
     ld h, a
 
     ; Increase how many bullets we have initailized
     ld a, b
     inc a
-    ld b ,a
+    ld b, a
 
-    cp a, MAX_BULLET_COUNT
+    cp MAX_BULLET_COUNT
     ret z
 
     jp InitializeBullets_Loop
 </code></pre>
 <h2 id="updating-bullets"><a class="header" href="#updating-bullets">Updating Bullets</a></h2>
 <p>When we want to update each of bullets, first we should check if any bullets are active. If no bullets are active we can stop early.</p>
-<pre><code class="language-rgbasm linenos start=70">UpdateBullets::
+<pre><code class="language-rgbasm linenos start=68">UpdateBullets::
 
     ; Make sure we have SOME active enemies
     ld a, [wSpawnBullet]
     ld b, a
     ld a, [wActiveBulletCounter]
-    or a,b
-    cp a, 0
+    or b
+    cp 0
     ret z
     
     ; Reset our counter for how many bullets we have checked
-    ld a, 0
+    xor a
     ld [wUpdateBulletsCounter], a
 
     ; Get the address of the first bullet in hl
     ld a, LOW(wBullets)
-    ld l,  a
+    ld l, a
     ld a, HIGH(wBullets)
     ld h, a
 
@@ -4196,28 +4185,28 @@ InitializeBullets_Loop:
 <li>Descale the y position we have in c &amp; d, and jump to our deactivation code if c (the low byte) is high enough</li>
 <li>Draw our bullet metasprit, if it wasn’t previously deactivated</li>
 </ul>
-<pre><code class="language-rgbasm linenos start=113">UpdateBullets_PerBullet:
+<pre><code class="language-rgbasm linenos start=111">UpdateBullets_PerBullet:
 
     ; The first byte is if the bullet is active
     ; If it's NOT  zero, it's active, go to the normal update section
     ld a, [hl]
-    cp a, 0
+    and a
     jp nz, UpdateBullets_PerBullet_Normal
 
     ; Do we need to spawn a bullet?
     ; If we dont, loop to the next enemy
     ld a, [wSpawnBullet]
-    cp a, 0
+    and a
     jp z, UpdateBullets_Loop
     
 UpdateBullets_PerBullet_SpawnDeactivatedBullet:
 
     ; reset this variable so we don't spawn anymore
-    ld a, 0
+    xor a
     ld [wSpawnBullet], a
     
     ; Increase how many bullets are active
-    ld a,[wActiveBulletCounter]
+    ld a, [wActiveBulletCounter]
     inc a
     ld [wActiveBulletCounter], a
 
@@ -4228,7 +4217,7 @@ UpdateBullets_PerBullet_SpawnDeactivatedBullet:
     ld [hli], a
 
     ; Get the unscaled player x position in b
-    ld a, [wPlayerPositionX+0]
+    ld a, [wPlayerPositionX]
     ld b, a
     ld a, [wPlayerPositionX+1]
     ld d, a
@@ -4249,10 +4238,10 @@ UpdateBullets_PerBullet_SpawnDeactivatedBullet:
     ld [hli], a
 
     ; Set the y position (low)
-    ld a, [wPlayerPositionY+0]
+    ld a, [wPlayerPositionY]
     ld [hli], a
 
-    ;Set the y position (high)
+    ; Set the y position (high)
     ld a, [wPlayerPositionY+1]
     ld [hli], a
 
@@ -4271,11 +4260,11 @@ UpdateBullets_PerBullet_Normal:
 
     ; get our 16-bit y position
     ld a, [hl]
-    sub a, BULLET_MOVE_SPEED
+    sub BULLET_MOVE_SPEED
     ld [hli], a
     ld c, a
     ld a, [hl] 
-    sbc a, 0
+    sbc 0
     ld [hl], a
     ld d, a
 
@@ -4293,14 +4282,14 @@ UpdateBullets_PerBullet_Normal:
 
     ; See if our non scaled low byte is above 160
     ld a, c
-    cp a, 178
-    ; If it below 160, continue on  to deactivate
+    cp 178
+    ; If it's below 160, deactivate
     jp nc, UpdateBullets_DeActivateIfOutOfBounds
     
 </code></pre>
 <h3 id="drawing-the-bullets"><a class="header" href="#drawing-the-bullets">Drawing the Bullets</a></h3>
 <p>We’ll draw our bullet metasprite like we drew the player, using our “DrawMetasprites” function. This function may alter the ‘h’ or ‘l’ registers, so we’ll push the hl register onto the stack before hand. After drawing, we’ll pop the hl register off of the stack to restore it’s value.</p>
-<pre><code class="language-rgbasm linenos start=214">
+<pre><code class="language-rgbasm linenos start=212">
     push hl
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4310,20 +4299,20 @@ UpdateBullets_PerBullet_Normal:
      ; Save the address of the metasprite into the 'wMetaspriteAddress' variable
     ; Our DrawMetasprites functoin uses that variable
     ld a, LOW(bulletMetasprite)
-    ld [wMetaspriteAddress+0], a
+    ld [wMetaspriteAddress], a
     ld a, HIGH(bulletMetasprite)
     ld [wMetaspriteAddress+1], a
 
     ; Save the x position
     ld a, b
-    ld [wMetaspriteX],a
+    ld [wMetaspriteX], a
 
     ; Save the y position
     ld a, c
-    ld [wMetaspriteY],a
+    ld [wMetaspriteY], a
 
     ; Actually call the 'DrawMetasprites function
-    call DrawMetasprites;
+    call DrawMetasprites
     
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    
@@ -4334,11 +4323,11 @@ UpdateBullets_PerBullet_Normal:
 </code></pre>
 <h3 id="deactivating-the-bullets"><a class="header" href="#deactivating-the-bullets">Deactivating the Bullets</a></h3>
 <p>If a bullet needs to be deactivated, we simply set it’s first byte to 0. At this point in time, the “hl” registers should point at our bullets first byte. This makes deactivation a really simple task. In addition to changing the first byte, we’ll decrease how many bullets we have that are active.</p>
-<pre><code class="language-rgbasm linenos start=246">UpdateBullets_DeActivateIfOutOfBounds:
+<pre><code class="language-rgbasm linenos start=244">UpdateBullets_DeActivateIfOutOfBounds:
 
     ; if it's y value is grater than 160
     ; Set as inactive
-    ld a, 0
+    xor a
     ld [hl], a
 
     ; Decrease counter
@@ -4350,7 +4339,7 @@ UpdateBullets_PerBullet_Normal:
 </code></pre>
 <h3 id="updating-the-next-bullet"><a class="header" href="#updating-the-next-bullet">Updating the next bullet</a></h3>
 <p>After we’ve updated a single bullet, we’ll increase how many bullet’s we’ve updated. If we’ve updated all the bullets, we can stop our “UpdateBullets” function. Otherwise, we’ll add 4 bytes to the addressed stored in “hl”, and update the next bullet.</p>
-<pre><code class="language-rgbasm linenos start=92">UpdateBullets_Loop:
+<pre><code class="language-rgbasm linenos start=90">UpdateBullets_Loop:
 
     ; Check our counter, if it's zero
     ; Stop the function
@@ -4360,15 +4349,15 @@ UpdateBullets_PerBullet_Normal:
 
     ; Check if we've already
     ld a, [wUpdateBulletsCounter]
-    cp a, MAX_BULLET_COUNT
+    cp MAX_BULLET_COUNT
     ret nc
 
     ; Increase the bullet data our address is pointingtwo
     ld a, l
-    add a, PER_BULLET_BYTES_COUNT
+    add PER_BULLET_BYTES_COUNT
     ld l, a
     ld a, h
-    adc a, 0
+    adc 0
     ld h, a
 </code></pre>
 <h2 id="firing-new-bullets"><a class="header" href="#firing-new-bullets">Firing New Bullets</a></h2>
@@ -4377,11 +4366,11 @@ UpdateBullets_PerBullet_Normal:
 <blockquote>
 <p>Our bullets only use one 8-bit integer for their x position, so need to de-scale the player’s 16-bit scaled x position</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=260">FireNextBullet::
+<pre><code class="language-rgbasm linenos start=258">FireNextBullet::
 
     ; Make sure we don't have the max amount of enmies
     ld a, [wActiveBulletCounter]
-    cp a, MAX_BULLET_COUNT
+    cp MAX_BULLET_COUNT
     ret nc
 
     ; Set our spawn bullet variable to true
@@ -4445,41 +4434,39 @@ enemyShipMetasprite::
 	ld bc, enemyShipTileDataEnd - enemyShipTileData
     call CopyDEintoMemoryAtHL
 
-    ld a, 0
+    xor a
     ld [wSpawnCounter], a
     ld [wActiveEnemyCounter], a
     ld [wNextEnemyXPosition], a
 
-    ld b, 0
+    ld b, a
 
     ld hl, wEnemies
 
 InitializeEnemies_Loop:
 
     ; Set as inactive
-    ld a, 0
-    ld [hl], a
+    ld [hl], 0
     
     ; Increase the address
     ld a, l
-    add a, PER_ENEMY_BYTES_COUNT
+    add PER_ENEMY_BYTES_COUNT
     ld l, a
     ld a, h
-    adc a, 0
+    adc 0
     ld h, a
 
+    inc b
     ld a, b
-    inc a
-    ld b ,a
 
-    cp a, MAX_ENEMY_COUNT
+    cp MAX_ENEMY_COUNT
     ret z
 
     jp InitializeEnemies_Loop
 </code></pre>
 <h2 id="updating-enemies"><a class="header" href="#updating-enemies">Updating Enemies</a></h2>
 <p>When “UpdateEnemies” is called from gameplay, the first thing we try to do is spawn new enemies. After that, if we have no active enemies (and are not trying to spawn a new enemy), we stop the “UpdateEnemies” function. From here, like with bullets, we’ll save the address of our first enemy in hl and start looping through.</p>
-<pre><code class="language-rgbasm linenos start=67">UpdateEnemies::
+<pre><code class="language-rgbasm linenos start=65">UpdateEnemies::
 
 	call TryToSpawnEnemies
 
@@ -4488,11 +4475,11 @@ InitializeEnemies_Loop:
     ld a, [wNextEnemyXPosition]
     ld b, a
     ld a, [wActiveEnemyCounter]
-    or a, b
-    cp a, 0
+    or b
+    and a
     ret z
     
-    ld a, 0
+    xor a
     ld [wUpdateEnemiesCounter], a
 
     ld a, LOW(wEnemies)
@@ -4504,12 +4491,12 @@ InitializeEnemies_Loop:
 </code></pre>
 <p>When we are  looping through our enemy object pool, let’s check if the current enemy is active. If it’s active, we’ll update it like normal. If it isn’t active, the game checks if we want to spawn a new enemy. We specify we want to spawn a new enemy by setting ‘wNextEnemyXPosition’ to a non-zero value. If we don’t want to spawn a new enemy, we’ll move on to the next enemy.</p>
 <p>If we want to spawn a new enemy, we’ll set the current inactive enemy to active. Afterwards, we’ll set it’s y position to zero, and it’s x position to whatever was in the ‘wNextEnemyXPosition’ variable. After that, we’ll increase our active enemy counter, and go on to update the enemy like normal.</p>
-<pre><code class="language-rgbasm linenos start=111">UpdateEnemies_PerEnemy:
+<pre><code class="language-rgbasm linenos start=108">UpdateEnemies_PerEnemy:
 
     ; The first byte is if the current object is active
     ; If it's not zero, it's active, go to the normal update section
     ld a, [hl]
-    cp 0
+    and a
     jp nz, UpdateEnemies_PerEnemy_Update
 
 UpdateEnemies_SpawnNewEnemy:
@@ -4517,7 +4504,7 @@ UpdateEnemies_SpawnNewEnemy:
     ; If this enemy is NOT active
     ; Check If we want to spawn a new enemy
     ld a, [wNextEnemyXPosition]
-    cp 0
+    and a
 
     ; If we don't want to spawn a new enemy, we'll skip this (deactivated) enemy
     jp z, UpdateEnemies_Loop
@@ -4534,17 +4521,15 @@ UpdateEnemies_SpawnNewEnemy:
     ld [hli], a
 
     ; Put the value for our enemies y position to equal 0
-    ld a, 0
+    xor a
     ld [hli], a
     ld [hld], a
-
-    ld a, 0
     ld [wNextEnemyXPosition], a
 
     pop hl
     
     ; Increase counter
-    ld a,[wActiveEnemyCounter]
+    ld a, [wActiveEnemyCounter]
     inc a
     ld [wActiveEnemyCounter], a
 
@@ -4553,7 +4538,7 @@ UpdateEnemies_SpawnNewEnemy:
 <blockquote>
 <p>The “hl” registers should always point to the current enemies first byte when this label is reached.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=89">UpdateEnemies_Loop:
+<pre><code class="language-rgbasm linenos start=87">UpdateEnemies_Loop:
 
     ; Check our coutner, if it's zero
     ; Stop the function
@@ -4562,20 +4547,19 @@ UpdateEnemies_SpawnNewEnemy:
     ld [wUpdateEnemiesCounter], a
 
     ; Compare against the active count
-    ld a, [wUpdateEnemiesCounter]
-    cp a, MAX_ENEMY_COUNT
+    cp MAX_ENEMY_COUNT
     ret nc
 
     ; Increase the enemy data our address is pointingtwo
     ld a, l
-    add a, PER_ENEMY_BYTES_COUNT
-    ld  l, a
+    add PER_ENEMY_BYTES_COUNT
+    ld l, a
     ld a, h
-    adc a, 0
-    ld  h, a
+    adc 0
+    ld h, a
 </code></pre>
 <p>For updating enemies, we’ll first get the enemies speed. Afterwards we’ll increase the enemies 16-bit y position. Once we’ve done that, we’ll descale the y position so we can check for collisions and draw the ennemy.</p>
-<pre><code class="language-rgbasm linenos start=156">UpdateEnemies_PerEnemy_Update:
+<pre><code class="language-rgbasm linenos start=151">UpdateEnemies_PerEnemy_Update:
 
     ; Save our first bytye
     push hl
@@ -4596,16 +4580,16 @@ UpdateEnemies_SpawnNewEnemy:
     ; Get our x position
     ld a, [hli]
     ld b, a
-    ld [wCurrentEnemyX],a
+    ld [wCurrentEnemyX], a
 
     ; get our 16-bit y position
     ; increase it (by e), but also save it 
     ld a, [hl]
-    add a, 10
+    add 10
     ld [hli], a
     ld c, a
     ld a, [hl]
-    adc a, 0
+    adc 0
     ld [hl], a
     ld d, a
 
@@ -4622,7 +4606,7 @@ UpdateEnemies_SpawnNewEnemy:
     rr c
 
     ld a, c
-    ld [wCurrentEnemyY],a
+    ld [wCurrentEnemyY], a
 
 </code></pre>
 <h2 id="player--bullet-collision"><a class="header" href="#player--bullet-collision">Player &amp; Bullet Collision</a></h2>
@@ -4631,21 +4615,17 @@ UpdateEnemies_SpawnNewEnemy:
 <blockquote>
 <p>Our “hl” registers should point to the active byte of the current enemy. We push and pop our “hl” registers to make sure we get back to that same address for later logic.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=207">UpdateEnemies_PerEnemy_CheckPlayerCollision:
+<pre><code class="language-rgbasm linenos start=202">UpdateEnemies_PerEnemy_CheckPlayerCollision:
 
     push hl
 
     call CheckCurrentEnemyAgainstBullets
-
-    pop hl
-    push hl
-
     call CheckEnemyPlayerCollision
 
     pop hl
 
     ld a, [wResult]
-    cp a, 0
+    and a
     jp z, UpdateEnemies_NoCollisionWithPlayer 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -4659,11 +4639,11 @@ UpdateEnemies_SpawnNewEnemy:
     jp UpdateEnemies_DeActivateEnemy
 </code></pre>
 <p>If there is no collision with the player, we’ll draw the enemies. This is done just as we did the player and bullets, with the “DrawMetasprites” function.</p>
-<pre><code class="language-rgbasm linenos start=249">UpdateEnemies_NoCollisionWithPlayer::
+<pre><code class="language-rgbasm linenos start=240">UpdateEnemies_NoCollisionWithPlayer::
 
     ; See if our non scaled low byte is above 160
     ld a, [wCurrentEnemyY]
-    cp a, 160
+    cp 160
     jp nc, UpdateEnemies_DeActivateEnemy
 
     push hl
@@ -4681,14 +4661,14 @@ UpdateEnemies_SpawnNewEnemy:
 
     ; Save the x position
     ld a, [wCurrentEnemyX]
-    ld [wMetaspriteX],a
+    ld [wMetaspriteX], a
 
     ; Save the y position
     ld a, [wCurrentEnemyY]
-    ld [wMetaspriteY],a
+    ld [wMetaspriteY], a
 
     ; Actually call the 'DrawMetasprites function
-    call DrawMetasprites;
+    call DrawMetasprites
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4703,14 +4683,14 @@ UpdateEnemies_SpawnNewEnemy:
 <blockquote>
 <p>Here, we can just use the current address in HL. This is the second reason we wanted to keep the address of our first byte on the stack.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=235">UpdateEnemies_DeActivateEnemy:
+<pre><code class="language-rgbasm linenos start=226">UpdateEnemies_DeActivateEnemy:
 
     ; Set as inactive
-    ld a, 0
+    xor
     ld [hl], a
 
     ; Decrease counter
-    ld a,[wActiveEnemyCounter]
+    ld a, [wActiveEnemyCounter]
     dec a
     ld [wActiveEnemyCounter], a
 
@@ -4724,7 +4704,7 @@ UpdateEnemies_SpawnNewEnemy:
 <p>All enemies are spawned with y position of 0, so we only need to get the x position.</p>
 </blockquote>
 <p>If we have a valid x position, we’ll reset our spawn counter, and save that x position in the “wNextEnemyXPosition” variable. With this variable set, We’ll later activate and update a enemy that we find in the inactive state.</p>
-<pre><code class="language-rgbasm linenos start=290">TryToSpawnEnemies::
+<pre><code class="language-rgbasm linenos start=281">TryToSpawnEnemies::
 
     ; Increase our spwncounter
     ld a, [wSpawnCounter]
@@ -4734,18 +4714,18 @@ UpdateEnemies_SpawnNewEnemy:
     ; Check our spawn acounter
     ; Stop if it's below a given value
     ld a, [wSpawnCounter]
-    cp a, ENEMY_SPAWN_DELAY_MAX
+    cp ENEMY_SPAWN_DELAY_MAX
     ret c
 
     ; Check our next enemy x position variable
     ; Stop if it's non zero
     ld a, [wNextEnemyXPosition]
-    cp a, 0
+    cp 0
     ret nz
 
     ; Make sure we don't have the max amount of enmies
     ld a, [wActiveEnemyCounter]
-    cp a, MAX_ENEMY_COUNT
+    cp MAX_ENEMY_COUNT
     ret nc
 
 GetSpawnPosition:
@@ -4754,17 +4734,17 @@ GetSpawnPosition:
     call rand
     
     ; make sure it's not above 150
-    ld a,b
-    cp a, 150
+    ld a, b
+    cp 150
     ret nc
 
     ; make sure it's not below 24
     ld a, b
-    cp a, 24
+    cp 24
     ret c
 
     ; reset our spawn counter
-    ld a, 0
+    xor a
     ld [wSpawnCounter], a
     
     ld a, b
@@ -4822,14 +4802,13 @@ NoAxisOverlap:
 <p>NOTE: We don’t need to test the y-axis if the x-axis fails. </p>
 </blockquote>
 <p>The source code for that function looks like this:</p>
-<pre><code class="language-rgbasm linenos start=1">include &quot;src/main/utils/hardware.inc&quot;
-include &quot;src/main/utils/constants.inc&quot;
+<pre><code class="language-rgbasm linenos start=1">include &quot;src/main/utils/constants.inc&quot;
 include &quot;src/main/utils/hardware.inc&quot;
 
 SECTION &quot;CollisionUtilsVariables&quot;, WRAM0
 
-wResult::db;
-wSize::db;
+wResult::       db
+wSize::         db
 wObject1Value:: db
 wObject2Value:: db
 
@@ -4851,8 +4830,8 @@ CheckObjectPositionDifference::
     ; carry means e&lt;b, means enemy.bottom is visually above bullet.y (no collision)
 
     ld a, e
-    add a, d
-    cp a, b
+    add d
+    cp b
 
     ;  carry means  no collision
     jp c, CheckObjectPositionDifference_Failure
@@ -4860,15 +4839,15 @@ CheckObjectPositionDifference::
     ; subtract  enemy.y-8 (aka e) - bullet.y (aka b)
     ; no carry means e&gt;b, means enemy.top is visually below bullet.y (no collision)
     ld a, e
-    sub a, d
-    cp a, b
+    sub d
+    cp b
 
     ; no carry means no collision
     jp nc, CheckObjectPositionDifference_Failure
 
-    ld a,1
+    ld a, 1
     ld [wResult], a
-    ret;
+    ret
 
     
 CheckObjectPositionDifference_Failure:
@@ -4886,11 +4865,11 @@ CheckObjectPositionDifference_Failure:
 <pre><code class="language-rgbasm linenos start=6">CheckEnemyPlayerCollision::
 
     ; Get our player's unscaled x position in d
-    ld a, [wPlayerPositionX+0]
-    ld d,a
+    ld a, [wPlayerPositionX]
+    ld d, a
 
     ld a, [wPlayerPositionX+1]
-    ld e,a
+    ld e, a
 
     srl e
     rr d
@@ -4921,7 +4900,7 @@ CheckObjectPositionDifference_Failure:
     call CheckObjectPositionDifference
 
     ld a, [wResult]
-    cp a, 0
+    and a
     jp z, NoCollisionWithPlayer
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -4931,10 +4910,10 @@ CheckObjectPositionDifference_Failure:
 <p>We’ll get the player’s unscaled y position. We’ll store that value in d for consistency.</p>
 <pre><code class="language-rgbasm linenos start=49">    ; Get our player's unscaled y position in d
     ld a, [wPlayerPositionY+0]
-    ld d,a
+    ld d, a
 
     ld a, [wPlayerPositionY+1]
-    ld e,a
+    ld e, a
 
     srl e
     rr d
@@ -4966,7 +4945,7 @@ CheckObjectPositionDifference_Failure:
     call CheckObjectPositionDifference
 
     ld a, [wResult]
-    cp a, 0
+    and a
     jp z, NoCollisionWithPlayer
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -4980,7 +4959,7 @@ CheckObjectPositionDifference_Failure:
     
 NoCollisionWithPlayer::
 
-    ld a, 0
+    xor a
     ld [wResult], a
 
     ret
@@ -5010,11 +4989,11 @@ CheckCurrentEnemyAgainstBullets::
 
 
     ld a, l
-    ld [wUpdateEnemiesCurrentEnemyAddress+0], a
+    ld [wUpdateEnemiesCurrentEnemyAddress], a
     ld a, h
     ld [wUpdateEnemiesCurrentEnemyAddress+1], a
 
-    ld a, 0
+    xor a
     ld [wEnemyBulletCollisionCounter], a
     
     ; Copy our bullets address into wBulletAddress
@@ -5029,7 +5008,7 @@ CheckCurrentEnemyAgainstBullets::
 <pre><code class="language-rgbasm linenos start=53">CheckCurrentEnemyAgainstBullets_PerBullet:
 
     ld a, [hl]
-    cp a, 1
+    cp 1
     jp nz, CheckCurrentEnemyAgainstBullets_Loop
 </code></pre>
 <p>First, we need to check if the current enemy and current bullet are overlapping on the x axis. We’ll get the enemy’s x position in e, and the bullet’s x position in b. From there, we’ll again call our “CheckObjectPositionDifference” function. If it returns a failure (wResult=0), we’ll start with the next bullet.</p>
@@ -5045,7 +5024,7 @@ CheckCurrentEnemyAgainstBullets::
 
     ; Get our x position
     ld a, [hli]
-    add a, 4
+    add 4
     ld b, a
 
     push hl
@@ -5060,7 +5039,7 @@ CheckCurrentEnemyAgainstBullets::
 
     ; The second value
     ld a, [wCurrentEnemyX]
-    add a, 8
+    add 8
     ld [wObject2Value], a
 
     ; Save if the minimum distance
@@ -5071,7 +5050,7 @@ CheckCurrentEnemyAgainstBullets::
 
     
     ld a, [wResult]
-    cp a, 0
+    and a
     jp z, CheckCurrentEnemyAgainstBullets_Check_X_Overlap_Fail
 
     
@@ -5132,7 +5111,7 @@ CheckCurrentEnemyAgainstBullets_PerBullet_Y_Overlap:
     pop hl
     
     ld a, [wResult]
-    cp a, 0
+    and a
     jp z, CheckCurrentEnemyAgainstBullets_Loop
     jp CheckCurrentEnemyAgainstBullets_PerBullet_Collision
 
@@ -5145,7 +5124,7 @@ CheckCurrentEnemyAgainstBullets_PerBullet_Y_Overlap:
 <pre><code class="language-rgbasm linenos start=168">CheckCurrentEnemyAgainstBullets_PerBullet_Collision:
 
     ; set the active byte  and x value to 0 for bullets
-    ld a, 0
+    xor a
     ld [hli], a
     ld [hl], a
 
@@ -5155,11 +5134,11 @@ CheckCurrentEnemyAgainstBullets_PerBullet_Y_Overlap:
     ld h, a
 
     ; set the active byte  and x value to 0 for enemies
-    ld a, 0
+    xor a
     ld [hli], a
     ld [hl], a
     
-    call IncreaseScore;
+    call IncreaseScore
     call DrawScore
 
     ; Decrease how many active enemies their are
@@ -5183,16 +5162,16 @@ CheckCurrentEnemyAgainstBullets_PerBullet_Y_Overlap:
     ld [wEnemyBulletCollisionCounter], a
 
     ; Stop if we've checked all bullets
-    cp a, MAX_BULLET_COUNT
+    cp MAX_BULLET_COUNT
     ret nc
 
     ; Increase the  data our address is pointing to
     ld a, l
-    add a, PER_BULLET_BYTES_COUNT
-    ld  l, a
+    add PER_BULLET_BYTES_COUNT
+    ld l, a
     ld a, h
-    adc a, 0
-    ld  h, a
+    adc 0
+    ld h, a
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="conclusione"><a class="header" href="#conclusione">Conclusione</a></h1>
 <p>If you liked this tutorial, and you want to take things to the next level, here are some ideas:</p>

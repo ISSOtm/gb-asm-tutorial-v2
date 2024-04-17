@@ -241,10 +241,10 @@ wLivesText::  db &quot;lives&quot;, 255
 <pre><code class="language-rgbasm linenos start=14">InitGameplayState::
 
 	ld a, 3
-	ld [wLives+0], a
+	ld [wLives], a
 
-	ld a, 0
-	ld [wScore+0], a
+	xor a
+	ld [wScore], a
 	ld [wScore+1], a
 	ld [wScore+2], a
 	ld [wScore+3], a
@@ -268,7 +268,7 @@ wLivesText::  db &quot;lives&quot;, 255
     call DrawTextTilesLoop
 
 	; Call Our function that draws text onto background/window tiles
-    ld de, $9c0D
+    ld de, $9c0d
     ld hl, wLivesText
     call DrawTextTilesLoop
 	
@@ -288,7 +288,7 @@ wLivesText::  db &quot;lives&quot;, 255
 	ld a, LCDCF_ON  | LCDCF_BGON|LCDCF_OBJON | LCDCF_OBJ16 | LCDCF_WINON | LCDCF_WIN9C00|LCDCF_BG9800
 	ld [rLCDC], a
 
-    ret;
+    ret
 </code></pre>
 <p>The initialization logic for our the background, the player, the enemies, the bullets will be explained in later pages. Every game state is responsible for turning the LCD back on. The gameplay game state needs to use the window layer, so we’ll make sure that’s enabled before we return.</p>
 <h2 id="updating-the-gameplay-game-state"><a class="header" href="#updating-the-gameplay-game-state">Updating the Gameplay Game State</a></h2>
@@ -333,13 +333,13 @@ wLivesText::  db &quot;lives&quot;, 255
 <blockquote>
 <p><strong>NOTE:</strong> We also keep a counter on how many shadow OAM sprites are used. In our “ResetOAMSpriteAddress” function, we’ll reset that counter too.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=64">ResetOAMSpriteAddress::
+<pre><code class="language-rgbasm linenos start=61">ResetOAMSpriteAddress::
     
-    ld a, 0
+    xor a
     ld [wSpritesUsed], a
 
 	ld a, LOW(wShadowOAM)
-	ld [wLastOAMAddress+0], a
+	ld [wLastOAMAddress], a
 	ld a, HIGH(wShadowOAM)
 	ld [wLastOAMAddress+1], a
 
@@ -360,7 +360,7 @@ wLivesText::  db &quot;lives&quot;, 255
 <p>At this point in time, we need to check if gameplay needs to continue. When the vertical blank phase starts, we check if the player has lost all of their lives. If so, we end gameplay. We end gameplay similar to how we started it, we’ll update our ‘wGameState’ variable and jump to “NextGameState”.</p>
 <p>If the player hasn’t lost all of their lives, we’ll copy our shadow OAM sprites over to the actual hardware OAM sprites and loop background.</p>
 <pre><code class="language-rgbasm linenos start=91">	ld a, [wLives]
-	cp a, 250
+	cp 250
 	jp nc, EndGameplay
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
