@@ -224,12 +224,10 @@
 </ul>
 <p>The logic stops drawing when it reads 128. </p>
 <p>An example of metasprite is the enemy ship:</p>
-<pre><code class="language-rgbasm linenos start=501">
-enemyShipMetasprite::
+<pre><code class="language-rgbasm linenos start=24">enemyShipMetasprite::
     .metasprite1    db 0,0,4,0
     .metasprite2    db 0,8,6,0
     .metaspriteEnd  db 128
-
 </code></pre>
 <p><img src="../assets/part3/img/MetaspriteDIagram.png" alt="MetaspriteDIagram.png" /></p>
 <p>The Previous snippet draws two sprites. One that the object’s actual position, which uses tile 4 and 5. The second sprite is 8 pixels to the right, and uses tile 6 and 7</p>
@@ -237,19 +235,29 @@ enemyShipMetasprite::
 <p>⚠️ <strong>NOTE</strong>: Sprites are in 8x16 mode for this project.</p>
 </blockquote>
 <p>I can later draw such metasprite by calling the “DrawMetasprite” function that</p>
-<pre><code class="language-rgbasm linenos start=509">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; call the 'DrawMetasprites function. 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Save the x position
-ld a, b
-ld [wMetaspriteX],a
+<pre><code class="language-rgbasm linenos start=251">
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ; call the 'DrawMetasprites function. setup variables and call
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Save the y position
-ld a, c
-ld [wMetaspriteY],a
+    ; Save the address of the metasprite into the 'wMetaspriteAddress' variable
+    ; Our DrawMetasprites functoin uses that variable
+    ld a, LOW(enemyShipMetasprite)
+    ld [wMetaspriteAddress+0], a
+    ld a, HIGH(enemyShipMetasprite)
+    ld [wMetaspriteAddress+1], a
 
-; Actually call the 'DrawMetasprites function
-call DrawMetasprites;
+    ; Save the x position
+    ld a, [wCurrentEnemyX]
+    ld [wMetaspriteX], a
+
+    ; Save the y position
+    ld a, [wCurrentEnemyY]
+    ld [wMetaspriteY], a
+
+    ; Actually call the 'DrawMetasprites function
+    call DrawMetasprites
+
 </code></pre>
 <p>We previously mentioned a variable called “wLastOAMAddress”. The “DrawMetasprites” function can be found in the “src/main/utils/metasprites.asm” file:</p>
 <pre><code class="language-rgbasm linenos start=1">

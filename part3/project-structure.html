@@ -312,16 +312,17 @@ $(GENBACKGROUNDS)/%.tilemap: $(RESBACKGROUNDS)/%.png | $(GENBACKGROUNDS)
 		$&lt;
 </code></pre>
 <p>From there, INCBIN commands are used to store reference the binary tile data.</p>
-<pre><code class="language-rgbasm linenos start=2">
+<pre><code class="language-rgbasm">; in src/main/states/gameplay/objects/player.asm
 playerShipTileData: INCBIN &quot;src/generated/sprites/player-ship.2bpp&quot;
 playerShipTileDataEnd:
 
+; in src/main/states/gameplay/objects/enemies.asm
 enemyShipTileData:: INCBIN &quot;src/generated/sprites/enemy-ship.2bpp&quot;
 enemyShipTileDataEnd::
 
+; in src/main/states/gameplay/objects/bullets.asm
 bulletTileData:: INCBIN &quot;src/generated/sprites/bullet.2bpp&quot;
 bulletTileDataEnd::
-
 </code></pre>
 <div class="box tip"><p class="box-title">Including binary files</p>
 <p>You probably have some graphics, level data, etc. you’d like to include. Use <strong><code>INCBIN</code></strong> to include a raw binary file as it is. If the file isn’t found in the current directory, the include-path list passed to <a href="https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.1">rgbasm(1)</a> (see the <strong><code>-i</code></strong> option) on the command line will be searched.</p>

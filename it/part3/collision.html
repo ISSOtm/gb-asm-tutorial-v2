@@ -219,15 +219,15 @@
 <p>For this, we’ve created a basic function called “CheckObjectPositionDifference”. This function will help us check for overlap on the x or y axis. When the (absolute) difference between the first two values passed is greater than the third value passed, it jump’s to the label passed in the fourth parameter.</p>
 <p>Here’s an example of how to call this function:</p>
 <blockquote>
-<p>We have the player’s x &amp; y position in registers d &amp; e respectively. We have the enemy’s x &amp; y position in registers b &amp; c respectively. If there is no overlap on the x or y axis, the program jumps to the “NoCollisionWithPlayer” label.</p>
+<p>We have the player’s Y position in the <code>d</code> register. We’ll check it’s value against the y value of the current enemy, which we have in a variable named <code>wCurrentEnemyY</code>.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=696">
+<pre><code class="language-rgbasm linenos start=67">
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ; Check the absolute distances. Jump to 'NoAxisOverlap' on failure
+    ; Check the y distances. Jump to 'NoCollisionWithPlayer' on failure
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-    ld a, b
+    ld a, [wCurrentEnemyY]
     ld [wObject1Value], a
 
     ld a, d
@@ -240,17 +240,9 @@
     call CheckObjectPositionDifference
 
     ld a, [wResult]
-    cp a, 0
-    jp z, NoAxisOverlap
-
-OverlapExists:
-
-  ... There is an overlap
-
-NoAxisOverlap:
-
-  ... no overlap
-    
+    and a
+    jp z, NoCollisionWithPlayer
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 </code></pre>
 <p>When checking for collision, we’ll use that function twice. Once for the x-axis, and again for the y-axis.</p>

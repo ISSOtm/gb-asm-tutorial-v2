@@ -263,7 +263,7 @@ titleScreenTileMapEnd:
     ret
 </code></pre>
 <p>In order to draw text in our game, we’ve created a function called “DrawTextTilesLoop”. We’ll pass this function which tile to start on in <code>de</code>, and the address of our text in <code>hl</code>.</p>
-<pre><code class="language-rgbasm linenos start=14">DrawTextTilesLoop::
+<pre><code class="language-rgbasm linenos start=16">DrawTextTilesLoop::
 
     ; Check for the end of string character 255
     ld a, [hl]

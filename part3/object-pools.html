@@ -211,8 +211,7 @@
                         <h1 id="object-pools"><a class="header" href="#object-pools">Object Pools</a></h1>
 <p>Galactic Armada will use “object pools” for bullets and enemies. A fixed amount of bytes representing a specific maximum amount of objects. Each pool is just a collection of bytes. The number of bytes per “pool” is the maximum number of objects in the pool, times the number of bytes needed for data for each object.</p>
 <p>Constants are also created for the size of each object, and what each byte is. These constants are in the “src/main/utils/constants.inc” file and utilize RGBDS offset constants (a really cool feature)</p>
-<pre><code class="language-rgbasm linenos start=528">
-; from https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.5#EXPRESSIONS
+<pre><code class="language-rgbasm linenos start=28">; from https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.5#EXPRESSIONS
 ; The RS group of commands is a handy way of defining structure offsets:
 RSRESET
 DEF bullet_activeByte            RB   1
@@ -220,8 +219,6 @@ DEF bullet_xByte                 RB   1
 DEF bullet_yLowByte              RB   1
 DEF bullet_yHighByte             RB   1
 DEF PER_BULLET_BYTES_COUNT       RB   0
-
-
 </code></pre>
 <p>The two object types that we need to loop through are Enemies and Bullets.</p>
 <p><strong>Bytes for an Enemy:</strong></p>
@@ -233,8 +230,7 @@ DEF PER_BULLET_BYTES_COUNT       RB   0
 <li>Speed - How fast they move</li>
 <li>Health - How many bullets they can take</li>
 </ol>
-<pre><code class="language-rgbasm linenos start=540">
-; Bytes: active, x , y (low), y (high), speed, health
+<pre><code class="language-rgbasm linenos start=15">; Bytes: active, x , y (low), y (high), speed, health
 wEnemies:: ds MAX_ENEMY_COUNT*PER_ENEMY_BYTES_COUNT
 
 </code></pre>
@@ -246,7 +242,7 @@ wEnemies:: ds MAX_ENEMY_COUNT*PER_ENEMY_BYTES_COUNT
 <li>Y (low) - The lower byte of their 16-bit (scaled) y position</li>
 <li>Y (high) - The higher byte of their 16-bit (scaled) y position</li>
 </ol>
-<pre><code class="language-rgbasm linenos start=523">
+<pre><code class="language-rgbasm linenos start=15">
 ; Bytes: active, x , y (low), y (high)
 wBullets:: ds MAX_BULLET_COUNT*PER_BULLET_BYTES_COUNT
 

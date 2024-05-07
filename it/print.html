@@ -2516,16 +2516,17 @@ $(GENBACKGROUNDS)/%.tilemap: $(RESBACKGROUNDS)/%.png | $(GENBACKGROUNDS)
 		$&lt;
 </code></pre>
 <p>From there, INCBIN commands are used to store reference the binary tile data.</p>
-<pre><code class="language-rgbasm linenos start=2">
+<pre><code class="language-rgbasm">; in src/main/states/gameplay/objects/player.asm
 playerShipTileData: INCBIN &quot;src/generated/sprites/player-ship.2bpp&quot;
 playerShipTileDataEnd:
 
+; in src/main/states/gameplay/objects/enemies.asm
 enemyShipTileData:: INCBIN &quot;src/generated/sprites/enemy-ship.2bpp&quot;
 enemyShipTileDataEnd::
 
+; in src/main/states/gameplay/objects/bullets.asm
 bulletTileData:: INCBIN &quot;src/generated/sprites/bullet.2bpp&quot;
 bulletTileDataEnd::
-
 </code></pre>
 <div class="box tip"><p class="box-title">Including binary files</p>
 <p>You probably have some graphics, level data, etc. you’d like to include. Use <strong><code>INCBIN</code></strong> to include a raw binary file as it is. If the file isn’t found in the current directory, the include-path list passed to <a href="https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.1">rgbasm(1)</a> (see the <strong><code>-i</code></strong> option) on the command line will be searched.</p>
@@ -2815,7 +2816,7 @@ titleScreenTileMapEnd:
     ret
 </code></pre>
 <p>In order to draw text in our game, we’ve created a function called “DrawTextTilesLoop”. We’ll pass this function which tile to start on in <code>de</code>, and the address of our text in <code>hl</code>.</p>
-<pre><code class="language-rgbasm linenos start=14">DrawTextTilesLoop::
+<pre><code class="language-rgbasm linenos start=16">DrawTextTilesLoop::
 
     ; Check for the end of string character 255
     ld a, [hl]
@@ -2994,7 +2995,7 @@ InitStoryState::
 <p>You could bind this to a variable and make it configurable via an options screen too!</p>
 </blockquote>
 <p>For this effect, we’ve defined a function in our “src/main/utils/text-utils.asm” file:</p>
-<pre><code class="language-rgbasm linenos start=32">DrawText_WithTypewriterEffect::
+<pre><code class="language-rgbasm linenos start=34">DrawText_WithTypewriterEffect::
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; Wait a small amount of time
@@ -3576,12 +3577,10 @@ DrawScore_Loop:
 </ul>
 <p>The logic stops drawing when it reads 128. </p>
 <p>An example of metasprite is the enemy ship:</p>
-<pre><code class="language-rgbasm linenos start=501">
-enemyShipMetasprite::
+<pre><code class="language-rgbasm linenos start=24">enemyShipMetasprite::
     .metasprite1    db 0,0,4,0
     .metasprite2    db 0,8,6,0
     .metaspriteEnd  db 128
-
 </code></pre>
 <p><img src="part3/../assets/part3/img/MetaspriteDIagram.png" alt="MetaspriteDIagram.png" /></p>
 <p>The Previous snippet draws two sprites. One that the object’s actual position, which uses tile 4 and 5. The second sprite is 8 pixels to the right, and uses tile 6 and 7</p>
@@ -3589,19 +3588,29 @@ enemyShipMetasprite::
 <p>⚠️ <strong>NOTE</strong>: Sprites are in 8x16 mode for this project.</p>
 </blockquote>
 <p>I can later draw such metasprite by calling the “DrawMetasprite” function that</p>
-<pre><code class="language-rgbasm linenos start=509">;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; call the 'DrawMetasprites function. 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Save the x position
-ld a, b
-ld [wMetaspriteX],a
+<pre><code class="language-rgbasm linenos start=251">
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ; call the 'DrawMetasprites function. setup variables and call
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Save the y position
-ld a, c
-ld [wMetaspriteY],a
+    ; Save the address of the metasprite into the 'wMetaspriteAddress' variable
+    ; Our DrawMetasprites functoin uses that variable
+    ld a, LOW(enemyShipMetasprite)
+    ld [wMetaspriteAddress+0], a
+    ld a, HIGH(enemyShipMetasprite)
+    ld [wMetaspriteAddress+1], a
 
-; Actually call the 'DrawMetasprites function
-call DrawMetasprites;
+    ; Save the x position
+    ld a, [wCurrentEnemyX]
+    ld [wMetaspriteX], a
+
+    ; Save the y position
+    ld a, [wCurrentEnemyY]
+    ld [wMetaspriteY], a
+
+    ; Actually call the 'DrawMetasprites function
+    call DrawMetasprites
+
 </code></pre>
 <p>We previously mentioned a variable called “wLastOAMAddress”. The “DrawMetasprites” function can be found in the “src/main/utils/metasprites.asm” file:</p>
 <pre><code class="language-rgbasm linenos start=1">
@@ -3703,8 +3712,7 @@ DrawMetasprites::
 <div style="break-before: page; page-break-before: always;"></div><h1 id="object-pools"><a class="header" href="#object-pools">Object Pools</a></h1>
 <p>Galactic Armada will use “object pools” for bullets and enemies. A fixed amount of bytes representing a specific maximum amount of objects. Each pool is just a collection of bytes. The number of bytes per “pool” is the maximum number of objects in the pool, times the number of bytes needed for data for each object.</p>
 <p>Constants are also created for the size of each object, and what each byte is. These constants are in the “src/main/utils/constants.inc” file and utilize RGBDS offset constants (a really cool feature)</p>
-<pre><code class="language-rgbasm linenos start=528">
-; from https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.5#EXPRESSIONS
+<pre><code class="language-rgbasm linenos start=28">; from https://rgbds.gbdev.io/docs/v0.6.1/rgbasm.5#EXPRESSIONS
 ; The RS group of commands is a handy way of defining structure offsets:
 RSRESET
 DEF bullet_activeByte            RB   1
@@ -3712,8 +3720,6 @@ DEF bullet_xByte                 RB   1
 DEF bullet_yLowByte              RB   1
 DEF bullet_yHighByte             RB   1
 DEF PER_BULLET_BYTES_COUNT       RB   0
-
-
 </code></pre>
 <p>The two object types that we need to loop through are Enemies and Bullets.</p>
 <p><strong>Bytes for an Enemy:</strong></p>
@@ -3725,8 +3731,7 @@ DEF PER_BULLET_BYTES_COUNT       RB   0
 <li>Speed - How fast they move</li>
 <li>Health - How many bullets they can take</li>
 </ol>
-<pre><code class="language-rgbasm linenos start=540">
-; Bytes: active, x , y (low), y (high), speed, health
+<pre><code class="language-rgbasm linenos start=15">; Bytes: active, x , y (low), y (high), speed, health
 wEnemies:: ds MAX_ENEMY_COUNT*PER_ENEMY_BYTES_COUNT
 
 </code></pre>
@@ -3738,7 +3743,7 @@ wEnemies:: ds MAX_ENEMY_COUNT*PER_ENEMY_BYTES_COUNT
 <li>Y (low) - The lower byte of their 16-bit (scaled) y position</li>
 <li>Y (high) - The higher byte of their 16-bit (scaled) y position</li>
 </ol>
-<pre><code class="language-rgbasm linenos start=523">
+<pre><code class="language-rgbasm linenos start=15">
 ; Bytes: active, x , y (low), y (high)
 wBullets:: ds MAX_BULLET_COUNT*PER_BULLET_BYTES_COUNT
 
@@ -4084,8 +4089,10 @@ wActiveBulletCounter:: db
 ; how many bullet's we've updated
 wUpdateBulletsCounter: db 
 
+
 ; Bytes: active, x , y (low), y (high)
 wBullets:: ds MAX_BULLET_COUNT*PER_BULLET_BYTES_COUNT
+
 
 SECTION &quot;Bullets&quot;, ROM0
 
@@ -4103,7 +4110,7 @@ bulletTileDataEnd::
 <p>In our “InitializeBullets” function, we’ll copy the tile data for the bullet sprites into VRAM, and set every bullet as inactive. Each bullet is 4 bytes, the first byte signaling if the bullet is active or not. </p>
 <p><img src="part3/../assets/part3/img/BulletBytesVisualized.png" alt="BulletBytesVisualized.png" /></p>
 <p>We’ll iterate through bullet object pool, named “wBullets”, and activate the first of the the four bytes. Then skipping the next 3 bytes, to go onto the next bullet. We’ll do this until we’ve looped for each bullet in our pool.</p>
-<pre><code class="language-rgbasm linenos start=29">InitializeBullets::
+<pre><code class="language-rgbasm linenos start=31">InitializeBullets::
 
     xor a
     ld [wSpawnBullet], a
@@ -4144,7 +4151,7 @@ InitializeBullets_Loop:
 </code></pre>
 <h2 id="updating-bullets"><a class="header" href="#updating-bullets">Updating Bullets</a></h2>
 <p>When we want to update each of bullets, first we should check if any bullets are active. If no bullets are active we can stop early.</p>
-<pre><code class="language-rgbasm linenos start=68">UpdateBullets::
+<pre><code class="language-rgbasm linenos start=70">UpdateBullets::
 
     ; Make sure we have SOME active enemies
     ld a, [wSpawnBullet]
@@ -4185,7 +4192,7 @@ InitializeBullets_Loop:
 <li>Descale the y position we have in c &amp; d, and jump to our deactivation code if c (the low byte) is high enough</li>
 <li>Draw our bullet metasprit, if it wasn’t previously deactivated</li>
 </ul>
-<pre><code class="language-rgbasm linenos start=111">UpdateBullets_PerBullet:
+<pre><code class="language-rgbasm linenos start=113">UpdateBullets_PerBullet:
 
     ; The first byte is if the bullet is active
     ; If it's NOT  zero, it's active, go to the normal update section
@@ -4289,7 +4296,7 @@ UpdateBullets_PerBullet_Normal:
 </code></pre>
 <h3 id="drawing-the-bullets"><a class="header" href="#drawing-the-bullets">Drawing the Bullets</a></h3>
 <p>We’ll draw our bullet metasprite like we drew the player, using our “DrawMetasprites” function. This function may alter the ‘h’ or ‘l’ registers, so we’ll push the hl register onto the stack before hand. After drawing, we’ll pop the hl register off of the stack to restore it’s value.</p>
-<pre><code class="language-rgbasm linenos start=212">
+<pre><code class="language-rgbasm linenos start=214">
     push hl
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4323,7 +4330,7 @@ UpdateBullets_PerBullet_Normal:
 </code></pre>
 <h3 id="deactivating-the-bullets"><a class="header" href="#deactivating-the-bullets">Deactivating the Bullets</a></h3>
 <p>If a bullet needs to be deactivated, we simply set it’s first byte to 0. At this point in time, the “hl” registers should point at our bullets first byte. This makes deactivation a really simple task. In addition to changing the first byte, we’ll decrease how many bullets we have that are active.</p>
-<pre><code class="language-rgbasm linenos start=244">UpdateBullets_DeActivateIfOutOfBounds:
+<pre><code class="language-rgbasm linenos start=246">UpdateBullets_DeActivateIfOutOfBounds:
 
     ; if it's y value is grater than 160
     ; Set as inactive
@@ -4339,7 +4346,7 @@ UpdateBullets_PerBullet_Normal:
 </code></pre>
 <h3 id="updating-the-next-bullet"><a class="header" href="#updating-the-next-bullet">Updating the next bullet</a></h3>
 <p>After we’ve updated a single bullet, we’ll increase how many bullet’s we’ve updated. If we’ve updated all the bullets, we can stop our “UpdateBullets” function. Otherwise, we’ll add 4 bytes to the addressed stored in “hl”, and update the next bullet.</p>
-<pre><code class="language-rgbasm linenos start=90">UpdateBullets_Loop:
+<pre><code class="language-rgbasm linenos start=92">UpdateBullets_Loop:
 
     ; Check our counter, if it's zero
     ; Stop the function
@@ -4366,7 +4373,7 @@ UpdateBullets_PerBullet_Normal:
 <blockquote>
 <p>Our bullets only use one 8-bit integer for their x position, so need to de-scale the player’s 16-bit scaled x position</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=258">FireNextBullet::
+<pre><code class="language-rgbasm linenos start=260">FireNextBullet::
 
     ; Make sure we don't have the max amount of enmies
     ld a, [wActiveBulletCounter]
@@ -4413,9 +4420,10 @@ wUpdateEnemiesCurrentEnemyAddress::dw
 ; Bytes: active, x , y (low), y (high), speed, health
 wEnemies:: ds MAX_ENEMY_COUNT*PER_ENEMY_BYTES_COUNT
 
+
 </code></pre>
 <p>Just like with bullets, we’ll setup ROM data for our enemies tile data and metasprites.</p>
-<pre><code class="language-rgbasm linenos start=18">SECTION &quot;Enemies&quot;, ROM0
+<pre><code class="language-rgbasm linenos start=19">SECTION &quot;Enemies&quot;, ROM0
 
 enemyShipTileData:: INCBIN &quot;src/generated/sprites/enemy-ship.2bpp&quot;
 enemyShipTileDataEnd::
@@ -4427,7 +4435,7 @@ enemyShipMetasprite::
 </code></pre>
 <h2 id="initializing-enemies"><a class="header" href="#initializing-enemies">Initializing Enemies</a></h2>
 <p>When initializing the enemies (at the start of gameplay), we’ll copy the enemy tile data into VRAM. Also, like with bullets, we’ll loop through and make sure each enemy is set to inactive.</p>
-<pre><code class="language-rgbasm linenos start=28">InitializeEnemies::
+<pre><code class="language-rgbasm linenos start=29">InitializeEnemies::
 
 	ld de, enemyShipTileData
 	ld hl, ENEMY_TILES_START
@@ -4466,7 +4474,7 @@ InitializeEnemies_Loop:
 </code></pre>
 <h2 id="updating-enemies"><a class="header" href="#updating-enemies">Updating Enemies</a></h2>
 <p>When “UpdateEnemies” is called from gameplay, the first thing we try to do is spawn new enemies. After that, if we have no active enemies (and are not trying to spawn a new enemy), we stop the “UpdateEnemies” function. From here, like with bullets, we’ll save the address of our first enemy in hl and start looping through.</p>
-<pre><code class="language-rgbasm linenos start=65">UpdateEnemies::
+<pre><code class="language-rgbasm linenos start=66">UpdateEnemies::
 
 	call TryToSpawnEnemies
 
@@ -4491,7 +4499,7 @@ InitializeEnemies_Loop:
 </code></pre>
 <p>When we are  looping through our enemy object pool, let’s check if the current enemy is active. If it’s active, we’ll update it like normal. If it isn’t active, the game checks if we want to spawn a new enemy. We specify we want to spawn a new enemy by setting ‘wNextEnemyXPosition’ to a non-zero value. If we don’t want to spawn a new enemy, we’ll move on to the next enemy.</p>
 <p>If we want to spawn a new enemy, we’ll set the current inactive enemy to active. Afterwards, we’ll set it’s y position to zero, and it’s x position to whatever was in the ‘wNextEnemyXPosition’ variable. After that, we’ll increase our active enemy counter, and go on to update the enemy like normal.</p>
-<pre><code class="language-rgbasm linenos start=108">UpdateEnemies_PerEnemy:
+<pre><code class="language-rgbasm linenos start=109">UpdateEnemies_PerEnemy:
 
     ; The first byte is if the current object is active
     ; If it's not zero, it's active, go to the normal update section
@@ -4538,7 +4546,7 @@ UpdateEnemies_SpawnNewEnemy:
 <blockquote>
 <p>The “hl” registers should always point to the current enemies first byte when this label is reached.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=87">UpdateEnemies_Loop:
+<pre><code class="language-rgbasm linenos start=88">UpdateEnemies_Loop:
 
     ; Check our coutner, if it's zero
     ; Stop the function
@@ -4559,7 +4567,7 @@ UpdateEnemies_SpawnNewEnemy:
     ld h, a
 </code></pre>
 <p>For updating enemies, we’ll first get the enemies speed. Afterwards we’ll increase the enemies 16-bit y position. Once we’ve done that, we’ll descale the y position so we can check for collisions and draw the ennemy.</p>
-<pre><code class="language-rgbasm linenos start=151">UpdateEnemies_PerEnemy_Update:
+<pre><code class="language-rgbasm linenos start=152">UpdateEnemies_PerEnemy_Update:
 
     ; Save our first bytye
     push hl
@@ -4615,7 +4623,7 @@ UpdateEnemies_SpawnNewEnemy:
 <blockquote>
 <p>Our “hl” registers should point to the active byte of the current enemy. We push and pop our “hl” registers to make sure we get back to that same address for later logic.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=202">UpdateEnemies_PerEnemy_CheckPlayerCollision:
+<pre><code class="language-rgbasm linenos start=203">UpdateEnemies_PerEnemy_CheckPlayerCollision:
 
     push hl
 
@@ -4639,7 +4647,7 @@ UpdateEnemies_SpawnNewEnemy:
     jp UpdateEnemies_DeActivateEnemy
 </code></pre>
 <p>If there is no collision with the player, we’ll draw the enemies. This is done just as we did the player and bullets, with the “DrawMetasprites” function.</p>
-<pre><code class="language-rgbasm linenos start=240">UpdateEnemies_NoCollisionWithPlayer::
+<pre><code class="language-rgbasm linenos start=241">UpdateEnemies_NoCollisionWithPlayer::
 
     ; See if our non scaled low byte is above 160
     ld a, [wCurrentEnemyY]
@@ -4647,6 +4655,8 @@ UpdateEnemies_SpawnNewEnemy:
     jp nc, UpdateEnemies_DeActivateEnemy
 
     push hl
+
+
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; call the 'DrawMetasprites function. setup variables and call
@@ -4670,6 +4680,7 @@ UpdateEnemies_SpawnNewEnemy:
     ; Actually call the 'DrawMetasprites function
     call DrawMetasprites
 
+
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4683,10 +4694,10 @@ UpdateEnemies_SpawnNewEnemy:
 <blockquote>
 <p>Here, we can just use the current address in HL. This is the second reason we wanted to keep the address of our first byte on the stack.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=226">UpdateEnemies_DeActivateEnemy:
+<pre><code class="language-rgbasm linenos start=227">UpdateEnemies_DeActivateEnemy:
 
     ; Set as inactive
-    xor
+    xor a
     ld [hl], a
 
     ; Decrease counter
@@ -4704,7 +4715,7 @@ UpdateEnemies_SpawnNewEnemy:
 <p>All enemies are spawned with y position of 0, so we only need to get the x position.</p>
 </blockquote>
 <p>If we have a valid x position, we’ll reset our spawn counter, and save that x position in the “wNextEnemyXPosition” variable. With this variable set, We’ll later activate and update a enemy that we find in the inactive state.</p>
-<pre><code class="language-rgbasm linenos start=281">TryToSpawnEnemies::
+<pre><code class="language-rgbasm linenos start=285">TryToSpawnEnemies::
 
     ; Increase our spwncounter
     ld a, [wSpawnCounter]
@@ -4763,15 +4774,15 @@ GetSpawnPosition:
 <p>For this, we’ve created a basic function called “CheckObjectPositionDifference”. This function will help us check for overlap on the x or y axis. When the (absolute) difference between the first two values passed is greater than the third value passed, it jump’s to the label passed in the fourth parameter.</p>
 <p>Here’s an example of how to call this function:</p>
 <blockquote>
-<p>We have the player’s x &amp; y position in registers d &amp; e respectively. We have the enemy’s x &amp; y position in registers b &amp; c respectively. If there is no overlap on the x or y axis, the program jumps to the “NoCollisionWithPlayer” label.</p>
+<p>We have the player’s Y position in the <code>d</code> register. We’ll check it’s value against the y value of the current enemy, which we have in a variable named <code>wCurrentEnemyY</code>.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=696">
+<pre><code class="language-rgbasm linenos start=67">
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ; Check the absolute distances. Jump to 'NoAxisOverlap' on failure
+    ; Check the y distances. Jump to 'NoCollisionWithPlayer' on failure
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-    ld a, b
+    ld a, [wCurrentEnemyY]
     ld [wObject1Value], a
 
     ld a, d
@@ -4784,17 +4795,9 @@ GetSpawnPosition:
     call CheckObjectPositionDifference
 
     ld a, [wResult]
-    cp a, 0
-    jp z, NoAxisOverlap
-
-OverlapExists:
-
-  ... There is an overlap
-
-NoAxisOverlap:
-
-  ... no overlap
-    
+    and a
+    jp z, NoCollisionWithPlayer
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 </code></pre>
 <p>When checking for collision, we’ll use that function twice. Once for the x-axis, and again for the y-axis.</p>

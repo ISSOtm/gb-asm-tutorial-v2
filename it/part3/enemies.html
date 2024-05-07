@@ -242,9 +242,10 @@ wUpdateEnemiesCurrentEnemyAddress::dw
 ; Bytes: active, x , y (low), y (high), speed, health
 wEnemies:: ds MAX_ENEMY_COUNT*PER_ENEMY_BYTES_COUNT
 
+
 </code></pre>
 <p>Just like with bullets, we’ll setup ROM data for our enemies tile data and metasprites.</p>
-<pre><code class="language-rgbasm linenos start=18">SECTION &quot;Enemies&quot;, ROM0
+<pre><code class="language-rgbasm linenos start=19">SECTION &quot;Enemies&quot;, ROM0
 
 enemyShipTileData:: INCBIN &quot;src/generated/sprites/enemy-ship.2bpp&quot;
 enemyShipTileDataEnd::
@@ -256,7 +257,7 @@ enemyShipMetasprite::
 </code></pre>
 <h2 id="initializing-enemies"><a class="header" href="#initializing-enemies">Initializing Enemies</a></h2>
 <p>When initializing the enemies (at the start of gameplay), we’ll copy the enemy tile data into VRAM. Also, like with bullets, we’ll loop through and make sure each enemy is set to inactive.</p>
-<pre><code class="language-rgbasm linenos start=28">InitializeEnemies::
+<pre><code class="language-rgbasm linenos start=29">InitializeEnemies::
 
 	ld de, enemyShipTileData
 	ld hl, ENEMY_TILES_START
@@ -295,7 +296,7 @@ InitializeEnemies_Loop:
 </code></pre>
 <h2 id="updating-enemies"><a class="header" href="#updating-enemies">Updating Enemies</a></h2>
 <p>When “UpdateEnemies” is called from gameplay, the first thing we try to do is spawn new enemies. After that, if we have no active enemies (and are not trying to spawn a new enemy), we stop the “UpdateEnemies” function. From here, like with bullets, we’ll save the address of our first enemy in hl and start looping through.</p>
-<pre><code class="language-rgbasm linenos start=65">UpdateEnemies::
+<pre><code class="language-rgbasm linenos start=66">UpdateEnemies::
 
 	call TryToSpawnEnemies
 
@@ -320,7 +321,7 @@ InitializeEnemies_Loop:
 </code></pre>
 <p>When we are  looping through our enemy object pool, let’s check if the current enemy is active. If it’s active, we’ll update it like normal. If it isn’t active, the game checks if we want to spawn a new enemy. We specify we want to spawn a new enemy by setting ‘wNextEnemyXPosition’ to a non-zero value. If we don’t want to spawn a new enemy, we’ll move on to the next enemy.</p>
 <p>If we want to spawn a new enemy, we’ll set the current inactive enemy to active. Afterwards, we’ll set it’s y position to zero, and it’s x position to whatever was in the ‘wNextEnemyXPosition’ variable. After that, we’ll increase our active enemy counter, and go on to update the enemy like normal.</p>
-<pre><code class="language-rgbasm linenos start=108">UpdateEnemies_PerEnemy:
+<pre><code class="language-rgbasm linenos start=109">UpdateEnemies_PerEnemy:
 
     ; The first byte is if the current object is active
     ; If it's not zero, it's active, go to the normal update section
@@ -367,7 +368,7 @@ UpdateEnemies_SpawnNewEnemy:
 <blockquote>
 <p>The “hl” registers should always point to the current enemies first byte when this label is reached.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=87">UpdateEnemies_Loop:
+<pre><code class="language-rgbasm linenos start=88">UpdateEnemies_Loop:
 
     ; Check our coutner, if it's zero
     ; Stop the function
@@ -388,7 +389,7 @@ UpdateEnemies_SpawnNewEnemy:
     ld h, a
 </code></pre>
 <p>For updating enemies, we’ll first get the enemies speed. Afterwards we’ll increase the enemies 16-bit y position. Once we’ve done that, we’ll descale the y position so we can check for collisions and draw the ennemy.</p>
-<pre><code class="language-rgbasm linenos start=151">UpdateEnemies_PerEnemy_Update:
+<pre><code class="language-rgbasm linenos start=152">UpdateEnemies_PerEnemy_Update:
 
     ; Save our first bytye
     push hl
@@ -444,7 +445,7 @@ UpdateEnemies_SpawnNewEnemy:
 <blockquote>
 <p>Our “hl” registers should point to the active byte of the current enemy. We push and pop our “hl” registers to make sure we get back to that same address for later logic.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=202">UpdateEnemies_PerEnemy_CheckPlayerCollision:
+<pre><code class="language-rgbasm linenos start=203">UpdateEnemies_PerEnemy_CheckPlayerCollision:
 
     push hl
 
@@ -468,7 +469,7 @@ UpdateEnemies_SpawnNewEnemy:
     jp UpdateEnemies_DeActivateEnemy
 </code></pre>
 <p>If there is no collision with the player, we’ll draw the enemies. This is done just as we did the player and bullets, with the “DrawMetasprites” function.</p>
-<pre><code class="language-rgbasm linenos start=240">UpdateEnemies_NoCollisionWithPlayer::
+<pre><code class="language-rgbasm linenos start=241">UpdateEnemies_NoCollisionWithPlayer::
 
     ; See if our non scaled low byte is above 160
     ld a, [wCurrentEnemyY]
@@ -476,6 +477,8 @@ UpdateEnemies_SpawnNewEnemy:
     jp nc, UpdateEnemies_DeActivateEnemy
 
     push hl
+
+
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; call the 'DrawMetasprites function. setup variables and call
@@ -499,6 +502,7 @@ UpdateEnemies_SpawnNewEnemy:
     ; Actually call the 'DrawMetasprites function
     call DrawMetasprites
 
+
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -512,10 +516,10 @@ UpdateEnemies_SpawnNewEnemy:
 <blockquote>
 <p>Here, we can just use the current address in HL. This is the second reason we wanted to keep the address of our first byte on the stack.</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=226">UpdateEnemies_DeActivateEnemy:
+<pre><code class="language-rgbasm linenos start=227">UpdateEnemies_DeActivateEnemy:
 
     ; Set as inactive
-    xor
+    xor a
     ld [hl], a
 
     ; Decrease counter
@@ -533,7 +537,7 @@ UpdateEnemies_SpawnNewEnemy:
 <p>All enemies are spawned with y position of 0, so we only need to get the x position.</p>
 </blockquote>
 <p>If we have a valid x position, we’ll reset our spawn counter, and save that x position in the “wNextEnemyXPosition” variable. With this variable set, We’ll later activate and update a enemy that we find in the inactive state.</p>
-<pre><code class="language-rgbasm linenos start=281">TryToSpawnEnemies::
+<pre><code class="language-rgbasm linenos start=285">TryToSpawnEnemies::
 
     ; Increase our spwncounter
     ld a, [wSpawnCounter]

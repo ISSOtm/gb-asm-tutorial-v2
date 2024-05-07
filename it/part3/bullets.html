@@ -225,8 +225,10 @@ wActiveBulletCounter:: db
 ; how many bullet's we've updated
 wUpdateBulletsCounter: db 
 
+
 ; Bytes: active, x , y (low), y (high)
 wBullets:: ds MAX_BULLET_COUNT*PER_BULLET_BYTES_COUNT
+
 
 SECTION &quot;Bullets&quot;, ROM0
 
@@ -244,7 +246,7 @@ bulletTileDataEnd::
 <p>In our “InitializeBullets” function, we’ll copy the tile data for the bullet sprites into VRAM, and set every bullet as inactive. Each bullet is 4 bytes, the first byte signaling if the bullet is active or not. </p>
 <p><img src="../assets/part3/img/BulletBytesVisualized.png" alt="BulletBytesVisualized.png" /></p>
 <p>We’ll iterate through bullet object pool, named “wBullets”, and activate the first of the the four bytes. Then skipping the next 3 bytes, to go onto the next bullet. We’ll do this until we’ve looped for each bullet in our pool.</p>
-<pre><code class="language-rgbasm linenos start=29">InitializeBullets::
+<pre><code class="language-rgbasm linenos start=31">InitializeBullets::
 
     xor a
     ld [wSpawnBullet], a
@@ -285,7 +287,7 @@ InitializeBullets_Loop:
 </code></pre>
 <h2 id="updating-bullets"><a class="header" href="#updating-bullets">Updating Bullets</a></h2>
 <p>When we want to update each of bullets, first we should check if any bullets are active. If no bullets are active we can stop early.</p>
-<pre><code class="language-rgbasm linenos start=68">UpdateBullets::
+<pre><code class="language-rgbasm linenos start=70">UpdateBullets::
 
     ; Make sure we have SOME active enemies
     ld a, [wSpawnBullet]
@@ -326,7 +328,7 @@ InitializeBullets_Loop:
 <li>Descale the y position we have in c &amp; d, and jump to our deactivation code if c (the low byte) is high enough</li>
 <li>Draw our bullet metasprit, if it wasn’t previously deactivated</li>
 </ul>
-<pre><code class="language-rgbasm linenos start=111">UpdateBullets_PerBullet:
+<pre><code class="language-rgbasm linenos start=113">UpdateBullets_PerBullet:
 
     ; The first byte is if the bullet is active
     ; If it's NOT  zero, it's active, go to the normal update section
@@ -430,7 +432,7 @@ UpdateBullets_PerBullet_Normal:
 </code></pre>
 <h3 id="drawing-the-bullets"><a class="header" href="#drawing-the-bullets">Drawing the Bullets</a></h3>
 <p>We’ll draw our bullet metasprite like we drew the player, using our “DrawMetasprites” function. This function may alter the ‘h’ or ‘l’ registers, so we’ll push the hl register onto the stack before hand. After drawing, we’ll pop the hl register off of the stack to restore it’s value.</p>
-<pre><code class="language-rgbasm linenos start=212">
+<pre><code class="language-rgbasm linenos start=214">
     push hl
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -464,7 +466,7 @@ UpdateBullets_PerBullet_Normal:
 </code></pre>
 <h3 id="deactivating-the-bullets"><a class="header" href="#deactivating-the-bullets">Deactivating the Bullets</a></h3>
 <p>If a bullet needs to be deactivated, we simply set it’s first byte to 0. At this point in time, the “hl” registers should point at our bullets first byte. This makes deactivation a really simple task. In addition to changing the first byte, we’ll decrease how many bullets we have that are active.</p>
-<pre><code class="language-rgbasm linenos start=244">UpdateBullets_DeActivateIfOutOfBounds:
+<pre><code class="language-rgbasm linenos start=246">UpdateBullets_DeActivateIfOutOfBounds:
 
     ; if it's y value is grater than 160
     ; Set as inactive
@@ -480,7 +482,7 @@ UpdateBullets_PerBullet_Normal:
 </code></pre>
 <h3 id="updating-the-next-bullet"><a class="header" href="#updating-the-next-bullet">Updating the next bullet</a></h3>
 <p>After we’ve updated a single bullet, we’ll increase how many bullet’s we’ve updated. If we’ve updated all the bullets, we can stop our “UpdateBullets” function. Otherwise, we’ll add 4 bytes to the addressed stored in “hl”, and update the next bullet.</p>
-<pre><code class="language-rgbasm linenos start=90">UpdateBullets_Loop:
+<pre><code class="language-rgbasm linenos start=92">UpdateBullets_Loop:
 
     ; Check our counter, if it's zero
     ; Stop the function
@@ -507,7 +509,7 @@ UpdateBullets_PerBullet_Normal:
 <blockquote>
 <p>Our bullets only use one 8-bit integer for their x position, so need to de-scale the player’s 16-bit scaled x position</p>
 </blockquote>
-<pre><code class="language-rgbasm linenos start=258">FireNextBullet::
+<pre><code class="language-rgbasm linenos start=260">FireNextBullet::
 
     ; Make sure we don't have the max amount of enmies
     ld a, [wActiveBulletCounter]
