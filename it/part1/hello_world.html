@@ -223,7 +223,7 @@ Il resto del capitolo sarà dedicato a spiegare come e perché funziona.</p>
 <div class="box warning decorated"><p>⚠️</p>
 <p>Per chiarezza espositiva, all’inizio di ogni comando, ho aggiunto un <code>$</code>, ma voi non digitatelo!</p>
 </div>
-<pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgbasm -L -o hello-world.o hello-world.asm</span>
+<pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgbasm -o hello-world.o hello-world.asm</span>
 <span class="console-line hljs-meta"></span><span class="language-bash">rgblink -o hello-world.gb hello-world.o</span>
 <span class="console-line hljs-meta"></span><span class="language-bash">rgbfix -v -p 0xFF hello-world.gb</span>
 </code></pre>
@@ -235,14 +235,13 @@ Il resto del capitolo sarà dedicato a spiegare come e perché funziona.</p>
 <div class="box danger decorated"><p>‼️</p>
 <p>Fate attenzione agli argomenti! Alcune opzioni, come <code>-o</code>, usano l’argomento dopo di esse come parametro:</p>
 <ol>
-<li><code>rgbasm -L -o hello-world.asm hello-world.o</code> won’t work (and may corrupt <code>hello-world.asm</code>!)</li>
-<li><code>rgbasm -L hello-world.asm -o hello-world.o</code> will work</li>
-<li><code>rgbasm hello-world.asm -o hello-world.o -L</code> will also work</li>
+<li><code>rgbasm -o hello-world.asm hello-world.o</code> won’t work (and may corrupt <code>hello-world.asm</code>!)</li>
+<li><code>rgbasm hello-world.asm -o hello-world.o</code> will work</li>
 </ol>
 <p>In caso di spazi all’interno di un argomento, è necessario metterlo tra virgolette:</p>
 <ol>
-<li><code>rgbasm -L -o hello world.o hello world.asm</code> won’t work</li>
-<li><code>rgbasm -L -o &quot;hello world.o&quot; &quot;hello world.asm&quot;</code> will work</li>
+<li><code>rgbasm -o hello world.o hello world.asm</code> won’t work</li>
+<li><code>rgbasm -o &quot;hello world.o&quot; &quot;hello world.asm&quot;</code> will work</li>
 </ol>
 </div>
 <p>It should look like this:</p>
