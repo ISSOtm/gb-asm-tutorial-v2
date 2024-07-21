@@ -16,79 +16,87 @@
 ; ::                                  ::
 ; ::::::::::::::::::::::::::::::::::::::
 
+; ANCHOR: sio-status-enum
 INCLUDE "hardware.inc"
 
-; Duration of timeout period in ticks. (for externally clocked device)
-DEF SIO_TIMEOUT_TICKS EQU 60
+DEF SIO_IDLE      EQU $00
+DEF SIO_DONE      EQU $01
+DEF SIO_FAILED    EQU $02
+DEF SIO_ACTIVE    EQU $80
+EXPORT SIO_IDLE, SIO_DONE, SIO_FAILED, SIO_ACTIVE
+; ANCHOR_END: sio-status-enum
 
+; ANCHOR: sio-port-start-defs
+; ANCHOR: sio-timeout-duration
+; Duration of timeout period in ticks
+DEF SIO_TIMEOUT_TICKS EQU 60
+; ANCHOR_END: sio-timeout-duration
+
+; ANCHOR: sio-catchup-duration
 ; Catchup delay duration
 DEF SIO_CATCHUP_SLEEP_DURATION EQU 100
+; ANCHOR_END: sio-catchup-duration
+; ANCHOR_END: sio-port-start-defs
 
-DEF SIO_CONFIG_INTCLK   EQU SCF_SOURCE
-DEF SIO_CONFIG_RESERVED EQU $02
-DEF SIO_CONFIG_DEFAULT  EQU $00
-EXPORT SIO_CONFIG_INTCLK
-
-; SioStatus transfer state enum
-RSRESET
-DEF SIO_IDLE           RB 1
-DEF SIO_FAILED         RB 1
-DEF SIO_DONE           RB 1
-DEF SIO_BUSY           RB 0
-DEF SIO_XFER_STARTED   RB 1
-EXPORT SIO_IDLE, SIO_FAILED, SIO_DONE
-EXPORT SIO_BUSY, SIO_XFER_STARTED
-
+; ANCHOR: sio-buffer-defs
+; Allocated size in bytes of the Tx and Rx data buffers.
 DEF SIO_BUFFER_SIZE EQU 32
+; ANCHOR_END: sio-buffer-defs
 
-
-; PACKET
-
+; ANCHOR: sio-packet-defs
 DEF SIO_PACKET_HEAD_SIZE EQU 2
 DEF SIO_PACKET_DATA_SIZE EQU SIO_BUFFER_SIZE - SIO_PACKET_HEAD_SIZE
 
 DEF SIO_PACKET_START EQU $70
 DEF SIO_PACKET_END EQU $7F
+; ANCHOR_END: sio-packet-defs
 
 
+; ANCHOR: sio-buffers
 SECTION "SioBufferRx", WRAM0, ALIGN[8]
 wSioBufferRx:: ds SIO_BUFFER_SIZE
 
 
 SECTION "SioBufferTx", WRAM0, ALIGN[8]
 wSioBufferTx:: ds SIO_BUFFER_SIZE
+; ANCHOR_END: sio-buffers
 
 
+; ANCHOR: sio-state
 SECTION "SioCore State", WRAM0
-; Sio config flags
-wSioConfig:: db
 ; Sio state machine current state
 wSioState:: db
 ; Number of transfers to perform (bytes to transfer)
 wSioCount:: db
+; Current position in the tx/rx buffers
 wSioBufferOffset:: db
-; Timer state (as ticks remaining, expires at zero) for timeouts and delays.
-; HACK: this is only "public" (::) for access by debug display code.
+; Timer state (as ticks remaining, expires at zero) for timeouts.
 wSioTimer:: db
+; ANCHOR_END: sio-state
 
 
+; ANCHOR: sio-serial-interrupt-vector
 SECTION "Sio Serial Interrupt", ROM0[$58]
 SerialInterrupt:
-	jp SioInterruptHandler
+	push af
+	push hl
+	call SioPortEnd
+	pop hl
+	pop af
+	reti
+; ANCHOR_END: sio-serial-interrupt-vector
 
 
+; ANCHOR: sio-impl-init
 SECTION "SioCore Impl", ROM0
 ; Initialise/reset Sio to the ready to use 'IDLE' state.
 ; NOTE: Enables the serial interrupt.
 ; @mut: AF, [IE]
 SioInit::
-	ld a, SIO_CONFIG_DEFAULT
-	ld [wSioConfig], a
 	ld a, SIO_IDLE
 	ld [wSioState], a
 	ld a, 0
 	ld [wSioTimer], a
-	ld a, 0
 	ld [wSioCount], a
 	ld [wSioBufferOffset], a
 
@@ -97,23 +105,16 @@ SioInit::
 	or a, IEF_SERIAL
 	ldh [rIE], a
 	ret
+; ANCHOR_END: sio-impl-init
 
 
-; @mut: AF, HL
+; ANCHOR: sio-tick
+; Per-frame update
+; @mut: AF
 SioTick::
 	ld a, [wSioState]
-	cp a, SIO_XFER_STARTED
-	jr z, .xfer_started
-	; anything else: do nothing
-	ret
-.xfer_started:
-	ld a, [wSioCount]
-	and a, a
-	jr nz, :+
-	ld a, SIO_DONE
-	ld [wSioState], a
-	ret
-:
+	cp a, SIO_ACTIVE
+	ret nz
 	; update timeout on external clock
 	ldh a, [rSC]
 	and a, SCF_SOURCE
@@ -136,71 +137,30 @@ SioAbort::
 	res SCB_START, a
 	ldh [rSC], a
 	ret
+; ANCHOR_END: sio-tick
 
 
-SioInterruptHandler:
-	push af
-	push hl
-
-	; check that we were expecting a transfer (to end)
-	ld hl, wSioCount
-	ld a, [hl]
-	and a
-	jr z, .end
-	dec [hl]
-	; Get buffer pointer offset (low byte)
-	ld a, [wSioBufferOffset]
-	ld l, a
-	; Get received value
-	ld h, HIGH(wSioBufferRx)
-	ldh a, [rSB]
-	; NOTE: incrementing L here
-	ld [hl+], a
-	; Store updated buffer offset
-	ld a, l
-	ld [wSioBufferOffset], a
-	; If completing the last transfer, don't start another one
-	; NOTE: We are checking the zero flag as set by `dec [hl]` up above!
-	jr z, .end
-	; Next value to send
-	ld h, HIGH(wSioBufferTx)
-	ld a, [hl]
-	ldh [rSB], a
-	call SioPortStart
-
-.end:
-	ld a, SIO_TIMEOUT_TICKS
-	ld [wSioTimer], a
-	pop hl
-	pop af
-	reti
-
-
-; @mut: AF
+; ANCHOR: sio-start-transfer
+; Start a whole-buffer transfer.
+; @mut: AF, L
 SioTransferStart::
-	; TODO: something if SIO_BUSY ...?
-
 	ld a, SIO_BUFFER_SIZE
 	ld [wSioCount], a
 	ld a, 0
 	ld [wSioBufferOffset], a
-
-	; set the clock source (do this first & separately from starting the transfer!)
-	ld a, [wSioConfig]
-	and a, SCF_SOURCE ; the sio config byte uses the same bit for the clock source
-	ldh [rSC], a
-	; reset timeout
-	ld a, SIO_TIMEOUT_TICKS
-	ld [wSioTimer], a
 	; send first byte
 	ld a, [wSioBufferTx]
 	ldh [rSB], a
-	call SioPortStart
-	ld a, SIO_XFER_STARTED
+	ld a, SIO_ACTIVE
 	ld [wSioState], a
-	ret
+	jr SioPortStart
+; ANCHOR_END: sio-start-transfer
 
 
+; ANCHOR: sio-port-start
+; Enable the serial port, starting a transfer.
+; If internal clock is enabled, performs catchup delay before enabling the port.
+; Resets the transfer timeout timer.
 ; @mut: AF, L
 SioPortStart:
 	; If internal clock source, do catchup delay
@@ -217,7 +177,48 @@ SioPortStart:
 .start_xfer:
 	or a, SCF_START
 	ldh [rSC], a
+	; reset timeout
+	ld a, SIO_TIMEOUT_TICKS
+	ld [wSioTimer], a
 	ret
+; ANCHOR_END: sio-port-start
+
+
+; ANCHOR: sio-port-end
+; Collects the received value and starts the next transfer, if there is any.
+; To be called after the serial port deactivates itself / serial interrupt.
+; @mut: AF, HL
+SioPortEnd:
+	; Check that we were expecting a transfer (to end)
+	ld hl, wSioState
+	ld a, [hl+]
+	cp SIO_ACTIVE
+	ret nz
+	; Update wSioCount
+	dec [hl]
+	; Get buffer pointer offset (low byte)
+	ld a, [wSioBufferOffset]
+	ld l, a
+	ld h, HIGH(wSioBufferRx)
+	ldh a, [rSB]
+	; NOTE: increments L only
+	ld [hl+], a
+	; Store updated buffer offset
+	ld a, l
+	ld [wSioBufferOffset], a
+	; If completing the last transfer, don't start another one
+	; NOTE: We are checking the zero flag as set by `dec [hl]` up above!
+	jr nz, .next
+	ld a, SIO_DONE
+	ld [wSioState], a
+	ret
+.next:
+	; Construct a Tx buffer pointer (keeping L from above)
+	ld h, HIGH(wSioBufferTx)
+	ld a, [hl]
+	ldh [rSB], a
+	jr SioPortStart
+; ANCHOR_END: sio-port-end
 
 
 SECTION "SioPacket Impl", ROM0
