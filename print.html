@@ -1492,7 +1492,7 @@ For example, <code>rgbasm -g '.xXO' (...)</code> or <code>OPT g.xXO</code> would
 We already have tiles made for this project, so you can copy <a href="https://github.com/gbdev/gb-asm-tutorial/raw/master/unbricked/getting-started/tileset.asm">this premade file</a>, and paste it at the end of your code.</p>
 <p>Then copy the tilemap from <a href="https://github.com/gbdev/gb-asm-tutorial/raw/master/unbricked/getting-started/tilemap.asm">this file</a>, and paste it after the <code>TilesEnd</code> label.</p>
 <p>You can build the ROM now, by running the following commands in your terminal:</p>
-<pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgbasm -L -o main.o main.asm</span>
+<pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgbasm -o main.o main.asm</span>
 <span class="console-line hljs-meta"></span><span class="language-bash">rgblink -o unbricked.gb main.o</span>
 <span class="console-line hljs-meta"></span><span class="language-bash">rgbfix -v -p 0xFF unbricked.gb</span>
 </code></pre>

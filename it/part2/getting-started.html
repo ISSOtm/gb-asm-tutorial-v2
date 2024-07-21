@@ -326,7 +326,7 @@ Per esempio, <code>rgbasm -g '.xXO' (...)</code> o <code>OPT g.xXO</code> scambi
 Abbiamo già delle piastrelle per questo progetto, quindi potete copiare <a href="https://github.com/gbdev/gb-asm-tutorial/raw/master/unbricked/getting-started/tileset.asm">questo file premade</a> e incollarlo alla fine del vostro codice.</p>
 <p>Quindi copiare la mappa delle piastrelle da [questo file] (https://github.com/gbdev/gb-asm-tutorial/raw/master/unbricked/getting-started/tilemap.asm) e incollarla dopo l’etichetta <code>TilesEnd</code>.</p>
 <p>È possibile creare la ROM ora, eseguendo i seguenti comandi nel terminale:</p>
-<pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgbasm -L -o main.o main.asm</span>
+<pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgbasm -o main.o main.asm</span>
 <span class="console-line hljs-meta"></span><span class="language-bash">rgblink -o unbricked.gb main.o</span>
 <span class="console-line hljs-meta"></span><span class="language-bash">rgbfix -v -p 0xFF unbricked.gb</span>
 </code></pre>
