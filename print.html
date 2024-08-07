@@ -1591,7 +1591,7 @@ Tiles with IDs 128–255 are shared by both, which is useful if you have a tile 
 <p><img src="part2/../assets/img/vram_viewer.png" alt="image" /></p>
 <p>Because we need to load this to a different area, we’ll use the address $8000 and load a graphic for our game’s paddle.
 Let’s do so right after <code>CopyTilemap</code>:</p>
-<pre><code class="language-rgbasm linenos start=46">	; Copy the tile data
+<pre><code class="language-rgbasm linenos start=46">	; Copy the paddle tile
 	ld de, Paddle
 	ld hl, $8000
 	ld bc, PaddleEnd - Paddle
@@ -1772,7 +1772,7 @@ CopyTilemap:
 	call Memcopy
 </code></pre>
 </td></tr><tr><td>
-<pre><code class="language-rgbasm linenos start=46">	; Copy the tile data
+<pre><code class="language-rgbasm linenos start=46">	; Copy the paddle tile
 	ld de, Paddle
 	ld hl, $8000
 	ld bc, PaddleEnd - Paddle
@@ -1786,7 +1786,7 @@ CopyPaddle:
 	jp nz, CopyPaddle
 </code></pre>
 </td><td>
-<pre><code class="language-rgbasm linenos start=32">	; Copy the tile data
+<pre><code class="language-rgbasm linenos start=32">	; Copy the paddle tile
 	ld de, Paddle
 	ld hl, $8000
 	ld bc, PaddleEnd - Paddle

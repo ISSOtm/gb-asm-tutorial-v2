@@ -273,7 +273,7 @@ Le mattonelle con ID 128-255 sono condivise da entrambi, il che è utile se si h
 <p><img src="../assets/img/vram_viewer.png" alt="image" /></p>
 <p>Poiché dobbiamo caricarla in un’area diversa, useremo l’indirizzo $8000 e caricheremo una grafica per la paletta del gioco.
 Lo faremo subito dopo <code>CopyTilemap</code>:</p>
-<pre><code class="language-rgbasm linenos start=46">	; Copy the tile data
+<pre><code class="language-rgbasm linenos start=46">	; Copy the paddle tile
 	ld de, Paddle
 	ld hl, $8000
 	ld bc, PaddleEnd - Paddle
