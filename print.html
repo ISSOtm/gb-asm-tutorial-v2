@@ -1579,7 +1579,7 @@ ClearOam:
 	ld [hli], a
 	ld a, 0
 	ld [hli], a
-	ld [hl], a
+	ld [hli], a
 </code></pre>
 <p>Remember that each object in OAM is 4 bytes, in the order Y, X, Tile ID, Attributes.
 So, the object’s top-left pixel lies 128 pixels from the top of the screen, and 16 from its left.
