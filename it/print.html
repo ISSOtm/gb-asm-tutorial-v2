@@ -5356,22 +5356,24 @@ ldh [rLCDC], a
 <h2 id="backgrounds"><a class="header" href="#backgrounds">Backgrounds</a></h2>
 <h3 id="put-backgroundwindow-tile-data-into-vram"><a class="header" href="#put-backgroundwindow-tile-data-into-vram">Put background/window tile data into VRAM</a></h3>
 <p>The region in VRAM dedicated for the background/window tilemaps is from $9000 to $97FF. hardware.inc defines a <code>_VRAM9000</code> constant you can use for that.</p>
-<p>MyBackground:
-INCBIN “src/path/to/my-background.2bpp”
-.end</p>
-<p>CopyBackgroundWindowTileDataIntoVram:
-; Copy the tile data
-ld de, myBackground
-ld hl, _VRAM
-ld bc, MyBackground.end - MyBackground
+<pre><code class="language-rgbasm  lineno">MyBackground:
+    INCBIN &quot;src/path/to/my-background.2bpp&quot;
+.end
+
+CopyBackgroundWindowTileDataIntoVram:
+    ; Copy the tile data
+    ld de, myBackground
+    ld hl, \_VRAM
+    ld bc, MyBackground.end - MyBackground
 .loop:
-ld a, [de]
-ld [hli], a
-inc de
-dec bc
-ld a, b
-or a, c
-jr nz, .Loop</p>
+    ld a, [de]
+    ld [hli], a
+    inc de
+    dec bc
+    ld a, b
+    or a, c
+    jr nz, .Loop
+</code></pre>
 <h3 id="draw-on-the-backgroundwindow"><a class="header" href="#draw-on-the-backgroundwindow">Draw on the Background/Window</a></h3>
 <p>The Game Boy has 2 32x32 tilemaps, one at <code>$9800</code> and another at <code>$9C00</code>. Either can be used for the background or window. By default, they both use the tilemap at <code>$9800</code>.</p>
 <p>Drawing on the background or window is as simple as copying bytes starting at one of those addresses:</p>
