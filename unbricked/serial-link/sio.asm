@@ -34,7 +34,7 @@ DEF SIO_TIMEOUT_TICKS EQU 60
 
 ; ANCHOR: sio-catchup-duration
 ; Catchup delay duration
-DEF SIO_CATCHUP_SLEEP_DURATION EQU 100
+DEF SIO_CATCHUP_SLEEP_DURATION EQU 200
 ; ANCHOR_END: sio-catchup-duration
 ; ANCHOR_END: sio-port-start-defs
 
@@ -145,6 +145,7 @@ SioAbort::
 ; @mut: AF, L
 SioTransferStart::
 	ld a, SIO_BUFFER_SIZE
+.CustomCount::
 	ld [wSioCount], a
 	ld a, 0
 	ld [wSioBufferOffset], a

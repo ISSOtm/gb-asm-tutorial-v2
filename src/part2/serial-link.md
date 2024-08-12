@@ -279,6 +279,22 @@ To do this we'll use the serial interrupt:
 
 **TODO:**
 
+/// building serial link test program, separate to unbricked main.asm?
+
+/// Because we have an extra file (sio.asm) to compile now, the build commands will look a little different:
+```console
+$ rgbasm -L -o sio.o sio.asm
+$ rgbasm -L -o main.o main.asm
+$ rgblink -o unbricked.gb main.o sio.o
+$ rgbfix -v -p 0xFF unbricked.gb
+```
+
+/// tiles
+
+/// defs
+
+/// init/reset
+
 /// initialise Sio
 Before doing anything else with Sio, `SioInit` needs to be called.
 
@@ -294,15 +310,56 @@ Before doing anything else with Sio, `SioInit` needs to be called.
 	call SioTick
 ```
 
-/// set clock source
-```rgbasm
-	ld a, SCF_SOURCE
-	ldh [rSC], a
-```
-
-/// do handshakey thing?
-/// whoever presses KEY attempts to do a transfer as the clock provider
-```rgbasm
-```
-
 ---
+
+### Handshake
+
+/// Establish contact by trading magic numbers
+
+/// Define the codes each device will send:
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:handshake-codes}}
+{{#include ../../unbricked/serial-link/main.asm:handshake-codes}}
+```
+
+///
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:handshake-state}}
+{{#include ../../unbricked/serial-link/main.asm:handshake-state}}
+```
+
+/// Routines to begin handshake sequence as either the internally or externally clocked device.
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:handshake-begin}}
+{{#include ../../unbricked/serial-link/main.asm:handshake-begin}}
+```
+
+/// Every frame, handshake update
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:handshake-update}}
+{{#include ../../unbricked/serial-link/main.asm:handshake-update}}
+```
+
+/// If `wHandshakeState` is zero, handshake is complete
+
+/// If the user has pressed START, abort the current handshake and start again as the clock provider.
+
+/// Monitor Sio. If the serial port is not busy, start the handshake, using the DIV register as a pseudorandom value to decide if we should be the clock or not.
+
+:::tip The DIV register
+
+/// is not particularly random...
+
+/// but we just need the value to be different when each device reads it, and for the value to occasionally be an odd number
+
+:::
+
+/// If a transfer is complete (`SIO_DONE`), jump to `HandshakeMsgRx` (described below) to check the received value.
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:handshake-xfer-complete}}
+{{#include ../../unbricked/serial-link/main.asm:handshake-xfer-complete}}
+```
+
+/// First byte must be `MSG_SHAKE`
+
+/// Second byte must be `wHandshakeExpect`
+
+/// If the received message is correct, set `wHandshakeState` to zero
