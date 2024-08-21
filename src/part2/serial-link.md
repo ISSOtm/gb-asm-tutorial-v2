@@ -266,20 +266,123 @@ To do this we'll use the serial interrupt:
 {{#include ../../unbricked/serial-link/sio.asm:sio-serial-interrupt-vector}}
 ```
 
----
-
 **TODO:** explain something about interrupts? but don't be weird about it, I guess...
 
 ---
 
 
+### A little protocol
+
+Before diving into implementation, let's take a minute to describe a *protocol*.
+A protocol is a set of rules that govern communication.
+
+The most critical communications are those that support the application's features, which we'll call *messages*.
+
+/// Transmission errors: do not want. Transmission errors: cannot be eliminated.
+/// Lots of possible ways to deal with damaged message packets.
+/// Need to *detect* errors before you can deal with them.
+
+There's always a possibility that a message will be damaged in transmission or even due to a bug.
+The most important step to take in dealing with this reality is *detection* -- the application needs to know if a message was delivered successfully (or not).
+To check that a message arrived intact, we'll use checksums.
+Every packet sent will include a checksum of itself.
+At the receiving end, the checksum can be computed again and checked against the one sent with the packet.
+
+:::tip Checksums, a checksummary
+
+A checksum is a computed value that depends on the value of some *input data*.
+In our case, the input data is all the bytes that make up a packet.
+In other words, every byte of the packet influences the sum.
+
+<!-- A checksum of a packet can be sent alongside the packet, which the receiver can use to check if the packet arrived intact. -->
+The packet includes a field for such a checksum, which is initialised to `0`.
+The checksum is computed using the whole packet -- including the zero -- and the result is written to the checksum field.
+When the packet checksum is recomputed now, the result will be zero!
+This is a common feature of popular checksums because it makes checking if data is intact so simple.
+
+:::
+
+Checking the packet checksum will indicate if the message was damaged, but only the receiver will have this information.
+To inform the sender we'll make a rule that every message transfer must be followed by a delivery *report*.
+In terms of information, a report is a boolean value -- either the message was received intact, or not.
+
+Because reports are so simple -- but very important -- we'll employ a simple technique to deliver them reliably.
+Define two magic numbers -- one to send when the packet checksum matched and another for if it didn't.
+For this tutorial we'll use `DEF STATUS_OK EQU $11` for *success* and flip every bit, giving `DEF STATUS_ERROR EQU $EE` to mean *failed*.
+
+To increase the likelihood of the report getting interpreted correctly, we'll simply repeat the value multiple times.
+At the receiving end, check each received byte -- finding just one byte equal to `STATUS_OK` will be interpreted as *success*.
+
+:::tip
+
+The binary values used here should be far apart in terms of [*hamming distance*](https://en.wikipedia.org/wiki/Hamming_distance).
+In essence, either value should be very hard to confuse for the other, even if some bits were randomly changed.
+
+:::
+
+<!-- PROTOCOL RULES
+- two communication "channels": application (messages) & meta (reports)
+- message packet includes a checksum of itself to be validated by receiver
+- every message packet is followed by a delivery report
+- message begins with 'MessageType' code -->
+
+
+### SioPacket
+We'll implement some functions to facilitate constructing, sending, receiving, and checking packets.
+The packet functions will operate on the existing serial data buffers.
+
+The packets follow a simple structure: starting with a header containing a magic number and the packet checksum, followed by the payload data.
+The magic number is a constant that marks the start of a packet.
+
+At the top of `sio.asm` define some constants:
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/sio.asm:sio-packet-defs}}
+{{#include ../../unbricked/serial-link/sio.asm:sio-packet-defs}}
+```
+
+/// function to call to start building a new packet:
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/sio.asm:sio-packet-prepare}}
+{{#include ../../unbricked/serial-link/sio.asm:sio-packet-prepare}}
+```
+
+/// returns packet data pointer in `hl`
+
+/// After calling `SioPacketTxPrepare`, the payload data can be added to the packet.
+
+Once the desired data has been copied to the packet, the checksum needs to be calculated before the packet can be transferred.
+We call this *finalising* the packet and this is implemented in `SioPacketTxFinalise`:
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/sio.asm:sio-packet-finalise}}
+{{#include ../../unbricked/serial-link/sio.asm:sio-packet-finalise}}
+```
+
+/// call `SioPacketChecksum` to calculate the checksum and write the result to the packet.
+
+/// a function to perform the checksum test when receiving a packet, `SioPacketRxCheck`:
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/sio.asm:sio-packet-check}}
+{{#include ../../unbricked/serial-link/sio.asm:sio-packet-check}}
+```
+
+/// Checks that the packet begins with the magic number `SIO_PACKET_START`, before checking the checksum.
+/// For convenience, a pointer to the start of packet data is returned in `hl`.
+
+/// Finally, implement the checksum:
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/sio.asm:sio-checksum}}
+{{#include ../../unbricked/serial-link/sio.asm:sio-checksum}}
+```
+
+:::tip
+
+The checksum implemented here has been kept very simple for this tutorial.
+It's probably not very suitable for real-world projects.
+
+:::
+
+
 ## Using Sio
-
----
-
-**TODO:**
-
-/// building serial link test program, separate to unbricked main.asm?
 
 /// Because we have an extra file (sio.asm) to compile now, the build commands will look a little different:
 ```console
@@ -289,28 +392,79 @@ $ rgblink -o unbricked.gb main.o sio.o
 $ rgbfix -v -p 0xFF unbricked.gb
 ```
 
+<!-- "Link" -->
+/// serial link features: *Link*
+
 /// tiles
 
 /// defs
 
-/// init/reset
+<!-- LinkInit -->
+/// one function to initialise basic serial link state.
 
-/// initialise Sio
-Before doing anything else with Sio, `SioInit` needs to be called.
+/// Implement `LinkInit`:
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:link-init}}
+{{#include ../../unbricked/serial-link/main.asm:link-init}}
+```
+
+Calling `SioInit` prepares Sio for use, except for one thing: **e**nabling **i**nterrupts with the `ei` instruction.
+
+:::tip
+
+If interrupts must be enabled for Sio to work fully, you might be wondering why we don't just do it in `SioInit`.
+Sio is in control of the serial interrupt, but `ei` enables interrupts globally.
+Other interrupts may be in use by other parts of the code, which are clearly outside of Sio's responsibility.
+
+/// Sio doesn't enable or disable interrupts because side effects ...
+
+/// [Interrupts](https://gbdev.io/pandocs/Interrupts.html)
+
+:::
+
+Note that `LinkReset` starts part way through `LinkInit`.
+This way the two functions can share code without zero overhead and `LinkReset` can be called without performing the startup initialisation again.
+This pattern is often referred to as *fallthrough*: `LinkInit` *falls through* to `LinkReset`.
+
+Call the init routine once before the main loop starts:
 
 ```rgbasm
-	call SioInit
+	call LinkInit
+```
 
-	; enable interrupts!
-	ei
+
+### Link impl go
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:link-send-status}}
+{{#include ../../unbricked/serial-link/main.asm:link-send-status}}
+```
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:link-send-test-data}}
+{{#include ../../unbricked/serial-link/main.asm:link-send-test-data}}
+```
+
+<!-- LinkUpdate -->
+/// Implement `LinkUpdate`:
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:link-update}}
+{{#include ../../unbricked/serial-link/main.asm:link-update}}
 ```
 
 /// update Sio every frame...
-```rgbasm
-	call SioTick
-```
 
----
+/// in the `INIT` state, do handshake until its done.
+
+Once the handshake is complete, change to the `READY` state and notify the other device.
+
+/// in any of the other active states, reset if the B button is pressed
+
+/// finally we jump to different routines based on Sio's transfer state
+
+
+<!-- handle received message -->
+/// **(very) TODO:** handling received messages...
+
+
 
 ### Handshake
 
@@ -363,3 +517,12 @@ Before doing anything else with Sio, `SioInit` needs to be called.
 /// Second byte must be `wHandshakeExpect`
 
 /// If the received message is correct, set `wHandshakeState` to zero
+
+:::tip
+
+This is a trivial example of a handshake protocol.
+In a real application, you might want to consider:
+- using a longer sequence of codes as a more unique app identifier
+- sharing more information about each device and negotiating to decide the preferred clock provider
+
+:::

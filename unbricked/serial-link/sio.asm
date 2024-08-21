@@ -223,6 +223,7 @@ SioPortEnd:
 
 
 SECTION "SioPacket Impl", ROM0
+; ANCHOR: sio-packet-prepare
 ; Initialise the Tx buffer as a packet, ready for data.
 ; Returns a pointer to the packet data section.
 ; @return HL: packet data pointer
@@ -244,16 +245,23 @@ SioPacketTxPrepare::
 	jr nz, :-
 	ld hl, wSioBufferTx + SIO_PACKET_HEAD_SIZE
 	ret
+; ANCHOR_END: sio-packet-prepare
 
 
+; ANCHOR: sio-packet-finalise
+; Close the packet and start the transfer.
 ; @mut: AF, C, HL
 SioPacketTxFinalise::
 	ld hl, wSioBufferTx
 	call SioPacketChecksum
 	ld [wSioBufferTx + 1], a
-	ret
+	jp SioTransferStart
+; ANCHOR_END: sio-packet-finalise
 
 
+; ANCHOR: sio-packet-check
+; Check if a valid packet has been received by Sio.
+; @return HL: packet data pointer (only valid if packet found)
 ; @return F.Z: if check OK
 ; @mut: AF, C, HL
 SioPacketRxCheck::
@@ -266,9 +274,12 @@ SioPacketRxCheck::
 	; check the sum
 	call SioPacketChecksum
 	and a, a
+	ld hl, wSioBufferRx + SIO_PACKET_HEAD_SIZE
 	ret ; F.Z already set (or not)
+; ANCHOR_END: sio-packet-check
 
 
+; ANCHOR: sio-checksum
 ; Calculate a simple 1 byte checksum of a Sio data buffer.
 ; sum(buffer + sum(buffer + 0)) == 0
 ; @param HL: &buffer
@@ -283,3 +294,4 @@ SioPacketChecksum:
 	dec c
 	jr nz, :-
 	ret
+; ANCHOR_END: sio-checksum

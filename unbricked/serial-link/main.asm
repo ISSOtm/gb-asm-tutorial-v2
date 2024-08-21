@@ -1,5 +1,6 @@
 INCLUDE "hardware.inc"
 
+; BG Tile IDs
 RSSET 16
 DEF BG_SOLID_0  RB 1
 DEF BG_SOLID_1  RB 1
@@ -13,15 +14,21 @@ DEF BG_CROSS    RB 1
 DEF BG_INTERNAL RB 1
 DEF BG_EXTERNAL RB 1
 DEF BG_SIO      RB 1
+DEF BG_INBOX    RB 1
+DEF BG_OUTBOX   RB 1
 
-DEF DISPLAY_CLOCK_SOURCE EQU $9800 + 32 * 1 + 0
-DEF DISPLAY_TX EQU $9800 + 32 * 14
-DEF DISPLAY_RX EQU $9800 + 32 * 16
-DEF DISPLAY_RX_STATE EQU $9800 + 32 * 17
-DEF DISPLAY_HANDSHAKE EQU $9800 + 19
+; BG map positions (addresses) of various info
+DEF DISPLAY_LINK      EQU $9800
+DEF DISPLAY_CLOCK_SRC EQU DISPLAY_LINK + 18
+DEF DISPLAY_HANDSHAKE EQU DISPLAY_LINK + 19
+DEF DISPLAY_TX        EQU DISPLAY_LINK + 32 * 2
+DEF DISPLAY_TX_STATE  EQU DISPLAY_TX + 1
+DEF DISPLAY_TX_BUFFER EQU DISPLAY_TX + 32
+DEF DISPLAY_RX        EQU DISPLAY_LINK + 32 * 5
+DEF DISPLAY_RX_STATE  EQU DISPLAY_RX + 1
+DEF DISPLAY_RX_BUFFER EQU DISPLAY_RX + 32
 
-DEF MESSAGE_LENGTH EQU 8
-
+; Link finite state machine states enum
 DEF DOWN EQU $00
 DEF INIT EQU $01
 DEF READY EQU $02
@@ -32,6 +39,10 @@ DEF PANIC EQU $05
 DEF MSG_SYNC EQU $A0
 DEF MSG_SHAKE EQU $B0
 DEF MSG_TEST_DATA EQU $C0
+
+DEF STATUS_OK EQU $11
+DEF STATUS_ERROR EQU $EE
+DEF STATUS_REPORT_COPIES EQU 4
 
 ; ANCHOR: handshake-codes
 ; Handshake code sent by internally clocked device (clock provider)
@@ -87,8 +98,6 @@ WaitVBlank:
 	dec b
 	jp nz, .clear_oam
 
-	call SioInit
-	ei ; Sio requires interrupts to be enabled.
 	call LinkInit
 
 	; Turn the LCD on
@@ -125,17 +134,29 @@ WaitVBlank2:
 	jp Main
 
 
+; ANCHOR: link-init
 LinkInit:
+	ld a, BG_OUTBOX
+	ld [DISPLAY_TX], a
+	ld a, BG_INBOX
+	ld [DISPLAY_RX], a
+	call SioInit
+	ei ; Sio requires interrupts to be enabled.
 LinkReset:
 	ld a, INIT
 	ld [wState], a
 	ld a, 0
+	ld [wCheckPacket], a
+	ld [wTxValue], a
+	ld [wRxValue], a
 	ld [wPacketCount], a
 	ld [wErrorCount], a
 	ld [wDelay], a
 	jp HandshakeDefault
+; ANCHOR_END: link-init
 
 
+; ANCHOR: link-update
 LinkUpdate:
 	ld a, [wState]
 	cp a, DOWN
@@ -144,8 +165,18 @@ LinkUpdate:
 	ld a, [wState]
 	cp a, INIT
 	jr z, .link_init
-	call ProcessInput
-	call CheckSioState
+	; if B is pressed, reset
+	ld a, [wNewKeys]
+	and a, PADF_B
+	jp nz, LinkReset
+	; handle Sio transfer states
+	ld a, [wSioState]
+	cp a, SIO_DONE
+	jp z, MsgRx
+	cp a, SIO_FAILED
+	jp z, MsgFailed
+	cp a, SIO_IDLE
+	jp z, SendNextMessage
 	ret
 .link_init
 	ld a, [wHandshakeState]
@@ -170,24 +201,13 @@ LinkUpdate:
 	ld a, BG_CROSS
 	ld [DISPLAY_HANDSHAKE], a
 	ret
+; ANCHOR_END: link-update
 
 
 LinkDisplay:
-; 	ld hl, $9800 + 32 * 4
-; 	ld de, wSioBufferRx
-; 	ld c, 8
-; :
-; 	ld a, [de]
-; 	inc de
-; 	ld b, a
-; 	call PrintHex
-; 	dec c
-; 	jr nz, :-
-
-	ld hl, $9800 + 32 * 2
+	ld hl, DISPLAY_LINK
 	ld a, [wState] :: ld [hl+], a
 	inc hl
-	ld a, BG_EMPTY :: ld [hl+], a
 	ld a, [wPacketCount]
 	ld b, a
 	call PrintHex
@@ -197,17 +217,11 @@ LinkDisplay:
 	call PrintHex
 
 	call DrawClockSource
-	ret
 
-
-CheckSioState:
-	ld a, [wSioState]
-	cp a, SIO_DONE
-	jp z, MsgRx
-	cp a, SIO_FAILED
-	jp z, MsgFailed
-	cp a, SIO_IDLE
-	jp z, SendNextMessage
+	ld hl, DISPLAY_TX_STATE
+	ld a, [wTxValue]
+	ld b, a
+	call PrintHex
 	ret
 
 
@@ -220,45 +234,95 @@ SendNextMessage:
 	jp SendStatusMsg
 
 
+; ANCHOR: link-send-status
 SendStatusMsg:
-	ld hl, wSioBufferTx
+	call SioPacketTxPrepare
 	ld a, MSG_SYNC
 	ld [hl+], a
-	ld c, MESSAGE_LENGTH - 1
 	ld a, [wState]
-.loop_tx:
 	ld [hl+], a
-	dec c
-	jr nz, .loop_tx
-	call DrawBufferTx
-	; jp SioTransferStart
-	ld a, MESSAGE_LENGTH
-	jp SioTransferStart.CustomCount
+	jr PacketTransferStart
+; ANCHOR_END: link-send-status
 
 
+; ANCHOR: link-send-test-data
 SendSequenceMsg:
-	ld hl, wSioBufferTx
+	call SioPacketTxPrepare
 	ld a, MSG_TEST_DATA
 	ld [hl+], a
-	ld c, MESSAGE_LENGTH - 1
-	ld a, [wPacketCount]
-.loop_tx:
+	ld a, [wTxValue]
 	ld [hl+], a
-	dec c
-	jr nz, .loop_tx
-	call DrawBufferTx
-	; jp SioTransferStart
-	ld a, MESSAGE_LENGTH
-	jp SioTransferStart.CustomCount
+	jr PacketTransferStart
+; ANCHOR_END: link-send-test-data
 
 
+PacketTransferStart:
+	call SioPacketTxFinalise
+	ld a, 1
+	ld [wCheckPacket], a
+	ld a, [wPacketCount]
+	inc a
+	ld [wPacketCount], a
+	jp DrawBufferTx
+
+
+SendStatusReport:
+	ld hl, wSioBufferTx
+	REPT STATUS_REPORT_COPIES
+	ld [hl+], a
+	ENDR
+	ld a, STATUS_REPORT_COPIES
+	call SioTransferStart.CustomCount
+	jp DrawBufferTx
+
+
+; Process received data
+; @mut: AF, BC, HL
 MsgRx:
 	ld a, SIO_IDLE
 	ld [wSioState], a
 
 	call DrawBufferRx
 
+	ld a, [wCheckPacket]
+	and a, a
+	jr nz, .rx_packet
+	; no packet check -- status report
 	ld hl, wSioBufferRx
+	ld c, STATUS_REPORT_COPIES
+.read_report_loop
+	ld a, [hl+]
+	cp a, STATUS_OK
+	jr z, .status_ok
+	dec c
+	jr nz, .read_report_loop
+	ld a, [wErrorCount]
+	inc a
+	ld [wErrorCount], a
+	ret
+.status_ok
+	; Advance tx value if delivered successfully
+	ld a, [wTxValue]
+	inc a
+	ret z
+	ld [wTxValue], a
+	ret
+.rx_packet:
+	ld a, 0
+	ld [wCheckPacket], a
+	call SioPacketRxCheck
+	jr z, .check_ok
+	; packet checksum didn't match
+	ld a, STATUS_ERROR
+	jp SendStatusReport
+.check_ok
+	call ProcessMsg
+	ld a, STATUS_OK
+	call SendStatusReport
+	ret
+
+
+ProcessMsg:
 	ld a, [hl+]
 	cp a, MSG_SYNC
 	jp z, .sync_msg
@@ -297,12 +361,14 @@ MsgRx:
 	ld a, RUNNING
 	ld [wState], a
 	ld a, 0
+	ld [wTxValue], a
+	ld [wRxValue], a
 	ld [wPacketCount], a
 	ld [wErrorCount], a
-	call SendSequenceMsg
 	ret
 .seq_msg:
 	ld a, [hl+]
+	ld [wRxValue], a
 	ld b, a
 
 	ld a, " " :: ld [DISPLAY_RX_STATE], a
@@ -310,19 +376,6 @@ MsgRx:
 	ld a, BG_SOLID_2 :: ld [hl+], a
 	call PrintHex
 	ld a, " " :: ld [hl+], a
-
-;;;;;;;;;;;;; process data packet
-	ld a, [wState]
-	cp a, RUNNING
-	jp z, .running
-	ret
-.running:
-	ld a, [wPacketCount]
-	inc a
-	ld [wPacketCount], a
-	ret nz
-	ld a, FINISHED
-	ld [wState], a
 	ret
 
 
@@ -335,13 +388,6 @@ MsgFailed:
 	ret
 
 
-ProcessInput:
-	ld a, [wNewKeys]
-	bit PADB_B, a
-	jp nz, LinkReset
-	ret
-
-
 DrawClockSource:
 	ldh a, [rSC]
 	and SCF_SOURCE
@@ -349,14 +395,14 @@ DrawClockSource:
 	jr z, :+
 	ld a, BG_INTERNAL
 :
-	ld [DISPLAY_CLOCK_SOURCE], a
+	ld [DISPLAY_CLOCK_SRC], a
 	ret
 
 
 DrawBufferTx:
 	ld de, wSioBufferTx
-	ld hl, DISPLAY_TX
-	ld c, 2
+	ld hl, DISPLAY_TX_BUFFER
+	ld c, 4
 .loop_tx
 	ld a, [de]
 	inc de
@@ -369,8 +415,8 @@ DrawBufferTx:
 
 DrawBufferRx:
 	ld de, wSioBufferRx
-	ld hl, DISPLAY_RX
-	ld c, 2
+	ld hl, DISPLAY_RX_BUFFER
+	ld c, 4
 .loop_rx
 	ld a, [de]
 	inc de
@@ -579,6 +625,36 @@ Tiles:
 	dw `20202023
 	dw `20200023
 	dw `33333332
+
+	; inbox
+	dw `33330003
+	dw `30000030
+	dw `30030300
+	dw `30033000
+	dw `30033303
+	dw `30000003
+	dw `30000003
+	dw `33333333
+
+	; outbox
+	dw `33330333
+	dw `30000033
+	dw `30000303
+	dw `30003000
+	dw `30030003
+	dw `30000003
+	dw `30000003
+	dw `33333333
+
+	; link
+	dw `03330000
+	dw `30003000
+	dw `30023200
+	dw `30203020
+	dw `30203020
+	dw `03230020
+	dw `00200020
+	dw `00022200
 TilesEnd:
 
 
@@ -591,6 +667,9 @@ wNewKeys: db
 
 SECTION "SioTest", WRAM0
 wState: db
+wCheckPacket: db
+wTxValue: db
+wRxValue: db
 
 wPacketCount: db
 wErrorCount: db
