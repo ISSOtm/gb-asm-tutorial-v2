@@ -6,49 +6,43 @@ DEF BG_SOLID_0  RB 1
 DEF BG_SOLID_1  RB 1
 DEF BG_SOLID_2  RB 1
 DEF BG_SOLID_3  RB 1
-DEF BG_END      RB 1
-DEF BG_NEXT     RB 1
 DEF BG_EMPTY    RB 1
 DEF BG_TICK     RB 1
 DEF BG_CROSS    RB 1
 DEF BG_INTERNAL RB 1
 DEF BG_EXTERNAL RB 1
-DEF BG_SIO      RB 1
 DEF BG_INBOX    RB 1
 DEF BG_OUTBOX   RB 1
 
 ; BG map positions (addresses) of various info
 DEF DISPLAY_LINK      EQU $9800
+DEF DISPLAY_LOCAL     EQU DISPLAY_LINK
+DEF DISPLAY_REMOTE    EQU DISPLAY_LOCAL + 32
 DEF DISPLAY_CLOCK_SRC EQU DISPLAY_LINK + 18
-DEF DISPLAY_HANDSHAKE EQU DISPLAY_LINK + 19
 DEF DISPLAY_TX        EQU DISPLAY_LINK + 32 * 2
 DEF DISPLAY_TX_STATE  EQU DISPLAY_TX + 1
 DEF DISPLAY_TX_BUFFER EQU DISPLAY_TX + 32
-DEF DISPLAY_RX        EQU DISPLAY_LINK + 32 * 5
+DEF DISPLAY_RX        EQU DISPLAY_LINK + 32 * 6
 DEF DISPLAY_RX_STATE  EQU DISPLAY_RX + 1
+DEF DISPLAY_RX_ERRORS EQU DISPLAY_RX + 18
 DEF DISPLAY_RX_BUFFER EQU DISPLAY_RX + 32
 
 ; Link finite state machine states enum
-DEF DOWN EQU $00
-DEF INIT EQU $01
-DEF READY EQU $02
-DEF RUNNING EQU $03
-DEF FINISHED EQU $04
-DEF PANIC EQU $05
+DEF LINK_DOWN  EQU $00
+DEF LINK_INIT  EQU $01
+DEF LINK_UP    EQU $02
+DEF LINK_ERROR EQU $03
 
 DEF MSG_SYNC EQU $A0
 DEF MSG_SHAKE EQU $B0
 DEF MSG_TEST_DATA EQU $C0
-
-DEF STATUS_OK EQU $11
-DEF STATUS_ERROR EQU $EE
-DEF STATUS_REPORT_COPIES EQU 4
 
 ; ANCHOR: handshake-codes
 ; Handshake code sent by internally clocked device (clock provider)
 DEF SHAKE_A EQU $88
 ; Handshake code sent by externally clocked device
 DEF SHAKE_B EQU $77
+DEF HANDSHAKE_COUNT EQU 5
 ; ANCHOR_END: handshake-codes
 
 
@@ -120,13 +114,15 @@ Main:
 	ld a, [rLY]
 	cp 144
 	jp nc, Main
+
+	call Input
+	call LinkUpdate
+
 WaitVBlank2:
 	ld a, [rLY]
 	cp 144
 	jp c, WaitVBlank2
 
-	call Input
-	call LinkUpdate
 	call LinkDisplay
 	ld a, [wFrameCounter]
 	inc a
@@ -140,254 +136,260 @@ LinkInit:
 	ld [DISPLAY_TX], a
 	ld a, BG_INBOX
 	ld [DISPLAY_RX], a
+	ld a, BG_CROSS
+	ld [DISPLAY_RX_ERRORS - 1], a
 	call SioInit
 	ei ; Sio requires interrupts to be enabled.
 LinkReset:
-	ld a, INIT
-	ld [wState], a
-	ld a, 0
-	ld [wCheckPacket], a
-	ld [wTxValue], a
-	ld [wRxValue], a
-	ld [wPacketCount], a
-	ld [wErrorCount], a
-	ld [wDelay], a
+	call SioReset
+	ld a, LINK_INIT
+	ld [wLocal.state], a
+	ld a, LINK_DOWN
+	ld [wRemote.state], a
+	ld a, $FF
+	ld [wLocal.tx_id], a
+	ld [wLocal.rx_id], a
+	ld [wRemote.tx_id], a
+	ld [wRemote.rx_id], a
+	call ClearTestSequenceResults
 	jp HandshakeDefault
 ; ANCHOR_END: link-init
 
 
 ; ANCHOR: link-update
 LinkUpdate:
-	ld a, [wState]
-	cp a, DOWN
-	ret z
-	call SioTick
-	ld a, [wState]
-	cp a, INIT
-	jr z, .link_init
 	; if B is pressed, reset
 	ld a, [wNewKeys]
 	and a, PADF_B
 	jp nz, LinkReset
+
+	call SioTick
+	ld a, [wLocal.state]
+	cp a, LINK_INIT
+	jr z, .link_init
+	cp a, LINK_UP
+	jr z, .link_up
+	ret
+
+.link_up
 	; handle Sio transfer states
 	ld a, [wSioState]
 	cp a, SIO_DONE
-	jp z, MsgRx
+	jp z, LinkRx
 	cp a, SIO_FAILED
-	jp z, MsgFailed
+	jp z, LinkError
 	cp a, SIO_IDLE
 	jp z, SendNextMessage
 	ret
 .link_init
 	ld a, [wHandshakeState]
 	and a, a
-	jr nz, .handshake
+	jp nz, HandshakeUpdate
 	; handshake complete
-	ld hl, DISPLAY_HANDSHAKE
-	ld a, BG_TICK
-	ld [hl+], a
-	ld a, READY
-	ld [wState], a
-	jp SendStatusMsg
-.handshake:
-	call HandshakeUpdate
-	ld a, [wFrameCounter]
-	and a, %0101_0000
-	jr z, .cross
-	ld a, BG_EMPTY
-	ld [DISPLAY_HANDSHAKE], a
-	ret
-.cross
-	ld a, BG_CROSS
-	ld [DISPLAY_HANDSHAKE], a
+	ld a, LINK_UP
+	ld [wLocal.state], a
+	ld a, 0
+	ld [wPacketCount], a
 	ret
 ; ANCHOR_END: link-update
 
 
 LinkDisplay:
-	ld hl, DISPLAY_LINK
-	ld a, [wState] :: ld [hl+], a
-	inc hl
+	ld hl, DISPLAY_CLOCK_SRC - 3
 	ld a, [wPacketCount]
 	ld b, a
 	call PrintHex
-	ld a, BG_CROSS :: ld [hl+], a
-	ld a, [wErrorCount]
+	ld hl, DISPLAY_CLOCK_SRC
+	call DrawClockSource
+	ld a, [wFrameCounter]
+	rrca
+	rrca
+	and 2
+	add BG_SOLID_1
+	ld [hl+], a
+
+	ld hl, DISPLAY_LOCAL
+	ld a, [wLocal.state]
+	call DrawLinkState
+	inc hl
+	ld a, [wLocal.tx_id]
+	ld b, a
+	call PrintHex
+	inc hl
+	ld a, [wLocal.rx_id]
 	ld b, a
 	call PrintHex
 
-	call DrawClockSource
+	ld hl, DISPLAY_REMOTE
+	ld a, [wRemote.state]
+	call DrawLinkState
+	inc hl
+	ld a, [wRemote.tx_id]
+	ld b, a
+	call PrintHex
+	inc hl
+	ld a, [wRemote.rx_id]
+	ld b, a
+	call PrintHex
 
 	ld hl, DISPLAY_TX_STATE
 	ld a, [wTxValue]
 	ld b, a
 	call PrintHex
-	ret
+
+	ld hl, DISPLAY_RX_STATE
+	ld a, [wRxValue]
+	ld b, a
+	call PrintHex
+	ld hl, DISPLAY_RX_ERRORS
+	ld a, [wErrorsRx]
+	ld b, a
+	call PrintHex
+	ld hl, DISPLAY_RX_ERRORS - 3
+	ld a, [wErrorsRxMsg]
+	ld b, a
+	call PrintHex
+
+	ld a, [wFrameCounter]
+	and a, $01
+	jp z, DrawBufferTx
+	jp DrawBufferRx
 
 
+; ANCHOR: link-send-message
 SendNextMessage:
-	ld a, [wState]
-	cp a, RUNNING
-	jp z, SendSequenceMsg
-	cp a, FINISHED
-	ret nc
-	jp SendStatusMsg
-
-
-; ANCHOR: link-send-status
-SendStatusMsg:
-	call SioPacketTxPrepare
-	ld a, MSG_SYNC
-	ld [hl+], a
-	ld a, [wState]
-	ld [hl+], a
-	jr PacketTransferStart
-; ANCHOR_END: link-send-status
-
-
-; ANCHOR: link-send-test-data
-SendSequenceMsg:
+	ld hl, wPacketCount
+	ld a, [hl]
+	inc [hl]
+	and a, $01
+	jr z, .sync
+.data:
 	call SioPacketTxPrepare
 	ld a, MSG_TEST_DATA
 	ld [hl+], a
+	ld a, [wLocal.tx_id]
+	ld [hl+], a
 	ld a, [wTxValue]
 	ld [hl+], a
-	jr PacketTransferStart
-; ANCHOR_END: link-send-test-data
-
-
-PacketTransferStart:
 	call SioPacketTxFinalise
-	ld a, 1
-	ld [wCheckPacket], a
-	ld a, [wPacketCount]
-	inc a
-	ld [wPacketCount], a
-	jp DrawBufferTx
-
-
-SendStatusReport:
-	ld hl, wSioBufferTx
-	REPT STATUS_REPORT_COPIES
+	ret
+.sync:
+	call SioPacketTxPrepare
+	ld a, MSG_SYNC
 	ld [hl+], a
-	ENDR
-	ld a, STATUS_REPORT_COPIES
-	call SioTransferStart.CustomCount
-	jp DrawBufferTx
+	ld a, [wLocal.state]
+	ld [hl+], a
+	ld a, [wLocal.rx_id]
+	ld [hl+], a
+	call SioPacketTxFinalise
+	ret
+; ANCHOR_END: link-send-message
 
 
 ; Process received data
 ; @mut: AF, BC, HL
-MsgRx:
+LinkRx:
 	ld a, SIO_IDLE
 	ld [wSioState], a
 
-	call DrawBufferRx
-
-	ld a, [wCheckPacket]
-	and a, a
-	jr nz, .rx_packet
-	; no packet check -- status report
-	ld hl, wSioBufferRx
-	ld c, STATUS_REPORT_COPIES
-.read_report_loop
-	ld a, [hl+]
-	cp a, STATUS_OK
-	jr z, .status_ok
-	dec c
-	jr nz, .read_report_loop
-	ld a, [wErrorCount]
-	inc a
-	ld [wErrorCount], a
-	ret
-.status_ok
-	; Advance tx value if delivered successfully
-	ld a, [wTxValue]
-	inc a
-	ret z
-	ld [wTxValue], a
-	ret
-.rx_packet:
-	ld a, 0
-	ld [wCheckPacket], a
 	call SioPacketRxCheck
 	jr z, .check_ok
-	; packet checksum didn't match
-	ld a, STATUS_ERROR
-	jp SendStatusReport
-.check_ok
-	call ProcessMsg
-	ld a, STATUS_OK
-	call SendStatusReport
+	ld hl, wErrorsRx
+	call u8ptr_IncrementToMax
 	ret
-
-
-ProcessMsg:
+.check_ok
 	ld a, [hl+]
 	cp a, MSG_SYNC
-	jp z, .sync_msg
+	jr z, .rx_sync
 	cp a, MSG_TEST_DATA
-	jp z, .seq_msg
-	; UNKNOWN BAD TIMES
-	ld b, a
-	ld a, " "
-	ld [DISPLAY_RX_STATE], a
-	ld [DISPLAY_RX_STATE + 3], a
-	ld hl, DISPLAY_RX_STATE + 6
-	ld a, BG_SOLID_2 :: ld [hl+], a
-	call PrintHex
-	ld a, PANIC
-	ld [wState], a
+	jr z, .rx_test_data
+	ld hl, wErrorsRxMsg
+	call u8ptr_IncrementToMax
 	ret
-.sync_msg:
+; handle MSG_SYNC
+.rx_sync:
+	; always take latest state value
 	ld a, [hl+]
-	ld [wRxStatus], a
+	ld [wRemote.state], a
+	; does remote ack the ID we sent?
+	ld a, [wLocal.tx_id]
 	ld b, a
-	ld hl, DISPLAY_RX_STATE
-	ld a, BG_SOLID_2 :: ld [hl+], a
-	call PrintHex
-	ld a, " " :: ld [hl+], a
-	ld [DISPLAY_RX_STATE + 6], a
-
-;;;;;;;;;;;; remote status updated
-	ld a, [wRxStatus]
-	ld b, a
-	ld a, [wState]
-	cp a, READY
-	ret nz
-	; A = READY, B = [wRxStatus]
+	ld a, [hl+]
 	cp a, b
 	ret nz
-	ld a, RUNNING
-	ld [wState], a
+	; save ack'd ID
+	ld [wRemote.rx_id], a
+	inc b
+	ld a, b
+	ld [wLocal.tx_id], a
+	ld a, [wTxValue]
+	inc a
+	ld [wTxValue], a
+	ret
+; handle MSG_TEST_DATA
+.rx_test_data:
+	; valid data packets must have sequential IDs
+	ld a, [wLocal.rx_id]
+	ld b, a
+	inc b
+	ld a, [hl+]
+	ld [wRemote.tx_id], a
+	cp a, b
+	ret nz
+	ld [wLocal.rx_id], a
+	ld a, [hl+]
+	ld [wRxValue], a
+	ret
+
+
+LinkError:
+	call SioReset
+	ld a, LINK_ERROR
+	ld [wLocal.state], a
+	ret
+
+
+ClearTestSequenceResults:
 	ld a, 0
 	ld [wTxValue], a
 	ld [wRxValue], a
 	ld [wPacketCount], a
-	ld [wErrorCount], a
+	ld [wErrorsRx], a
+	ld [wErrorsRxMsg], a
 	ret
-.seq_msg:
-	ld a, [hl+]
-	ld [wRxValue], a
+
+
+; Draw Link state
+; @param A: value
+; @param HL: dest
+; @mut: AF, B, HL
+DrawLinkState:
+	cp a, LINK_INIT
+	jr nz, :+
+	ld a, [wHandshakeState]
+	and $0F
+	ld [hl+], a
+	ret
+:
+	ld b, BG_EMPTY
+	cp a, LINK_DOWN
+	jr z, .end
+	ld b, BG_TICK
+	cp a, LINK_UP
+	jr z, .end
+	ld b, BG_CROSS
+	cp a, LINK_ERROR
+	jr z, .end
 	ld b, a
-
-	ld a, " " :: ld [DISPLAY_RX_STATE], a
-	ld hl, DISPLAY_RX_STATE + 3
-	ld a, BG_SOLID_2 :: ld [hl+], a
-	call PrintHex
-	ld a, " " :: ld [hl+], a
+	jp PrintHex
+.end
+	ld a, b
+	ld [hl+], a
 	ret
 
 
-MsgFailed:
-	ld a, SIO_IDLE
-	ld [wSioState], a
-	ld a, READY
-	ld [wState], a
-	call SendStatusMsg
-	ret
-
-
+; @param HL: dest
+; @mut AF, HL
 DrawClockSource:
 	ldh a, [rSC]
 	and SCF_SOURCE
@@ -395,14 +397,15 @@ DrawClockSource:
 	jr z, :+
 	ld a, BG_INTERNAL
 :
-	ld [DISPLAY_CLOCK_SRC], a
+	ld [hl+], a
 	ret
 
 
+; @mut: AF, BC, DE, HL
 DrawBufferTx:
 	ld de, wSioBufferTx
 	ld hl, DISPLAY_TX_BUFFER
-	ld c, 4
+	ld c, 8
 .loop_tx
 	ld a, [de]
 	inc de
@@ -413,10 +416,11 @@ DrawBufferTx:
 	ret
 
 
+; @mut: AF, BC, DE, HL
 DrawBufferRx:
 	ld de, wSioBufferRx
 	ld hl, DISPLAY_RX_BUFFER
-	ld c, 4
+	ld c, 8
 .loop_rx
 	ld a, [de]
 	inc de
@@ -424,6 +428,15 @@ DrawBufferRx:
 	call PrintHex
 	dec c
 	jr nz, .loop_rx
+	ret
+
+
+; Increment the byte at [hl], if it's less than 255.
+u8ptr_IncrementToMax:
+	ld a, [hl]
+	inc a
+	ret z
+	ld [hl], a
 	ret
 
 
@@ -546,26 +559,6 @@ Tiles:
 	dw `33333333
 	dw `33333333
 
-	; end
-	dw `30000330
-	dw `03000330
-	dw `00300330
-	dw `00030330
-	dw `00300330
-	dw `03000330
-	dw `30000330
-	dw `00000000
-
-	; next
-	dw `00003000
-	dw `00003300
-	dw `33333330
-	dw `33333333
-	dw `33333330
-	dw `00003300
-	dw `00003000
-	dw `00000000
-
 	; empty
 	dw `00000000
 	dw `01111110
@@ -597,34 +590,24 @@ Tiles:
 	dw `22222200
 
 	; internal
-	dw `03333330
-	dw `00033000
-	dw `00033000
-	dw `00033000
-	dw `00033000
-	dw `00033000
-	dw `00033000
-	dw `03333330
+	dw `03333333
+	dw `01223333
+	dw `00033300
+	dw `00033300
+	dw `00023300
+	dw `00023300
+	dw `03333333
+	dw `01223333
 
 	; external
+	dw `03333221
+	dw `03333333
+	dw `03300000
+	dw `03333210
 	dw `03333330
 	dw `03300000
-	dw `03300000
-	dw `03333300
-	dw `03300000
-	dw `03300000
-	dw `03300000
-	dw `03333330
-
-	; Sio
-	dw `22223332
-	dw `22232223
-	dw `20223322
-	dw `22220032
-	dw `20202023
-	dw `20202023
-	dw `20200023
-	dw `33333332
+	dw `03333221
+	dw `03333333
 
 	; inbox
 	dw `33330003
@@ -645,16 +628,6 @@ Tiles:
 	dw `30000003
 	dw `30000003
 	dw `33333333
-
-	; link
-	dw `03330000
-	dw `30003000
-	dw `30023200
-	dw `30203020
-	dw `30203020
-	dw `03230020
-	dw `00200020
-	dw `00022200
 TilesEnd:
 
 
@@ -665,23 +638,31 @@ SECTION "Input Variables", WRAM0
 wCurKeys: db
 wNewKeys: db
 
-SECTION "SioTest", WRAM0
-wState: db
-wCheckPacket: db
+SECTION "Link", WRAM0
 wTxValue: db
 wRxValue: db
 
 wPacketCount: db
-wErrorCount: db
-wDelay: db
+; inbound errors (count packets that fail integrity checks)
+wErrorsRx: db
+; invalid/unexpected message (packet content)
+wErrorsRxMsg: db
 
-wRxStatus: db
+; Local Link state
+wLocal:
+	.state: db
+	.tx_id: db
+	.rx_id: db
+; Remote Link state
+wRemote:
+	.state: db
+	.tx_id: db
+	.rx_id: db
 
 
 ; ANCHOR: handshake-state
 SECTION "Handshake State", WRAM0
 wHandshakeState:: db
-wHandshakeExpect: db
 ; ANCHOR_END: handshake-state
 
 
@@ -692,9 +673,9 @@ HandshakeDefault:
 	call SioAbort
 	ld a, 0
 	ldh [rSC], a
-	ld b, SHAKE_B
-	ld c, SHAKE_A
-	jp HandshakeBegin
+	ld a, HANDSHAKE_COUNT
+	ld [wHandshakeState], a
+	jr HandshakeSendPacket
 
 
 ; Begin handshake as the clock provider / internally clocked device.
@@ -702,33 +683,28 @@ HandshakeAsClockProvider:
 	call SioAbort
 	ld a, SCF_SOURCE
 	ldh [rSC], a
-	ld b, SHAKE_A
-	ld c, SHAKE_B
-	jp HandshakeBegin
-
-
-; Begin handshake
-; @param B: code to send
-; @param C: code to expect
-HandshakeBegin:
-	ld a, 1
+	ld a, HANDSHAKE_COUNT
 	ld [wHandshakeState], a
-	ld a, c
-	ld [wHandshakeExpect], a
-	ld hl, wSioBufferTx
+	jr HandshakeSendPacket
+
+
+HandshakeSendPacket:
+	call SioPacketTxPrepare
 	ld a, MSG_SHAKE
 	ld [hl+], a
+	ld b, SHAKE_A
+	ldh a, [rSC]
+	and a, SCF_SOURCE
+	jr nz, :+
+	ld b, SHAKE_B
+:
 	ld [hl], b
-	ld a, 2
-	jp SioTransferStart.CustomCount
+	jp SioPacketTxFinalise
 ; ANCHOR_END: handshake-begin
 
 
 ; ANCHOR: handshake-update
 HandshakeUpdate:
-	ld a, [wHandshakeState]
-	and a, a
-	ret z
 	; press START: perform handshake as clock provider
 	ld a, [wNewKeys]
 	bit PADB_START, a
@@ -752,17 +728,27 @@ HandshakeMsgRx:
 	; flush sio status
 	ld a, SIO_IDLE
 	ld [wSioState], a
-	; Check received value
-	ld hl, wSioBufferRx
+	call SioPacketRxCheck
+	jr nz, .failed
 	ld a, [hl+]
 	cp a, MSG_SHAKE
-	ret nz
-	ld a, [wHandshakeExpect]
-	ld b, a
+	jr nz, .failed
+	ld b, SHAKE_A
+	ldh a, [rSC]
+	and a, SCF_SOURCE
+	jr z, :+
+	ld b, SHAKE_B
+:
 	ld a, [hl+]
 	cp a, b
-	ret nz
-	ld a, 0
+	jr nz, .failed
+	ld a, [wHandshakeState]
+	dec a
+	ld [wHandshakeState], a
+	jr nz, HandshakeSendPacket
+	ret
+.failed
+	ld a, $FF
 	ld [wHandshakeState], a
 	ret
 ; ANCHOR_END: handshake-xfer-complete

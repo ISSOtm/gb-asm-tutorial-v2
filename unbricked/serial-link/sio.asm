@@ -22,6 +22,7 @@ INCLUDE "hardware.inc"
 DEF SIO_IDLE      EQU $00
 DEF SIO_DONE      EQU $01
 DEF SIO_FAILED    EQU $02
+DEF SIO_RESET     EQU $03
 DEF SIO_ACTIVE    EQU $80
 EXPORT SIO_IDLE, SIO_DONE, SIO_FAILED, SIO_ACTIVE
 ; ANCHOR_END: sio-status-enum
@@ -41,6 +42,8 @@ DEF SIO_CATCHUP_SLEEP_DURATION EQU 200
 ; ANCHOR: sio-buffer-defs
 ; Allocated size in bytes of the Tx and Rx data buffers.
 DEF SIO_BUFFER_SIZE EQU 32
+; A slightly identifiable value to clear the buffers to.
+DEF SIO_BUFFER_CLEAR EQU $EE
 ; ANCHOR_END: sio-buffer-defs
 
 ; ANCHOR: sio-packet-defs
@@ -99,11 +102,42 @@ SioInit::
 	ld [wSioTimer], a
 	ld [wSioCount], a
 	ld [wSioBufferOffset], a
+	call SioClearBufferRx
+	call SioClearBufferTx
 
 	; enable serial interrupt
 	ldh a, [rIE]
 	or a, IEF_SERIAL
 	ldh [rIE], a
+	ret
+
+
+; @mut: AF, C, HL
+SioClearBufferRx:
+	ld hl, wSioBufferRx
+	ld c, SIO_BUFFER_SIZE
+	ld a, SIO_BUFFER_CLEAR
+	jr SioMemFill
+
+
+; @mut: AF, C, HL
+SioClearBufferTx:
+	ld hl, wSioBufferTx
+	ld c, SIO_BUFFER_SIZE
+	ld a, SIO_BUFFER_CLEAR
+	jr SioMemFill
+
+
+; Fill a contiguous block of memory with the same value.
+; @param A: clear value
+; @param C: size of region to clear (WARN: size = 0 is equivalent to 256)
+; @param HL: start address
+; @mut: AF, C, HL
+SioMemFill:
+:
+	ld [hl+], a
+	dec c
+	jr nz, :-
 	ret
 ; ANCHOR_END: sio-impl-init
 
@@ -113,6 +147,8 @@ SioInit::
 ; @mut: AF
 SioTick::
 	ld a, [wSioState]
+	cp a, SIO_RESET
+	jr z, .reset_tick
 	cp a, SIO_ACTIVE
 	ret nz
 	; update timeout on external clock
@@ -126,6 +162,10 @@ SioTick::
 	ld [wSioTimer], a
 	jr z, SioAbort
 	ret
+.reset_tick
+	ld a, SIO_IDLE
+	ld [wSioState], a
+	ret
 
 
 ; Abort the ongoing transfer (if any) and enter the FAILED state.
@@ -137,6 +177,20 @@ SioAbort::
 	res SCB_START, a
 	ldh [rSC], a
 	ret
+
+
+SioReset::
+	ldh a, [rSC]
+	res SCB_START, a
+	ldh [rSC], a
+	ld a, SIO_RESET
+	ld [wSioState], a
+	ld a, 0
+	ld [wSioTimer], a
+	ld [wSioCount], a
+	ld [wSioBufferOffset], a
+	call SioClearBufferRx
+	jp SioClearBufferTx
 ; ANCHOR_END: sio-tick
 
 
