@@ -2781,7 +2781,7 @@ INCLUDE &quot;src/main/utils/macros/text-macros.inc&quot;
 
 SECTION &quot;TitleScreenState&quot;, ROM0
 
-wPressPlayText::  db &quot;press a to play&quot;, 255
+PressPlayText::  db &quot;press a to play&quot;, 255
  
 titleScreenTileData: INCBIN &quot;src/generated/backgrounds/title-screen.2bpp&quot;
 titleScreenTileDataEnd:
@@ -2807,7 +2807,7 @@ titleScreenTileMapEnd:
 
 	; Call Our function that draws text onto background/window tiles
     ld de, $99C3
-    ld hl, wPressPlayText
+    ld hl, PressPlayText
     call DrawTextTilesLoop
 
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
