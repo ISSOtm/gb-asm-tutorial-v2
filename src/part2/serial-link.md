@@ -3,18 +3,9 @@
 ---
 
 **TODO:** In this lesson...
-- learn about the Game Boy serial port...
-	- how it works, how to use it
-	- pitfalls and challenges
-- build a thing, Sio Core:
-	- multibyte + convenience wrapper over GB serial
-	- incl. sync catchup delays, timeouts
-- do something with Sio:
-	- integrate/use Sio
-	- ? manually choose clock provider
-	- ? send some data ...
-- ? build a thing, 'Packets':
-	- adds data integrity test with simple checksum
+- learn how to control the Game Boy serial port from code
+- build a wrapper over the low-level serial port interface
+- implement high-level features to enable reliable data transfers
 
 ---
 
@@ -34,21 +25,18 @@ So if you're connecting a DMG with a later model, make sure you have an adapter 
 :::tip Can I just use an emulator?
 
 Emulators should not be relied upon as a substitute for the real thing, especially when working with the serial port.
-<!-- With that said, gbe-plus seems promising... -->
-<!-- Also, avoid Emulicious... -->
 
 :::
 
 
 ## The Game Boy serial port
 
----
+:::tip Information overload
 
-**TODO:** about this section
-- this section = crash course on GB serial port theory and operation
-- programmer's mental model (not a description of the hardware implementation)
+This section is intended as a reasonably complete description of the Game Boy serial port, from a programming perspective.
+There's a lot of information packed in here and you don't need to absorb it all to continue.
 
----
+:::
 
 Communication via the serial port is organised as discrete data transfers of one byte each.
 Data transfer is bidirectional, with every bit of data written out matched by one read in.
@@ -71,26 +59,15 @@ While the serial port is *active*, it sends and receives a data bit on each seri
 After 8 pulses (*8 bits!*) the transfer is complete -- the serial port deactivates itself, and the serial interrupt is requested.
 Normal execution continues while the serial port is active: the transfer will be performed independently of the program code.
 
----
-
-**TODO:** something about the challenges posed...
-- GB serial is not "unreliable"... But it's also "not reliable"...
-- some notable things for reliable communication that GB doesn't provide:
-	- connection detection, status: can't be truly solved in software, work around with error detection
-	- delivery report / ACK: software can make improvements with careful design
-	- error detection: software implementation can be effective
-
----
-
 
 ## Sio
-Let's start building **Sio**, a serial I/O guy.
 
----
+<!-- /// Connectivity features tend to have a multiplicative effect on a developer's workload, particularly in testing and debugging.
+/// This is why we're going to work outside of the unbricked project for a while.
+/// create a separate folder for this program? -->
 
-**TODO:** Create a file, sio.asm? (And complicate the build process) ... Just stick it in main.asm?
-
----
+/// Let's start building **Sio**, our serial I/O system.
+/// Create a new source file called `sio.asm`. ... reuseable code ... & avoid gigantic `main.asm`
 
 First, define the constants that represent Sio's main states/status:
 
@@ -266,68 +243,53 @@ To do this we'll use the serial interrupt:
 {{#include ../../unbricked/serial-link/sio.asm:sio-serial-interrupt-vector}}
 ```
 
-**TODO:** explain something about interrupts? but don't be weird about it, I guess...
+All this short routine really *does* is `call SioPortEnd`.
+But because this is an interrupt handler we have to do a little dance to prevent *bad things* from happening.
+We need to preserve the values in the registers that will be modified by `SioPortEnd`, `af` and `hl`.
+/// make sure the registers are in the same state as when the interrupt occured so that when the interrupted code is resumed, it can continue as if nothing happened.
+*The stack* is the perfect way to do this.
+`push` copies the value from the register to the top of the stack and `pop` takes the top value off of the stack and moves it to the register.
+Note that a stack is a first-in first-out (FIFO) container, so we push `af` then `hl` -- leaving `hl` on the top -- and pop `hl` then `af`.
 
----
+:::tip We interrupt this broadcast to briefly explain what interrupts are
+
+An interrupt is a way to run a certain piece of code when an external event occurs.
+Interrupts are requested by *peripherals* (hardware connected to the CPU) and the CPU literally interrupts whatever it was doing to go an execute some different code instead.
+In this case, the event is the serial port counting to eight (meaning a whole byte was transferred), and the code that will be executed is whatever is at memory address `$58` -- the routine above.
+
+:::
 
 
 ### A little protocol
 
-Before diving into implementation, let's take a minute to describe a *protocol*.
+Before diving into (more) implementation, let's take a minute to describe a *protocol*.
 A protocol is a set of rules that govern communication.
 
-The most critical communications are those that support the application's features, which we'll call *messages*.
+/// Everything is packets.
+/// Packets: small chunks of data with rudimentary error detection
 
-/// Transmission errors: do not want. Transmission errors: cannot be eliminated.
-/// Lots of possible ways to deal with damaged message packets.
-/// Need to *detect* errors before you can deal with them.
+For reliable data transfer, alternate between two message types:
+protocol metadata in *SYNC* packets, and application data in *DATA* packets.
+DATA packets are required to include a sequential message ID -- the rest is up to the application.
+SYNC packets include the ID of the most recently received DATA packet.
 
-There's always a possibility that a message will be damaged in transmission or even due to a bug.
-The most important step to take in dealing with this reality is *detection* -- the application needs to know if a message was delivered successfully (or not).
-To check that a message arrived intact, we'll use checksums.
-Every packet sent will include a checksum of itself.
-At the receiving end, the checksum can be computed again and checked against the one sent with the packet.
+Packet integrity can be tested on the receiving end using a checksum.
+Damaged packets of either type are discarded.
+Successful delivery of a DATA packet is acknowledged when its ID is included in a SYNC packet.
+The sender should retransmit the packet if successful delivery is not acknowledged.
 
-:::tip Checksums, a checksummary
-
-A checksum is a computed value that depends on the value of some *input data*.
-In our case, the input data is all the bytes that make up a packet.
-In other words, every byte of the packet influences the sum.
-
-<!-- A checksum of a packet can be sent alongside the packet, which the receiver can use to check if the packet arrived intact. -->
-The packet includes a field for such a checksum, which is initialised to `0`.
-The checksum is computed using the whole packet -- including the zero -- and the result is written to the checksum field.
-When the packet checksum is recomputed now, the result will be zero!
-This is a common feature of popular checksums because it makes checking if data is intact so simple.
-
-:::
-
-Checking the packet checksum will indicate if the message was damaged, but only the receiver will have this information.
-To inform the sender we'll make a rule that every message transfer must be followed by a delivery *report*.
-In terms of information, a report is a boolean value -- either the message was received intact, or not.
-
-Because reports are so simple -- but very important -- we'll employ a simple technique to deliver them reliably.
-Define two magic numbers -- one to send when the packet checksum matched and another for if it didn't.
-For this tutorial we'll use `DEF STATUS_OK EQU $11` for *success* and flip every bit, giving `DEF STATUS_ERROR EQU $EE` to mean *failed*.
-
-To increase the likelihood of the report getting interpreted correctly, we'll simply repeat the value multiple times.
-At the receiving end, check each received byte -- finding just one byte equal to `STATUS_OK` will be interpreted as *success*.
-
-:::tip
-
-The binary values used here should be far apart in terms of [*hamming distance*](https://en.wikipedia.org/wiki/Hamming_distance).
-In essence, either value should be very hard to confuse for the other, even if some bits were randomly changed.
-
-:::
-
-<!-- PROTOCOL RULES
-- two communication "channels": application (messages) & meta (reports)
-- message packet includes a checksum of itself to be validated by receiver
-- every message packet is followed by a delivery report
-- message begins with 'MessageType' code -->
+There's one more thing our protocol needs: some way to get both devices on the same page and kick things off.
+We need a *handshake* that must be completed before doing anything else.
+This is a simple sequence that checks that there is a connection and tests that the connection is working.
+The handshake can be performed in one of two roles: *A* or *B*.
+To be successful, one peer must be *A* and the other must be *B*.
+Which role to perform is determined by the clock source setting of the serial port.
+In each exchange, each peer sends a number associated with its role and expects to receive a number associated with the other role.
+If an unexpected value is received, or something goes wrong with the transfer, that handshake attempt is aborted.
 
 
-### SioPacket
+### /// SioPacket
+
 We'll implement some functions to facilitate constructing, sending, receiving, and checking packets.
 The packet functions will operate on the existing serial data buffers.
 
@@ -382,7 +344,7 @@ It's probably not very suitable for real-world projects.
 :::
 
 
-## Using Sio
+## /// Using Sio
 
 /// Because we have an extra file (sio.asm) to compile now, the build commands will look a little different:
 ```console
@@ -423,7 +385,7 @@ Other interrupts may be in use by other parts of the code, which are clearly out
 :::
 
 Note that `LinkReset` starts part way through `LinkInit`.
-This way the two functions can share code without zero overhead and `LinkReset` can be called without performing the startup initialisation again.
+This way the two functions can share code with zero overhead and `LinkReset` can be called without performing the startup initialisation again.
 This pattern is often referred to as *fallthrough*: `LinkInit` *falls through* to `LinkReset`.
 
 Call the init routine once before the main loop starts:
@@ -432,41 +394,61 @@ Call the init routine once before the main loop starts:
 	call LinkInit
 ```
 
+/// `LinkTx`, alternate between sending the two types of packet:
 
-### Link impl go
-
-```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:link-send-status}}
-{{#include ../../unbricked/serial-link/main.asm:link-send-status}}
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:link-send-message}}
+{{#include ../../unbricked/serial-link/main.asm:link-send-message}}
 ```
 
-```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:link-send-test-data}}
-{{#include ../../unbricked/serial-link/main.asm:link-send-test-data}}
-```
-
-<!-- LinkUpdate -->
 /// Implement `LinkUpdate`:
 
 ```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:link-update}}
 {{#include ../../unbricked/serial-link/main.asm:link-update}}
 ```
 
-/// update Sio every frame...
+/// reset the demo if the B button is pressed
 
-/// in the `INIT` state, do handshake until its done.
+/// update Sio every frame
 
-Once the handshake is complete, change to the `READY` state and notify the other device.
+In the `LINK_INIT` state, do handshake until its done.
+Once the handshake is complete, change to the `LINK_UP` state.
 
-/// in any of the other active states, reset if the B button is pressed
+/// In the `LINK_UP` state, ...
 
-/// finally we jump to different routines based on Sio's transfer state
+When a transfer has completed (`SIO_DONE`), process the received data in `LinkRx`:
+
+```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:link-receive-message}}
+{{#include ../../unbricked/serial-link/main.asm:link-receive-message}}
+```
+
+/// We flush Sio's state (set it to `SIO_IDLE`) here so ... LinkTx ... next update...
+
+Check that we received a packet and its checksum matches.
+If the packet integrity test comes back negative, increment the inbound transmission errors counter.
+
+:::tip
+
+/// This class of error -- which we're calling a *transmission errors* -- are very significant.
+/// assuming code works -- & have reason to believe it does -- this means the data was damaged during transmission, if a valid packet was sent
+
+/// You might want to do something a bit more sophisticated than counting errors in a real-world application.
+
+:::
+
+/// with the packet checking out OK, move on to process the message it contains
+/// jump to the appropriate handler ...
+/// if the msg type is unknown/unexpected, increment the message/protocol error counter.
+
+/// SYNC messages...
+
+---
+
+/// TEST_DATA messages...
+
+---
 
 
-<!-- handle received message -->
-/// **(very) TODO:** handling received messages...
-
-
-
-### Handshake
+### Implement the handshake protocol
 
 /// Establish contact by trading magic numbers
 
@@ -486,37 +468,28 @@ Once the handshake is complete, change to the `READY` state and notify the other
 {{#include ../../unbricked/serial-link/main.asm:handshake-begin}}
 ```
 
-/// Every frame, handshake update
-
 ```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:handshake-update}}
 {{#include ../../unbricked/serial-link/main.asm:handshake-update}}
 ```
 
-/// If `wHandshakeState` is zero, handshake is complete
+The handshake can be forced to restart in the clock provider role by pressing START.
+This is included as a fallback and manual override for the automatic role selection implemented below.
 
-/// If the user has pressed START, abort the current handshake and start again as the clock provider.
+If a transfer is completed, process the received data by jumping to `HandshakeMsgRx`.
 
-/// Monitor Sio. If the serial port is not busy, start the handshake, using the DIV register as a pseudorandom value to decide if we should be the clock or not.
-
-:::tip The DIV register
-
-/// is not particularly random...
-
-/// but we just need the value to be different when each device reads it, and for the value to occasionally be an odd number
-
-:::
-
-/// If a transfer is complete (`SIO_DONE`), jump to `HandshakeMsgRx` (described below) to check the received value.
+If the serial port is otherwise inactive, (re)start the handshake.
+To automatically determine which device should be the clock provider, we check the lowest bit of the DIV register.
+This value increments at around 16 kHz which, for our purposes and because we only check it every now and then, is close enough to random.
 
 ```rgbasm,linenos,start={{#line_no_of "" ../../unbricked/serial-link/main.asm:handshake-xfer-complete}}
 {{#include ../../unbricked/serial-link/main.asm:handshake-xfer-complete}}
 ```
 
-/// First byte must be `MSG_SHAKE`
-
-/// Second byte must be `wHandshakeExpect`
-
-/// If the received message is correct, set `wHandshakeState` to zero
+Check that a packet was received and that it contains the expected handshake value.
+The state of the serial port clock source bit is used to determine which value to expect -- `SHAKE_A` if set to use an external clock and `SHAKE_B` if using the internal clock.
+If all is well, decrement the `wHandshakeState` counter.
+If the counter is zero, there is nothing left to do.
+Otherwise, more exchanges are required so start the next one immediately.
 
 :::tip
 

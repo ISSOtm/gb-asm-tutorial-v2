@@ -43,6 +43,7 @@ DEF SHAKE_A EQU $88
 ; Handshake code sent by externally clocked device
 DEF SHAKE_B EQU $77
 DEF HANDSHAKE_COUNT EQU 5
+DEF HANDSHAKE_FAILED EQU $F0
 ; ANCHOR_END: handshake-codes
 
 
@@ -179,7 +180,7 @@ LinkUpdate:
 	cp a, SIO_FAILED
 	jp z, LinkError
 	cp a, SIO_IDLE
-	jp z, SendNextMessage
+	jp z, LinkTx
 	ret
 .link_init
 	ld a, [wHandshakeState]
@@ -257,7 +258,7 @@ LinkDisplay:
 
 
 ; ANCHOR: link-send-message
-SendNextMessage:
+LinkTx:
 	ld hl, wPacketCount
 	ld a, [hl]
 	inc [hl]
@@ -286,6 +287,7 @@ SendNextMessage:
 ; ANCHOR_END: link-send-message
 
 
+; ANCHOR: link-receive-message
 ; Process received data
 ; @mut: AF, BC, HL
 LinkRx:
@@ -340,6 +342,7 @@ LinkRx:
 	ld a, [hl+]
 	ld [wRxValue], a
 	ret
+; ANCHOR_END: link-receive-message
 
 
 LinkError:
@@ -748,7 +751,8 @@ HandshakeMsgRx:
 	jr nz, HandshakeSendPacket
 	ret
 .failed
-	ld a, $FF
+	ld a, [wHandshakeState]
+	or a, HANDSHAKE_FAILED
 	ld [wHandshakeState], a
 	ret
 ; ANCHOR_END: handshake-xfer-complete
