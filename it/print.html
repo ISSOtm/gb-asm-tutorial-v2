@@ -293,9 +293,9 @@ Al momento in cui scriviamo, dovrebbe essere stampato un avviso che il Make aggi
 <p>Una volta installato RGBDS, aprite il terminale ed eseguite il comando <code>make --version</code> per controllare la vostra versione di Make (che probabilmente è GNU Make).</p>
 <p>Se <code>make</code> non è presente, potrebbe essere necessario installare le <code>build-essentials</code> della propria distribuzione.</p>
 <h3 id="windows"><a class="header" href="#windows">Windows</a></h3>
-<p>La triste verità è che Windows è un pessimo sistema operativo per noi sviluppatori; tuttavia, è possibile installare degli strumenti che risolvono la maggior parte dei suoi problemi.</p>
-<p>Su Windows 10, la scelta migliore è <a href="https://docs.microsoft.com/en-us/windows/wsl">WSL</a>, che permette di eseguire una distribuzione Linux all’interno di Windows.
-Installate WSL 1 o WSL 2, poi una distribuzione a vostra scelta e quindi seguite nuovamente questi passaggi per la distribuzione Linux appena installata.</p>
+<p>The modern tools we’ll be using for Game Boy development have been designed for a Unix environment, so setup on Windows is not fully straightfoward.  However, it’s possible to install an environment that will provide everything we need.</p>
+<p>On Windows 10 and Windows 11, your best bet is <a href="https://docs.microsoft.com/en-us/windows/wsl">WSL</a>, which is a method for running a Linux distribution within Windows.
+Install WSL, then a distribution of your choice (pick Ubuntu if unsure), and then follow these steps again, but for the Linux distribution you installed.</p>
 <p>In alternativa a WSL, si può usare <a href="https://www.msys2.org">MSYS2</a> o <a href="https://www.cygwin.com">Cygwin</a>; per poi consultare le istruzioni per l’installazione di Windows di [RGBDS] (https://rgbds.gbdev.io/install).
 Per quanto ne so, entrambi dovrebbero fornire una versione sufficientemente aggiornata di GNU Make.</p>
 <div class="box tip">
@@ -387,10 +387,10 @@ RGBLINK potrebbe sembrare superfluo, ma è solo perché la ROM che abbiamo guard
 <p>Quindi: Codice sorgente → <code>rgbasm</code> → File oggetto → <code>rgblink</code> → ROM, giusto?
 Beh, non esattamente.</p>
 <h2 id="rgbfix"><a class="header" href="#rgbfix">RGBFIX</a></h2>
-<p>RGBLINK produce sì una ROM, ma se la provassimo su un GameBoy non funzionerebbe.
-Nelle ROM deve sempre essere presente qualcosa chiamato <em>header</em>:
-questa sezione contiene <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html">informazioni sulla ROM</a>, come il nome del gioco, il nome dell’autore, se sia compatibile con il GameBoy Color ed altro.
-Per il momento abbiamo impostato tutti i valori a zero nel programma per semplicità, ma ne riparleremo nella seconda parte del tutorial.</p>
+<p>RGBLINK does produce a ROM, but it’s not quite usable yet.
+See, actual ROMs have what’s called a <em>header</em>.
+It’s a special area of the ROM that contains <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html">metadata about the ROM</a>; for example, the game’s name, Game Boy Color compatibility, and more.
+For simplicity, we defaulted a lot of these values to 0 for the time being; we’ll come back to them in Part Ⅱ.</p>
 <p>However, the header contains three crucial fields:</p>
 <ul>
 <li>The <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0104-0133--nintendo-logo">Nintendo logo</a>,</li>

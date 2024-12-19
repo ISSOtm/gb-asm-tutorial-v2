@@ -223,10 +223,10 @@ RGBLINK potrebbe sembrare superfluo, ma è solo perché la ROM che abbiamo guard
 <p>Quindi: Codice sorgente → <code>rgbasm</code> → File oggetto → <code>rgblink</code> → ROM, giusto?
 Beh, non esattamente.</p>
 <h2 id="rgbfix"><a class="header" href="#rgbfix">RGBFIX</a></h2>
-<p>RGBLINK produce sì una ROM, ma se la provassimo su un GameBoy non funzionerebbe.
-Nelle ROM deve sempre essere presente qualcosa chiamato <em>header</em>:
-questa sezione contiene <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html">informazioni sulla ROM</a>, come il nome del gioco, il nome dell’autore, se sia compatibile con il GameBoy Color ed altro.
-Per il momento abbiamo impostato tutti i valori a zero nel programma per semplicità, ma ne riparleremo nella seconda parte del tutorial.</p>
+<p>RGBLINK does produce a ROM, but it’s not quite usable yet.
+See, actual ROMs have what’s called a <em>header</em>.
+It’s a special area of the ROM that contains <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html">metadata about the ROM</a>; for example, the game’s name, Game Boy Color compatibility, and more.
+For simplicity, we defaulted a lot of these values to 0 for the time being; we’ll come back to them in Part Ⅱ.</p>
 <p>However, the header contains three crucial fields:</p>
 <ul>
 <li>The <a href="https://gbdev.io/pandocs/The_Cartridge_Header.html#0104-0133--nintendo-logo">Nintendo logo</a>,</li>
