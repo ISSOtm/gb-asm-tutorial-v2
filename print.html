@@ -209,10 +209,10 @@
                         <h1 id="home"><a class="header" href="#home">Home</a></h1>
 <p>👋 Welcome to gb-asm-tutorial!
 This tutorial will teach you how to make games for the Game Boy and Game Boy Color.</p>
-<div class="box warning decorated"><p>⚠️</p>
+<div class="box tip">
 <p>While the Game Boy and Game Boy Color are almost the same console, <strong>the Game Boy Advance is entirely different</strong>.
 However, the GBA is able to run GB and GBC games!
-If you are looking to program GBC games and run them on a GBA, you’re at the right place; however, if you want to make games specifically for the GBA, please check out the <a href="https://gbadev.net/tonc/">Tonc</a> tutorial instead.</p>
+If you are looking to program GBC games and run them on a GBA, you’re at the right place; however, if you want to make games specifically for the GBA, please check out the <a href="https://gbadev.net/tonc/">Tonc tutorial</a> instead.</p>
 </div>
 <h2 id="controls"><a class="header" href="#controls">Controls</a></h2>
 <p>There are some handy icons near the top of your screen!</p>
@@ -237,7 +237,7 @@ If you are looking to program GBC games and run them on a GBA, you’re at the r
 <p><strong>In short</strong>:</p>
 <ul>
 <li>Code within the tutorial is essentially <strong>public domain</strong>, meaning that you are allowed to copy it freely without restrictions.</li>
-<li>You are free to copy the tutorial’s contents (prose, diagrams, etc.), modify them, and share that, but you must give credit and license any copies permissively.</li>
+<li>You are free to copy the tutorial’s contents (prose, diagrams, etc.), modify them, and share that, but you must give credit and license any copies under the same license.</li>
 <li>This site’s <em>source code</em> can be freely copied, but you must give a license and copyright notice.</li>
 </ul>
 <p><strong>Full details</strong>, please follow these links for more information on the respective licenses:</p>
@@ -253,17 +253,14 @@ If you are looking to program GBC games and run them on a GBA, you’re at the r
 <p>In Part Ⅱ, we program our first game, a clone of <em>Arkanoid</em>; we learn how to prod the hardware into having something we can call a “game”.
 Along the way, we will make plenty of mistakes, so we can learn how to debug our code.</p>
 <p>And finally, Part Ⅲ is about “advanced” use of the hardware, where we learn how to make even better-looking games, and we program a Shoot ’Em Up!</p>
-<div class="box tip">
-<p>We hope this tutorial will work for you.</p>
-<p>But if it doesn’t (the format may not work well for everyone, and that’s okay), I encourage you to look at <a href="resources.html">some other resources</a>, which might work better for you.</p>
-<p>It’s also fine to <strong>take a break from time to time</strong>; feel free to read at your own pace, and to <a href="https://gbdev.io/chat">ask for clarifications</a> if anything isn’t clear to you.</p>
-</div>
-<hr />
 <p>This tutorial is a work in progress.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="help"><a class="header" href="#help">Help</a></h1>
+<p>We hope this tutorial will work for you.</p>
+<p>But if it doesn’t (the format may not work well for everyone, and that’s okay), we encourage to look at <a href="resources.html">some other resources</a>, which might work better for you.</p>
+<p>It’s also fine to <strong>take a break from time to time</strong>; feel free to read at your own pace.</p>
 <p>If you are stuck in a certain part of the tutorial, want some advice, or just wish to chat with us, <a href="https://gbdev.io/chat">the GBDev community chat</a> is the place to go!
 The authors actively participate there so don’t be afraid to ask questions!
-(The “ASM” channel should be the most appropriate to discuss the tutorial, by the way.)</p>
+The <code>#asm</code> channel should be the most appropriate to discuss the tutorial.</p>
 <p>If you prefer email, you can reach us at <code>tutorial@&lt;domain&gt;</code>, where you replace <code>&lt;domain&gt;</code> with this website’s domain name.
 Anti-spam measure, I hope you understand.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="setup"><a class="header" href="#setup">Setup</a></h1>
@@ -334,8 +331,8 @@ It’s a good idea to create a new directory (<code>mkdir gb_hello_world</code>,
 <li><a href="https://raw.githubusercontent.com/gbdev/hardware.inc/v4.0/hardware.inc"><code>hardware.inc</code></a></li>
 </ul>
 <p>Then, still from a terminal within that directory, run the following three commands.</p>
-<div class="box warning decorated"><p>⚠️</p>
-<p>To clarify where each individual command begins, I’ve added a <code>$</code> before each command, but don’t type them!</p>
+<div class="box tip"><p class="box-title">CONVENTION</p>
+<p>To make it clear where each command begins, they are preceded by a <code>$</code> symbol. However, do not type it when entering them in your shell!</p>
 </div>
 <pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgbasm -o hello-world.o hello-world.asm</span>
 <span class="console-line hljs-meta"></span><span class="language-bash">rgblink -o hello-world.gb hello-world.o</span>
@@ -436,7 +433,7 @@ Here’s how digits work:</p>
        ↑          ↑          ↑          ↑
 And here we can see the digits that make up the number!
 </code></pre>
-<div class="box tip decorated"><p>ℹ️</p>
+<div class="box tip"><p class="box-title">CONVENTION</p>
 <p><code>^</code> here means “to the power of”, where <code>X^N</code> is equal to multiplying <code>X</code> with itself <code>N</code> times, and <code>X ^ 0 = 1</code>.</p>
 </div>
 <p>Decimal digits form a unique <em>decomposition</em> of numbers in powers of 10 (<em>deci</em>mal is base 10, remember?).
@@ -500,8 +497,8 @@ This is <em>much</em> more compact than binary, and slightly more than decimal, 
 Thus, hexadecimal is used a lot more than binary.
 And, don’t worry, decimal can still be used 😜</p>
 <p>(Side note: one could point that octal, i.e. base 8, would also work for this; however, we will primarily deal with units of 8 bits, for which hexadecimal works much better than octal. RGBDS supports octal via the <code>&amp;</code> prefix, but I have yet to see it used.)</p>
-<div class="box tip decorated"><p>💡</p>
-<p>If you’re having trouble converting between decimal and binary/hexadecimal, check if your favorite calculator program doesn’t have a “programmer” mode, or a way to convert between bases.</p>
+<div class="box tip">
+<p>If you’re having trouble converting between decimal and binary/hexadecimal, check whether your favorite calculator program has a ‘programmer’ mode or a way to convert between bases.</p>
 </div>
 <h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
 <ul>
@@ -513,7 +510,7 @@ And, don’t worry, decimal can still be used 😜</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="registers"><a class="header" href="#registers">Registers</a></h1>
 <p>Alright!
 Now that we know what bits are, let’s talk about how they’re used.
-Don’t worry, this is mostly prep work for the next section, where we will—finally!—look at the code 👀</p>
+Don’t worry, this is mostly preliminary work for the next section, where we will—finally!—look at the code 👀</p>
 <p>First, if you opened Emulicious, you have been greeted with just the Game Boy screen.
 So, it’s time we pop the debugger open!
 Go to “Tools”, then click “Debugger”, or press <kbd><kbd>F1</kbd></kbd>.

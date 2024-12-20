@@ -209,10 +209,10 @@
                         <h1 id="pagina-principale"><a class="header" href="#pagina-principale">Pagina Principale</a></h1>
 <p>👋 Benvenuto in gb-asm-tutorial!
 Questo tutorial ti insegnerà come programmare giochi per il Game Boy e per il Game Boy Color.</p>
-<div class="box warning decorated"><p>⚠️</p>
+<div class="box tip">
 <p>While the Game Boy and Game Boy Color are almost the same console, <strong>the Game Boy Advance is entirely different</strong>.
 However, the GBA is able to run GB and GBC games!
-If you are looking to program GBC games and run them on a GBA, you’re at the right place; however, if you want to make games specifically for the GBA, please check out the <a href="https://gbadev.net/tonc/">Tonc</a> tutorial instead.</p>
+If you are looking to program GBC games and run them on a GBA, you’re at the right place; however, if you want to make games specifically for the GBA, please check out the <a href="https://gbadev.net/tonc/">Tonc tutorial</a> instead.</p>
 </div>
 <h2 id="comandi"><a class="header" href="#comandi">Comandi</a></h2>
 <p>In cima alla pagina puoi vedere alcune icone, sempre presenti se ne dovessi avere bisogno!</p>
@@ -237,7 +237,7 @@ If you are looking to program GBC games and run them on a GBA, you’re at the r
 <p><strong>In breve</strong>:</p>
 <ul>
 <li>Code within the tutorial is essentially <strong>public domain</strong>, meaning that you are allowed to copy it freely without restrictions.</li>
-<li>You are free to copy the tutorial’s contents (prose, diagrams, etc.), modify them, and share that, but you must give credit and license any copies permissively.</li>
+<li>You are free to copy the tutorial’s contents (prose, diagrams, etc.), modify them, and share that, but you must give credit and license any copies under the same license.</li>
 <li>This site’s <em>source code</em> can be freely copied, but you must give a license and copyright notice.</li>
 </ul>
 <p><strong>Maggiori Informazioni</strong>, per maggiori informazioni sulle rispettive licenze, seguire questi link:</p>
@@ -253,17 +253,14 @@ If you are looking to program GBC games and run them on a GBA, you’re at the r
 <p>Nella parte Ⅱ programmiamo il nostro primo gioco, un clone di <em>Arkanoid</em>; impariamo a dare le prime istruzioni all’hardware per ottenere qualcosa che si possa definire “gioco”.
 Lungo il percorso commetteremo molti errori, ma questo servirà anche a imparare a risolvere i problemi del nostro codice.</p>
 <p>Infine, la Parte Ⅲ riguarda l’uso “avanzato” dell’hardware, dove impareremo a creare giochi ancora più rifiniti e programmeremo uno “Shoot ’Em Up”!</p>
-<div class="box tip">
-<p>We hope this tutorial will work for you.</p>
-<p>But if it doesn’t (the format may not work well for everyone, and that’s okay), I encourage you to look at <a href="resources.html">some other resources</a>, which might work better for you.</p>
-<p>It’s also fine to <strong>take a break from time to time</strong>; feel free to read at your own pace, and to <a href="https://gbdev.io/chat">ask for clarifications</a> if anything isn’t clear to you.</p>
-</div>
-<hr />
 <p>Questo tutorial è ancora in lavorazione.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="aiuto"><a class="header" href="#aiuto">Aiuto</a></h1>
-<p>Se avessi problemi con una parte del tutorial, se volessi suggerimenti di qualsiasi tipo o anche solo parlare con noi la <a href="https://gbdev.io/chat">chat della comunità GBDev</a> è il posto che cerchi!
-Partecipiamo tutti attivamente sul sito, perciò non aver timore di fare domande di qualunque tipo!
-(il canale “ASM” è il posto migliore per discutere di questo tutorial.)</p>
+<p>We hope this tutorial will work for you.</p>
+<p>But if it doesn’t (the format may not work well for everyone, and that’s okay), we encourage to look at <a href="resources.html">some other resources</a>, which might work better for you.</p>
+<p>It’s also fine to <strong>take a break from time to time</strong>; feel free to read at your own pace.</p>
+<p>If you are stuck in a certain part of the tutorial, want some advice, or just wish to chat with us, <a href="https://gbdev.io/chat">the GBDev community chat</a> is the place to go!
+The authors actively participate there so don’t be afraid to ask questions!
+The <code>#asm</code> channel should be the most appropriate to discuss the tutorial.</p>
 <p>Se preferisci la posta elettronica, puoi raggiungerci all’indirizzo <code>tutorial@&lt;domain&gt;</code>, devi sostituire <code>&lt;domain&gt;</code> con il nome di dominio di questo sito.
 Si tratta di una misura antispam, spero che tu capisca.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="preparazione"><a class="header" href="#preparazione">Preparazione</a></h1>
@@ -334,8 +331,8 @@ Il resto del capitolo sarà dedicato a spiegare come e perché funziona.</p>
 <li><a href="https://raw.githubusercontent.com/gbdev/hardware.inc/v4.0/hardware.inc"><code>hardware.inc</code></a></li>
 </ul>
 <p>Quindi, sempre dal terminale, all’interno di quella directory, lanciate i tre comandi seguenti.</p>
-<div class="box warning decorated"><p>⚠️</p>
-<p>Per chiarezza espositiva, all’inizio di ogni comando, ho aggiunto un <code>$</code>, ma voi non digitatelo!</p>
+<div class="box tip"><p class="box-title">CONVENTION</p>
+<p>To make it clear where each command begins, they are preceded by a <code>$</code> symbol. However, do not type it when entering them in your shell!</p>
 </div>
 <pre><code><span class="console-line hljs-meta"></span><span class="language-bash">rgbasm -o hello-world.o hello-world.asm</span>
 <span class="console-line hljs-meta"></span><span class="language-bash">rgblink -o hello-world.gb hello-world.o</span>
@@ -435,7 +432,7 @@ Le cifre hanno una funzione ben specifica:</p>
        ↑          ↑          ↑          ↑
 And here we can see the digits that make up the number!
 </code></pre>
-<div class="box tip decorated"><p>ℹ️</p>
+<div class="box tip"><p class="box-title">CONVENTION</p>
 <p><code>^</code> qui significa “alla potenza di”, dove <code>X^N</code> è uguale a moltiplicare <code>X</code> con se stesso <code>N</code> volte, e <code>X ^ 0 = 1</code>.</p>
 </div>
 <p>Con le cifre decimali ogni numero viene <em>scomposto</em> in maniera univoca in potenze di 10 (il <em>deci</em>male è la base 10, ricordi?).
@@ -499,8 +496,8 @@ Questo è <em>molto</em> più compatto del binario, e anche un po’ più del de
 Per questo, l’esadecimale è molto più utilizzato del binario.
 E non preoccuparti, puoi ancora usare il decimale 😜</p>
 <p>(Nota: si potrebbe pensare che anche l’ottale, cioè la base 8, funzioni altrettanto bene; tuttavia avremo a che fare perlopiù con unità di 8 bit, per le quali l’esadecimale funziona molto meglio dell’ottale. Volendo, RGBDS permette di usare l’ottale tramite il prefisso <code>&amp;</code>, ma non l’ho mai visto usare nella pratica)</p>
-<div class="box tip decorated"><p>💡</p>
-<p>Se vi è difficile convertire i numeri tra le diverse basi, controllate se la vostra calcolatrice ha una modalità “programmatore” o un altro modo per convertire i numeri: la maggior parte delle calcolatrici lo ha.</p>
+<div class="box tip">
+<p>If you’re having trouble converting between decimal and binary/hexadecimal, check whether your favorite calculator program has a ‘programmer’ mode or a way to convert between bases.</p>
 </div>
 <h2 id="riepilogo"><a class="header" href="#riepilogo">Riepilogo</a></h2>
 <ul>
@@ -510,9 +507,9 @@ E non preoccuparti, puoi ancora usare il decimale 😜</p>
 <li>For when numbers get a bit too long, RGBASM allows underscores between digits (<code>123_465</code>, <code>%10_1010</code>, <code>$DE_AD_BE_EF</code>, etc.)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="registri"><a class="header" href="#registri">Registri</a></h1>
-<p>Bene!
-Ora che sappiamo cosa sono i bit, cerchiamo di capire come si usano.
-Non ti preoccupare, tutto questo è per lo più in preparazione alla prossima parte, dove ci butteremo finalmente nel codice vero e proprio 👀</p>
+<p>Alright!
+Now that we know what bits are, let’s talk about how they’re used.
+Don’t worry, this is mostly preliminary work for the next section, where we will—finally!—look at the code 👀</p>
 <p>First, if you opened Emulicious, you have been greeted with just the Game Boy screen.
 So, it’s time we pop the debugger open!
 Go to “Tools”, then click “Debugger”, or press <kbd><kbd>F1</kbd></kbd>.
