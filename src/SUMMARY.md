@@ -29,6 +29,7 @@
 - [Input](part2/input.md)
 - [Collision](part2/collision.md)
 - [Bricks](part2/bricks.md)
+- [Decimal Numbers](part2/bcd.md)
 - [Work in progress](part2/wip.md)
 
 # Part III — Our second game
