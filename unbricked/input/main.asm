@@ -130,7 +130,7 @@ UpdateKeys:
   ; Poll the other half
   ld a, P1F_GET_DPAD
   call .onenibble
-  swap a ; A3-0 = unpressed directions; A7-4 = 1
+  swap a ; A7-4 = unpressed directions; A3-0 = 1
   xor a, b ; A = pressed buttons + directions
   ld b, a ; B = pressed buttons + directions
 
